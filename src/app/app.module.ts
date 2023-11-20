@@ -19,13 +19,19 @@ import { MdbTabsModule } from 'mdb-angular-ui-kit/tabs';
 import { MdbTooltipModule } from 'mdb-angular-ui-kit/tooltip';
 import { MdbValidationModule } from 'mdb-angular-ui-kit/validation';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { NewPDFComponent } from './new-pdf/new-pdf.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { PdfTemplateComponent } from './pdf-template/pdf-template.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    PdfComponent
+    PdfComponent,
+    NewPDFComponent,
+    PdfTemplateComponent
   ],
   imports: [
+    ReactiveFormsModule,
     BrowserModule,
     MdbAccordionModule,
     MdbCarouselModule,
