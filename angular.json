@@ -34,7 +34,10 @@
             ],
             "scripts": [
               "src/assets/fonts/Lato-Bold-bold.js",
-              "src/assets/fonts/Lato-Regular-normal.js"
+              "src/assets/fonts/Lato-Regular-normal.js",
+              "src/assets/fonts/Montserrat-Bold-bold.js",
+              "src/assets/fonts/Montserrat-Medium-normal.js",
+              "src/assets/fonts/Montserrat-SemiBold-bold.js"
             ]
           },
           "configurations": {
