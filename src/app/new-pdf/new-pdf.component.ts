@@ -23,7 +23,7 @@ export class NewPDFComponent {
     observaciones: new FormControl('Sin observaciones'),
     zona: new FormControl(''),
     pared: new FormControl(null),
-    este: new FormControl(NaN),
+    este: new FormControl(NaN), 
     norte: new FormControl(NaN),
     cota: new FormControl(NaN),
     produccion: new FormControl(false),
@@ -63,36 +63,21 @@ export class NewPDFComponent {
   }
 
 
-  getFecha(): string {
 
-    const dias = [
-      'Domingo',
-      'Lunes',
-      'Martes',
-      'Miércoles',
-      'Jueves',
-      'Viernes',
-      'Sábado',
-    ];
-
-    const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
-
-    let form = this.reporte.controls
-    let dia = dias[new Date(form.fecha.value!).getDay()]
-    let diaNum = new Date(form.fecha.value!).getDate()
-    let mes = meses[new Date(form.fecha.value!).getMonth()]
-    let hora = new Date(form.fecha.value!).getHours() + ':' + new Date(form.fecha.value!).getMinutes()
-    let ano = new Date(form.fecha.value!).getFullYear()
-    return dia + ' ' + diaNum + ' de ' + mes + ' de ' + ano + ', ' + hora + ' hrs.'
-
-  }
 
 
   generatePDF() {
+
+    let zona = 'Zona 23'
+    let este = 22
+    let norte = 22
+    let cota = 22
+    let fecha = new Date()
+
     let form = this.reporte.controls
     this.generaService.tampleEMT()
     this.generaService.doc.addPage()
-    this.generaService.generateHeader(form.zona.value!, form.este.value!, form.norte.value!, form.cota.value!, this.getFecha())
+    this.generaService.generateHeader(zona, este, norte, cota, this.generaService.getFecha(fecha))
     this.generaService.generateFooter()
     this.generaService.planoDeUbicacion()
     this.generaService.informacionTronadura(form.produccion.value!, form.precorte.value!, form.destape.value!, form.bolones.value!,

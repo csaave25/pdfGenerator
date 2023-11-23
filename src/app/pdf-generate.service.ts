@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { jsPDF } from 'jspdf'
 import { radares } from './dataPrueba';
-import { font, latoRegular } from 'src/assets/fonts/fonts';
+import { font, latoRegular, montBold, montMedium, montSemi } from 'src/assets/fonts/fonts';
 
 @Injectable({
   providedIn: 'root'
 })
-export class PdfGenerateService  {
+export class PdfGenerateService {
 
   constructor() { }
 
@@ -25,16 +25,39 @@ export class PdfGenerateService  {
   usoPage = 0
   doc = new jsPDF('p', 'pt', 'A4')
 
+  getFecha(fecha: Date): string {
+
+    const dias = [
+      'Domingo',
+      'Lunes',
+      'Martes',
+      'Miércoles',
+      'Jueves',
+      'Viernes',
+      'Sábado',
+    ];
+
+    const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+
+    let dia = dias[new Date(fecha).getDay()]
+    let diaNum = new Date(fecha).getDate()
+    let mes = meses[new Date(fecha).getMonth()]
+    let hora = new Date(fecha).getHours() + ':' + fecha.getMinutes()
+    let ano = new Date(fecha).getFullYear()
+    return dia + ' ' + diaNum + ' de ' + mes + ' de ' + ano + ', ' + hora + ' hrs.'
+
+  }
+
   generateNewPage(espacio: number) {
-    let zona = ''
+    let zona = 'Zona 23'
     let este = 22
     let norte = 22
     let cota = 22
-    let fecha = new Date().toLocaleString()
+    let fecha = new Date()
     let espacioUtilizable = (this.totalY - this.usoPage - 20)
     if (espacioUtilizable < espacio) {
       this.doc.addPage()
-      this.generateHeader(zona, este, norte, cota, fecha)
+      this.generateHeader(zona, este, norte, cota, this.getFecha(fecha))
       this.generateFooter()
     }
   }
@@ -44,12 +67,13 @@ export class PdfGenerateService  {
     this.doc.addImage("assets/images/marca.jpg", 'JPG', 0, 0, 600, 842, 'marca2', 'SLOW');
     this.doc.setTextColor('#013033')
     this.doc.setFontSize(13)
+    this.doc.setFont('Lato', 'bold')
     this.doc.text("REPORTE PUNTOS DE SEGUIMIENTO POST TRONADURA", this.midPointX, 40, { align: 'center' });
-    this.doc.setFont("helvetica", "normal");
+    this.doc.setFont("Lato", "normal");
     this.doc.setFontSize(11)
     this.doc.text("TRONADURA " + zona.toUpperCase() + " - COORDENADAS: " + este + " | " + norte + " | " + cota, this.midPointX, 55, { align: 'center' });
     this.doc.text(fecha, this.midPointX, 70, { align: 'center' });
-    this.doc.setFont("helvetica", "bold")
+    this.doc.setFont("Lato", "bold");
     this.doc.text("2023.12", this.left, 80, { align: 'left' });
     this.doc.text("IYV-RP-VIG-CMZ-04", this.right, 80, { align: 'right' });
     this.doc.line(this.left, 85, this.right, 85);
@@ -61,27 +85,25 @@ export class PdfGenerateService  {
     //E-Mining Technology S.A.  •  Calle Limache 3405, Oficina 21, Viña del Mar  •  Teléfono: +56 32 2187440  •  eminingtech.com
 
     this.doc.setFontSize(10)
-    this.doc.setFont('helvetica', 'normal')
+    this.doc.setFont('Lato', 'normal')
     this.doc.text(this.contadorPagina.toString(), this.midPointX, this.endY - 20, { align: 'center' });
-    this.doc.setFont('helvetica', 'bold')
+    this.doc.setFont('Lato', 'bold')
     this.doc.text("Néstor Ramírez Muena", 30, this.endY - 20, { align: 'left' });
     this.doc.text("2023.12", 570, this.endY - 20, { align: 'right' });
 
     //template emt
     this.doc.setFontSize(8)
+    this.doc.setTextColor("#013033")
     let calc = (this.right + this.left) / 6
-    this.doc.setFont("helvetica", 'bold')
+    this.doc.setFont("Montserrat", 'bold')
     this.doc.text('E-Mining Technology S.A.', this.left, this.endY, { align: 'left' });
-    this.doc.text('•', this.left + 115, this.endY, { align: 'left' });
-    this.doc.setFont("helvetica", 'normal')
-    this.doc.text('Calle Limache 3405, Oficina 21, Viña del Mar', this.left + 135, this.endY, { align: 'left' });
-    this.doc.setFont("helvetica", 'bold')
     this.doc.text('•', this.left + 314, this.endY, { align: 'left' });
-    this.doc.setFont("helvetica", 'normal')
-    this.doc.text('Teléfono: +56 32 2187440', this.left + 336, this.endY, { align: 'left' });
-    this.doc.setFont("helvetica", 'bold')
+    this.doc.text('•', this.left + 115, this.endY, { align: 'left' });
     this.doc.text('•', this.left + 455, this.endY, { align: 'right' });
     this.doc.text('eminingtech.com', this.right, this.endY, { align: 'right' });
+    this.doc.setFont("Lato", 'normal')
+    this.doc.text('Calle Limache 3405, Oficina 21, Viña del Mar', this.left + 135, this.endY, { align: 'left' });
+    this.doc.text('Teléfono: +56 32 2187440', this.left + 336, this.endY, { align: 'left' });
 
 
     this.contadorPagina++
@@ -89,11 +111,11 @@ export class PdfGenerateService  {
 
   planoDeUbicacion() {
     this.doc.setFontSize(12)
-    this.doc.setFont("helvetica", "bold");
+    this.doc.setFont("Lato", "bold");
     this.doc.text("PLANO DE UBICACIÓN", this.left, 110, { align: 'left' });
     this.doc.addImage("assets/img1.png", "PNG", this.left + 100, 130, 340, 360, "alias1", 'SLOW');
     this.doc.setFontSize(8)
-    this.doc.setFont("helvetica", "normal");
+    this.doc.setFont("Lato", "normal");
 
     //aumneto num figura
     this.doc.text("Figura " + this.numFigura + ": Posición de tronadura e instrumentación", this.midPointX, 500, { align: 'center' });
@@ -106,7 +128,7 @@ export class PdfGenerateService  {
     pozosProduccion: number, pozosPrecorte: number, nMallas: number, volumen: number, factorCarga: number) {
 
     this.doc.setFontSize(12)
-    this.doc.setFont("helvetica", "bold");
+    this.doc.setFont("Lato", "bold");
     this.doc.text("INFORMACIÓN TRONADURA", 30, this.usoPage, { align: 'left' });
     this.doc.line(this.left, this.usoPage + 20, this.right, this.usoPage + 20);
     this.doc.setFontSize(10)
@@ -130,27 +152,30 @@ export class PdfGenerateService  {
 
     this.doc.line(this.left, alturaY + 20, this.right, alturaY + 20);
     calc = (this.right + this.left) / 4
-    this.doc.text("N° Pozos Producción: ", calc, alturaY + 40, { align: 'center' });
-    this.doc.setFont("helvetica", "normal");
-    this.doc.text(pozosProduccion.toString(), calc + 65, alturaY + 40, { align: 'center' });
-    this.doc.setFont("helvetica", "bold");
+
+    this.doc.setFont("Lato", "bold");
     this.doc.text("N° Pozos Precorte: ", calc * 2, alturaY + 40, { align: 'center' });
-    this.doc.setFont("helvetica", "normal");
-    this.doc.text(pozosPrecorte.toString(), calc * 2 + 57, alturaY + 40, { align: 'center' });
-    this.doc.setFont("helvetica", "bold");
     this.doc.text("N° de Mallas: ", calc * 3, alturaY + 40, { align: 'center' });
-    this.doc.setFont("helvetica", "normal");
+    this.doc.text("N° Pozos Producción: ", calc, alturaY + 40, { align: 'center' });
+
+
+    this.doc.setFont("Lato", "normal");
+    this.doc.text(pozosPrecorte.toString(), calc * 2 + 57, alturaY + 40, { align: 'center' });
+    this.doc.text(pozosProduccion.toString(), calc + 65, alturaY + 40, { align: 'center' });
     this.doc.text(nMallas.toString(), calc * 3 + 43, alturaY + 40, { align: 'center' });
+
+
+
     calc = (this.right + this.left) / 3
-    this.doc.setFont("helvetica", "bold");
+
     this.doc.line(this.left, alturaY + 55, this.right, alturaY + 55);
+    this.doc.setFont("Lato", "bold");
     this.doc.text("Volumen (Kton):", calc, alturaY + 75, { align: 'center' });
-    this.doc.setFont("helvetica", "normal");
-    this.doc.text(volumen.toString(), calc + 50, alturaY + 75, { align: 'center' });
-    this.doc.setFont("helvetica", "bold");
     this.doc.text("Factor de Carga General: ", calc * 2, alturaY + 75, { align: 'center' });
-    this.doc.setFont("helvetica", "normal");
-    this.doc.text(factorCarga.toString(), calc * 2 + 70, alturaY + 75, { align: 'center' });
+
+    this.doc.setFont("Lato", "normal");
+    this.doc.text(volumen.toString(), calc + 52, alturaY + 75, { align: 'center' });
+    this.doc.text(factorCarga.toString(), calc * 2 + 72, alturaY + 75, { align: 'center' });
 
     this.usoPage = alturaY + 95
 
@@ -160,7 +185,7 @@ export class PdfGenerateService  {
     this.usoPage += 20
     this.generateNewPage(220)
     this.doc.setFontSize(12)
-    this.doc.setFont("helvetica", "bold");
+    this.doc.setFont("Lato", "bold");
     this.doc.text("PUNTOS DE CONTROL SECTOR TRONADURA", this.left, this.usoPage, { align: 'left' });
     let midIMG = 110 + this.left
 
@@ -168,9 +193,7 @@ export class PdfGenerateService  {
     //1ra Img
     this.doc.addImage("assets/img/mapa1.png", 'PNG', midIMG, this.usoPage + 15, 320, 220, 'figura2', 'SLOW');
     this.doc.setFontSize(8)
-    this.doc.setFont("helvetica", "normal");
-
-
+    this.doc.setFont("Lato", "normal");
     this.doc.text("Figura " + this.numFigura + ": Mapa sintético de desplazamientos Vs. tiempo", this.midPointX, this.usoPage + 245, { align: 'center' });
     //Aumento num figura
     this.numFigura++
@@ -180,9 +203,6 @@ export class PdfGenerateService  {
     //2da Img
     this.generateNewPage(220)
     this.doc.addImage("../../assets/img/mapa2.png", 'PNG', midIMG, this.usoPage + 25, 320, 220, 'figura 3', 'SLOW');
-    this.doc.setFontSize(8)
-    this.doc.setFont("helvetica", "normal");
-
     this.doc.text("Figura " + this.numFigura + ": Gráfico de desplazamientos Vs. tiempo", this.midPointX, this.usoPage + 255, { align: 'center' });
     //Aumento num figura
     this.numFigura++
@@ -194,7 +214,7 @@ export class PdfGenerateService  {
     this.usoPage += 50
     this.generateNewPage(50)
     this.doc.line(this.left, this.usoPage, this.right, this.usoPage);
-    this.doc.setFont("helvetica", "bold");
+    this.doc.setFont("Lato", "bold");
     this.doc.setFontSize(9)
     let calc = (this.right + this.left) / 8
     this.doc.text("Radar", calc, this.usoPage + 20, { align: 'center' });
@@ -207,14 +227,13 @@ export class PdfGenerateService  {
     this.doc.text("(4hrs.)", calc * 6, this.usoPage + 25, { align: 'center' });
     this.doc.text("Velocidad", calc * 7, this.usoPage + 15, { align: 'center' });
     this.doc.text("(4hrs.)", calc * 7, this.usoPage + 25, { align: 'center' });
-    this.doc.setFont("helvetica", "normal");
     this.doc.line(this.left, this.usoPage + 38, this.right, this.usoPage + 38);
     //radares
 
     this.usoPage += 50
     this.rds.forEach(rdr => {
       this.doc.setFontSize(9)
-      this.doc.setFont("helvetica", "normal");
+      this.doc.setFont("Lato", "normal");
       // this.doc.text(radar, calc, this.usoPage, { align: 'center' });
       // this.doc.text(descripcionPunto.toString(), calc * 2, this.usoPage, { align: 'center' });
       // this.doc.text(radarEste.toString(), calc * 3, this.usoPage, { align: 'center' });
@@ -239,12 +258,12 @@ export class PdfGenerateService  {
     this.generateNewPage(190)
     this.usoPage += 20
     this.doc.setFontSize(12)
-    this.doc.setFont("helvetica", "bold");
+    this.doc.setFont("Lato", "bold");
     this.doc.text("IMÁGENES", this.left, this.usoPage, { align: 'left' });
     let midIMG = 110 + this.left
 
     this.doc.setFontSize(8)
-    this.doc.setFont("helvetica", "normal");
+    this.doc.setFont("Lato", "normal");
     //Primera img
     this.doc.addImage("assets/img1.png", 'PNG', this.left, this.usoPage + 10, 260, 180, 'alias1', 'SLOW');
     this.doc.text("Figura " + this.numFigura + ": Antes Panorámica ", 260 / 2 + this.left, this.usoPage + 200, { align: 'center' });
@@ -310,12 +329,12 @@ export class PdfGenerateService  {
 
     this.doc.addImage("assets/images/image2.jpg", 'JPG', 0, 0, 600, 842, 'marca', 'SLOW');
     this.doc.setTextColor('#D5E1E2')
-    this.doc.setFont("Lato", "normal");
+    this.doc.setFont("Montserrat", "bold");
     this.doc.setFontSize(20)
     this.doc.text("REPORTE PUNTOS DE\n" + "SEGUIMIENTO POST TRONADURA", 100, 250, { align: 'left' });
     this.doc.setTextColor('#DE6719')
     this.doc.setFontSize(18)
-    this.doc.setFont("Lato", "bold");
+    this.doc.setFont("Lato", "normal");
     this.doc.text("Nombre Faena", 100, 295, { align: 'left' });
     this.doc.setTextColor('#D5E1E2')
     this.doc.setFontSize(12)
@@ -326,18 +345,16 @@ export class PdfGenerateService  {
     this.doc.setFontSize(8)
     this.doc.setTextColor("#D5E1E2")
     let calc = (this.right + this.left) / 6
-    this.doc.setFont("helvetica", 'bold')
+    this.doc.setFont("Montserrat", 'bold')
     this.doc.text('E-Mining Technology S.A.', this.left, this.endY, { align: 'left' });
-    this.doc.text('•', this.left + 115, this.endY, { align: 'left' });
-    this.doc.setFont("helvetica", 'normal')
-    this.doc.text('Calle Limache 3405, Oficina 21, Viña del Mar', this.left + 135, this.endY, { align: 'left' });
-    this.doc.setFont("helvetica", 'bold')
     this.doc.text('•', this.left + 314, this.endY, { align: 'left' });
-    this.doc.setFont("helvetica", 'normal')
-    this.doc.text('Teléfono: +56 32 2187440', this.left + 336, this.endY, { align: 'left' });
-    this.doc.setFont("helvetica", 'bold')
+    this.doc.text('•', this.left + 115, this.endY, { align: 'left' });
     this.doc.text('•', this.left + 455, this.endY, { align: 'right' });
     this.doc.text('eminingtech.com', this.right, this.endY, { align: 'right' });
+    this.doc.setFont("Lato", 'normal')
+    this.doc.text('Calle Limache 3405, Oficina 21, Viña del Mar', this.left + 135, this.endY, { align: 'left' });
+    this.doc.text('Teléfono: +56 32 2187440', this.left + 336, this.endY, { align: 'left' });
+
   }
 
 
@@ -346,6 +363,12 @@ export class PdfGenerateService  {
     this.doc.addFont("Lato-Font-bold.ttf", "Lato", "bold");
     this.doc.addFileToVFS("Lato-Font-normal.ttf", latoRegular);
     this.doc.addFont("Lato-Font-normal.ttf", "Lato", "normal");
+    this.doc.addFileToVFS("Montserrat-Bold.ttf", montBold);
+    this.doc.addFont("Montserrat-Bold.ttf", "Montserrat", "bold");
+    this.doc.addFileToVFS("Montserrat-Medium.ttf", montMedium);
+    this.doc.addFont("Montserrat-Medium.ttf", "Montserrat", "normal");
+    this.doc.addFileToVFS("Montserrat-SemiBold.ttf", montSemi);
+    this.doc.addFont("Montserrat-SemiBold.ttf", "Montserrat", "semibold");
   }
 
   previsualizar() {
@@ -358,6 +381,8 @@ export class PdfGenerateService  {
     x!.document.close();
   }
 
+
+  
 
 }
 
