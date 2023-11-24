@@ -339,7 +339,7 @@ export class PdfGenerateService {
     this.doc.setTextColor('#D5E1E2')
     this.doc.setFontSize(12)
     this.doc.text("25 de agosto de 2022.", 331, 450, { align: 'left' });
-    // this.doc.addImage("assets/images/image1.png", 'PNG', 20, 23, 217, 70, 'logo', 'SLOW');
+    
 
 
     this.doc.setFontSize(8)

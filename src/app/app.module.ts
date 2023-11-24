@@ -22,13 +22,15 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { NewPDFComponent } from './new-pdf/new-pdf.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { PdfTemplateComponent } from './pdf-template/pdf-template.component';
+import { InformeMensualComponent } from './informe-mensual/informe-mensual.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     PdfComponent,
     NewPDFComponent,
-    PdfTemplateComponent
+    PdfTemplateComponent,
+    InformeMensualComponent
   ],
   imports: [
     ReactiveFormsModule,
