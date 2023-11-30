@@ -4,3 +4,4 @@ export const dataInforme = {
     faena: 'Minera Antucoya – AMSA',
     fecha: 'Octubre 2023'
 }
+

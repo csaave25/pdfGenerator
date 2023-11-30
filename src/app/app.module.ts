@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
+import { HttpClientModule } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { PdfComponent } from './pdf/pdf.component';
 import { MdbAccordionModule } from 'mdb-angular-ui-kit/accordion';
@@ -33,6 +33,7 @@ import { InformeMensualComponent } from './informe-mensual/informe-mensual.compo
     InformeMensualComponent
   ],
   imports: [
+    HttpClientModule,
     ReactiveFormsModule,
     BrowserModule,
     MdbAccordionModule,
@@ -50,7 +51,8 @@ import { InformeMensualComponent } from './informe-mensual/informe-mensual.compo
     MdbTabsModule,
     MdbTooltipModule,
     MdbValidationModule,
-    NoopAnimationsModule
+    NoopAnimationsModule,
+    
   ],
   providers: [],
   bootstrap: [AppComponent]

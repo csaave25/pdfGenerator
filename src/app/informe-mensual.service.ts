@@ -1,8 +1,13 @@
-import { Injectable, ViewChild } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { jsPDF } from 'jspdf'
 import autoTable from 'jspdf-autotable'
 import { font, latoRegular, montBold, montMedium, montSemi } from 'src/assets/fonts/fonts';
 import { dataInforme } from './informe-mensual/informeData';
+import { ConsultasService } from './consultas.service';
+import { Observable, retry } from 'rxjs'
+import { HttpClient } from '@angular/common/http';
+
+
 
 
 interface Data {
@@ -17,7 +22,8 @@ interface Data {
 export class InformeMensualService {
 
 
-  constructor() { }
+  constructor(private consulta: ConsultasService, private http: HttpClient) { }
+
 
   colores = {
     negro: '#013033',
@@ -34,17 +40,21 @@ export class InformeMensualService {
   startPage = 20
   startcContent = this.startPage + 90
   marginContent = this.marginLeft + 50
-  contadorPagina = 1
+  contadorPagina = 2
   usoPagina = this.startcContent
   totalUso = this.endPage - this.startcContent
   contadorItem = 1
   listaContenido: Data[] = []
+  tablaCriticidades = []
 
   doc = new jsPDF('p', 'pt', 'letter')
 
+  url: string = 'https://apps.emt.cl/api/images/alertas/alta';
+
+
+
 
   implementarFuentes() {
-
     this.doc.addFileToVFS("Lato-Font-bold.ttf", font);
     this.doc.addFont("Lato-Font-bold.ttf", "Lato", "bold");
     this.doc.addFileToVFS("Lato-Font-normal.ttf", latoRegular);
@@ -54,10 +64,11 @@ export class InformeMensualService {
     this.doc.addFileToVFS("Montserrat-Medium.ttf", montMedium);
     this.doc.addFont("Montserrat-Medium.ttf", "Montserrat", "normal");
     this.doc.addFileToVFS("Montserrat-SemiBold.ttf", montSemi);
-    this.doc.addFont("Montserrat-SemiBold.ttf", "Montserrat", "semibold");
+    this.doc.addFont("Montserrat-SemiBold.ttf", "Montserrat", "semibold")
   }
 
   implementarPortada() {
+
     let altura = 246
     let margenIzq = this.marginLeft + 72
     this.doc.addImage("assets/images/image2.jpg", 'JPG', 0, 0, 612, 792, 'marca', 'SLOW');
@@ -168,7 +179,10 @@ export class InformeMensualService {
   }
 
   implementarTablaContenido() {
-    this.nuevaPagina()
+    this.doc.insertPage(3)
+    this.contadorPagina = 1
+    this.implementarFooter()
+    this.implementarHeader()
 
     this.doc.setFontSize(16)
     this.doc.setTextColor(this.colores.naranjo)
@@ -181,16 +195,17 @@ export class InformeMensualService {
     let espacios = this.startcContent
     this.listaContenido.forEach(data => {
       this.doc.text(data.titulo, this.marginContent, espacios + 30, { align: 'left' })
-      this.doc.text(data.pagina.toString(), this.marginRight, espacios + 30, { align: 'right' })
+      this.doc.text((data.pagina - 1).toString(), this.marginRight, espacios + 30, { align: 'right' })
+      this.doc.setLineDashPattern([4], 1000);
+      this.doc.line(this.marginContent + this.doc.getTextWidth(data.titulo) + 10, espacios + 30, this.marginRight - 15, espacios + 30, 'FD')
       data.sub?.forEach(sub => {
         this.doc.text(sub.titulo, this.marginContent + 30, espacios + 60, { align: 'left' })
-        this.doc.text(sub.pagina.toString(), this.marginRight, espacios + 60, { align: 'right' })
-        espacios += 20
+        this.doc.text((sub.pagina - 1).toString(), this.marginRight, espacios + 60, { align: 'right' })
+        this.doc.line(this.marginContent + this.doc.getTextWidth(sub.titulo) + 40, espacios + 60, this.marginRight - 15, espacios + 60, 'FD')
+        espacios += 30
       })
       espacios += 30
     })
-
-    this.nuevaPagina()
   }
 
   implementarIndicadoresDeServicio() {
@@ -199,7 +214,7 @@ export class InformeMensualService {
       titulo: this.contadorItem + '. Indicadores de Servicio',
       pagina: this.contadorPagina,
       sub: [{
-        titulo: this.contadorItem + '. Disponibilidad',
+        titulo: this.contadorItem + '.1 Disponibilidad del Sistema',
         pagina: this.contadorPagina,
         sub: null
       }]
@@ -346,12 +361,39 @@ export class InformeMensualService {
 
   }
 
-  implementarAnalisis() {
-    if (this.usoPagina + 70 > this.totalUso)
+
+
+  implementarAnalisis(data: any) {
+
+    const manejoData = () => {
+      let tabla: any = []
+      data.objects.alerts.forEach((dato: any) => {
+        let fecha = new Date(dato.date).getMonth()
+        if ((fecha == 10) && !dato.fake) {
+          function addZero(i: any) {
+            if (i < 10) { i = "0" + i }
+            return i;
+          }
+          let d = new Date(dato.date)
+          let date = d.toLocaleString()
+          let h = addZero(d.getHours());
+          let m = addZero(d.getMinutes());
+          let s = addZero(d.getSeconds());
+          let hora = h + ":" + m + ":" + s;
+          tabla.push([dato.camera, date, hora, dato.zonas, dato.id, dato.openning, dato.length])
+
+        }
+      })
+      return tabla
+    }
+
+    this.tablaCriticidades = manejoData();
+
+    if (this.usoPagina + 65 > this.totalUso)
       this.nuevaPagina()
 
     let contenido: Data = {
-      titulo: this.contadorItem + '. Análisis de criticidades',
+      titulo: this.contadorItem + '. Análisis de Criticidades',
       pagina: this.contadorPagina,
       sub: null
     }
@@ -360,20 +402,60 @@ export class InformeMensualService {
     this.doc.setFontSize(14)
     this.doc.setTextColor(this.colores.naranjo)
     this.doc.setFont('Lato', 'bold')
-    this.doc.text(this.contadorItem + '. Análisis de criticidades', this.marginContent, this.usoPagina, { align: 'left', maxWidth: this.marginRight - this.marginContent })
+    this.doc.text(this.contadorItem + '. Análisis de Criticidades', this.marginContent, this.usoPagina, { align: 'left', maxWidth: this.marginRight - this.marginContent })
     this.contadorItem++
-    this.doc.setFontSize(11)
-    this.doc.setTextColor(this.colores.negro)
-    this.doc.setFont('Lato', 'normal')
-    this.doc.text('Durante el periodo no se registran grietas de criticidad alta asociadas a alguna condición de fallamiento.', this.marginContent, this.usoPagina + 30, { align: 'left', maxWidth: this.marginRight - this.marginContent })
 
-    this.usoPagina += 70
+
+
+    if (this.tablaCriticidades.length == 0) {
+      this.doc.setFontSize(11)
+      this.doc.setTextColor(this.colores.negro)
+      this.doc.setFont('Lato', 'normal')
+      this.doc.text('Durante el periodo no se registran grietas de criticidad alta asociadas a alguna condición de fallamiento.', this.marginContent, this.usoPagina + 30, { align: 'left', maxWidth: this.marginRight - this.marginContent })
+      this.usoPagina += 65
+
+    } else {
+      //GENERA TABLA
+      let index = 0
+      let lastTableHeight = 0
+      let page = 1
+      autoTable(this.doc, {
+        styles: { lineWidth: .1, halign: 'center', fontSize: 10, fillColor: undefined, lineColor: [1, 48, 51], textColor: [1, 48, 51] },
+        headStyles: { font: 'Lato', fontStyle: 'bold', fillColor: [217, 217, 217] },
+        head: [['Id Camara', 'Fecha', 'Hora', 'Zona', 'Grieta', 'Apertura', 'Longitud']],
+        bodyStyles: { font: 'Lato', fontStyle: 'normal', fontSize: 9, fillColor: undefined },
+        body: this.tablaCriticidades,
+        margin: { top: this.startcContent, left: this.marginContent, bottom: 80 },
+        alternateRowStyles: { fillColor: undefined },
+        startY: this.usoPagina + 30,
+        didDrawCell: (data) => {
+          if (page == data.pageCount) {
+            if (data.row.index != index) {
+              index = data.row.index
+              this.usoPagina += data.row.height
+            }
+          }
+        },
+
+        didDrawPage: (data) => {
+          if (data.pageNumber != 1) {
+            this.implementarFooter()
+            this.implementarHeader()
+          }
+          page++
+          lastTableHeight = this.usoPagina
+          this.usoPagina = 0
+        }
+      })
+      this.usoPagina += 40 + lastTableHeight + this.startcContent
+    }
+
   }
 
   implementarParametroA2MG() {
 
 
-    if (this.usoPagina + 240 > this.totalUso)
+    if (this.usoPagina + 170 > this.totalUso)
       this.nuevaPagina()
 
     let contenido: Data = {
@@ -516,16 +598,27 @@ export class InformeMensualService {
     this.implementarFooter()
   }
 
-  onPrevizualizar() {
+  previsualizar() {
+    let string = this.doc.output('datauristring');
+    let embed = "<embed width='100%' height='100%' src='" + string + "'/>"
+    let x = window.open();
+    x!.document.open();
+    x!.document.write(embed);
+    x!.document.body.style.margin = '0'
+    x!.document.close();
+  }
+
+  onPrevizualizar(data: any) {
     this.implementarFuentes()
     this.implementarPortada()
     this.generarTablaResumen()
     this.implementarIndicadoresDeServicio()
     this.implmentarConfiabilidad()
-    this.implementarAnalisis()
+    this.implementarAnalisis(data)
     this.implementarParametroA2MG()
     this.implementarConclusion()
     this.implementarTablaContenido()
+    this.previsualizar()
 
   }
 
