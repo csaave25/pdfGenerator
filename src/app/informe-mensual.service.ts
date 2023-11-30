@@ -46,13 +46,12 @@ export class InformeMensualService {
   contadorItem = 1
   listaContenido: Data[] = []
   tablaCriticidades = []
+  mesNum = 6
+  anoNum = 2023
 
   doc = new jsPDF('p', 'pt', 'letter')
 
   url: string = 'https://apps.emt.cl/api/images/alertas/alta';
-
-
-
 
   implementarFuentes() {
     this.doc.addFileToVFS("Lato-Font-bold.ttf", font);
@@ -364,12 +363,11 @@ export class InformeMensualService {
 
 
   implementarAnalisis(data: any) {
-
     const manejoData = () => {
       let tabla: any = []
       data.objects.alerts.forEach((dato: any) => {
         let fecha = new Date(dato.date).getMonth()
-        if ((fecha == 10) && !dato.fake) {
+        if ((fecha == this.mesNum) && !dato.fake) {
           function addZero(i: any) {
             if (i < 10) { i = "0" + i }
             return i;
@@ -452,8 +450,51 @@ export class InformeMensualService {
 
   }
 
-  implementarParametroA2MG() {
+  implementarParametroA2MG(dataMatrix: any, dataUltimosCambiosMatrix: any) {
 
+    let matrix: any = {
+      matrixNombre: [],
+      matrixLongitud: [],
+      matrixApertura: [],
+      matrixAreas: []
+    }
+
+    const colores = (nivel: string): [number, number, number] => {
+      if (nivel.includes('BAJA'))
+        return [146, 208, 80]
+
+      if (nivel.includes('MEDIA'))
+        return [255, 255, 0]
+
+      if (nivel.includes('ALTA'))
+        return [255, 0, 0]
+
+      return [146, 208, 80]
+    }
+
+    dataMatrix.objects.forEach((data: any) => {
+      matrix.matrixNombre.push([data.name]);
+      matrix.matrixLongitud.push([data.length_min, data.length_max])
+      matrix.matrixApertura.push([data.openning_min, data.openning_max])
+      matrix.matrixAreas.push([
+        { content: data.m1, styles: { fillColor: colores(data.m1) } },
+        { content: data.m2, styles: { fillColor: colores(data.m2) } },
+        { content: data.m3, styles: { fillColor: colores(data.m3) } },
+        { content: data.m4, styles: { fillColor: colores(data.m4) } }
+      ])
+
+    })
+
+    let ultimosCambios: any = []
+    dataUltimosCambiosMatrix.logs.forEach((data: any) => {
+
+      let fecha = new Date(data.date).getMonth()
+
+      if (fecha == this.mesNum) {
+        let fecha = new Date(data.date).toLocaleString()
+        ultimosCambios.push([fecha, data.user, data.before, data.current, data.column])
+      }
+    });
 
     if (this.usoPagina + 170 > this.totalUso)
       this.nuevaPagina()
@@ -471,36 +512,71 @@ export class InformeMensualService {
     this.doc.text(this.contadorItem + '. Registro de Cambios de Parámetros del A2MG', this.marginContent, this.usoPagina, { align: 'left', maxWidth: this.marginRight - this.marginContent })
     this.contadorItem++
 
+    let ultimoDiaMes = new Date(this.anoNum, this.mesNum + 1, 0);
     this.doc.setFontSize(11)
     this.doc.setTextColor(this.colores.negro)
     this.doc.setFont('Lato', 'normal')
-    this.doc.text('Matriz utilizada entre 01-10-2023 00:00 y 31-10-2023 23:59, no se registraron cambios.', this.marginContent, this.usoPagina + 30, { align: 'left', maxWidth: this.marginRight - this.marginContent })
 
-    const doc = this.doc
 
-    const colores = (nivel: string): [number, number, number] => {
-      if (nivel.includes('BAJA'))
-        return [146, 208, 80]
-
-      if (nivel.includes('MEDIA'))
-        return [255, 255, 0]
-
-      if (nivel.includes('ALTA'))
-        return [255, 0, 0]
-
-      return [146, 208, 80]
+    let index = 0
+    let lastTableHeight = 0
+    let page = 1
+    function addZero(i: any) {
+      if (i < 10) { i = "0" + i }
+      return i;
     }
 
+    if (ultimosCambios.length < 1) {
+      this.doc.text('Matriz utilizada entre 01-' + addZero(this.mesNum + 1) + '-' + this.anoNum + ' 00:00 y ' + ultimoDiaMes + '-' + this.mesNum + '-' + this.anoNum + ' 23:59, no se registraron cambios.', this.marginContent, this.usoPagina + 30, { align: 'left', maxWidth: this.marginRight - this.marginContent })
+
+    } else {
+      this.doc.text('Matriz utilizada entre 01-' + (this.mesNum + 1) + '-' + this.anoNum + ' 00:00 y ' + ultimoDiaMes + '-' + this.mesNum + '-' + this.anoNum + ' 23:59.', this.marginContent, this.usoPagina + 30, { align: 'left', maxWidth: this.marginRight - this.marginContent })
+
+      autoTable(this.doc, {
+        styles: { lineWidth: .1, halign: 'center', fontSize: 10, fillColor: undefined, lineColor: [1, 48, 51], textColor: [1, 48, 51] },
+        headStyles: { font: 'Lato', fontStyle: 'bold', fillColor: [217, 217, 217] },
+        head: [['Fecha', 'Usuario', 'Anterior', 'Actual', 'Columna']],
+        bodyStyles: { font: 'Lato', fontStyle: 'normal', fontSize: 9, fillColor: undefined },
+        body: ultimosCambios,
+        margin: { top: this.startcContent, left: this.marginContent, bottom: 80 },
+        alternateRowStyles: { fillColor: undefined },
+        startY: this.usoPagina + 60,
+        didDrawCell: (data) => {
+          if (page == data.pageCount) {
+            if (data.row.index != index) {
+              index = data.row.index
+              this.usoPagina += data.row.height
+            }
+          }
+        },
+
+        didDrawPage: (data) => {
+          if (data.pageNumber != 1) {
+            this.implementarFooter()
+            this.implementarHeader()
+          }
+          page++
+          lastTableHeight = this.usoPagina
+          this.usoPagina = 0
+        }
+      })
+
+    }
+
+
+
+    let doc = this.doc
+
     autoTable(doc, {
-      tableWidth: this.marginRight - this.marginContent,
+
       margin: { left: this.marginContent },
       styles: { halign: 'center', lineWidth: .1, fillColor: undefined, lineColor: [1, 48, 51], textColor: [1, 48, 51] },
       bodyStyles: { fillColor: undefined },
       headStyles: { fillColor: [217, 217, 217] },
       alternateRowStyles: { fillColor: undefined },
       head: [[{ content: 'Probabilidad de daño al esparcidor', styles: { cellWidth: 125, cellPadding: { top: 15, bottom: 15 } } }, { content: 'Longitud' }, { content: 'Apertura' }, { content: 'Áreas de criticidad' }]],
-      body: [['P1'], ['P2'], ['P3'], ['P4']],
-      startY: this.usoPagina + 60,
+      body: matrix.matrixNombre,
+      startY: this.usoPagina + lastTableHeight + this.startcContent + 30,
       didDrawCell: function (data) {
 
         if (data.cell.text[0].includes('Longitud')) {
@@ -511,12 +587,7 @@ export class InformeMensualService {
             margin: { left: data.cell.x },
             tableWidth: data.cell.width,
             head: [['Min\n[px]', 'Max\n[px]']],
-            body: [
-              ['0', '250'],
-              ['250', '500'],
-              ['500', '1000'],
-              ['1000', '1500']
-            ]
+            body: matrix.matrixLongitud
 
           })
         }
@@ -529,12 +600,7 @@ export class InformeMensualService {
             margin: { left: data.cell.x },
             tableWidth: data.cell.width,
             head: [['Min\n[px]', 'Max\n[px]']],
-            body: [
-              ['0', '5'],
-              ['5', '10'],
-              ['10', '15'],
-              ['15', '20']
-            ]
+            body: matrix.matrixApertura
 
           })
         }
@@ -548,24 +614,19 @@ export class InformeMensualService {
             margin: { left: data.cell.x },
             tableWidth: data.cell.width,
             head: [['A4', 'A3', 'A2', 'A1']],
-            body: [
-              [{ content: 'BAJA', styles: { fillColor: colores('BAJA') } }, { content: 'BAJA', styles: { fillColor: colores('BAJA') } }, { content: 'MEDIA', styles: { fillColor: colores('MEDIA') } }, { content: 'MEDIA', styles: { fillColor: colores('MEDIA') } }],
-              [{ content: 'BAJA', styles: { fillColor: colores('BAJA') } }, { content: 'MEDIA', styles: { fillColor: colores('MEDIA') } }, { content: 'MEDIA', styles: { fillColor: colores('MEDIA') } }, { content: 'MEDIA', styles: { fillColor: colores('MEDIA') } }],
-              [{ content: 'MEDIA', styles: { fillColor: colores('MEDIA') } }, { content: 'MEDIA', styles: { fillColor: colores('MEDIA') } }, { content: 'MEDIA', styles: { fillColor: colores('MEDIA') } }, { content: 'ALTA', styles: { fillColor: colores('ALTA') } }],
-              [{ content: 'MEDIA', styles: { fillColor: colores('MEDIA') } }, { content: 'MEDIA', styles: { fillColor: colores('MEDIA') } }, { content: 'ALTA', styles: { fillColor: colores('ALTA') } }, { content: 'ALTA', styles: { fillColor: colores('ALTA') } }],
-            ]
+            body: matrix.matrixAreas
 
           })
         }
       }
     })
 
-    this.usoPagina += 240
+    this.usoPagina += 240 + lastTableHeight + 80
   }
 
   implementarConclusion() {
 
-    if (this.usoPagina + 150 > this.totalUso)
+    if (this.usoPagina + 120 > this.totalUso)
       this.nuevaPagina()
 
     let contenido: Data = {
@@ -608,14 +669,14 @@ export class InformeMensualService {
     x!.document.close();
   }
 
-  onPrevizualizar(data: any) {
+  onPrevizualizar(data: any, dataMatrix: any, dataUltimosCambiosMatrix: any) {
     this.implementarFuentes()
     this.implementarPortada()
     this.generarTablaResumen()
     this.implementarIndicadoresDeServicio()
     this.implmentarConfiabilidad()
     this.implementarAnalisis(data)
-    this.implementarParametroA2MG()
+    this.implementarParametroA2MG(dataMatrix, dataUltimosCambiosMatrix)
     this.implementarConclusion()
     this.implementarTablaContenido()
     this.previsualizar()

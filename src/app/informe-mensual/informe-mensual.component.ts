@@ -17,6 +17,8 @@ export class InformeMensualComponent implements AfterViewInit, OnInit {
   }
 
   data:any
+  dataMatrix:any
+  dataUltimosCambiosMatrix:any
 
   ngOnInit(): void {      
     this.load()
@@ -24,14 +26,19 @@ export class InformeMensualComponent implements AfterViewInit, OnInit {
 
   load() {
     this.rq.getHttp().subscribe(dato => this.data = dato);
+    this.rq.getMatrix().subscribe(dato => this.dataMatrix = dato)
+    this.rq.getUltimosCambiosMatrix().subscribe(dato => this.dataUltimosCambiosMatrix = dato)
+
   }
+
+
 
   ngAfterViewInit(): void {
       // this.activarInforme()
   }
 
   activarInforme() {
-    this.informeService.onPrevizualizar(this.data)
+    this.informeService.onPrevizualizar(this.data,this.dataMatrix, this.dataUltimosCambiosMatrix)
     // console.log(this.data);
     
     // let string = this.informeService.doc.output('datauristring');
