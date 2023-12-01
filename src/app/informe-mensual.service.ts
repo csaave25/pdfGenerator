@@ -485,16 +485,16 @@ export class InformeMensualService {
 
     })
 
-    let ultimosCambios: any = []
-    dataUltimosCambiosMatrix.logs.forEach((data: any) => {
+    // let ultimosCambios: any = []
+    // dataUltimosCambiosMatrix.logs.forEach((data: any) => {
 
-      let fecha = new Date(data.date).getMonth()
+    //   let fecha = new Date(data.date).getMonth()
 
-      if (fecha == this.mesNum) {
-        let fecha = new Date(data.date).toLocaleString()
-        ultimosCambios.push([fecha, data.user, data.before, data.current, data.column])
-      }
-    });
+    //   if (fecha == this.mesNum) {
+    //     let fecha = new Date(data.date).toLocaleString()
+    //     ultimosCambios.push([fecha, data.user, data.before, data.current, data.column])
+    //   }
+    // });
 
     if (this.usoPagina + 170 > this.totalUso)
       this.nuevaPagina()
@@ -526,42 +526,44 @@ export class InformeMensualService {
       return i;
     }
 
-    if (ultimosCambios.length < 1) {
-      this.doc.text('Matriz utilizada entre 01-' + addZero(this.mesNum + 1) + '-' + this.anoNum + ' 00:00 y ' + ultimoDiaMes + '-' + this.mesNum + '-' + this.anoNum + ' 23:59, no se registraron cambios.', this.marginContent, this.usoPagina + 30, { align: 'left', maxWidth: this.marginRight - this.marginContent })
+    this.doc.text('Matriz utilizada entre 01-' + (this.mesNum + 1) + '-' + this.anoNum + ' 00:00 y ' + ultimoDiaMes + '-' + this.mesNum + '-' + this.anoNum + ' 23:59.', this.marginContent, this.usoPagina + 30, { align: 'left', maxWidth: this.marginRight - this.marginContent })
 
-    } else {
-      this.doc.text('Matriz utilizada entre 01-' + (this.mesNum + 1) + '-' + this.anoNum + ' 00:00 y ' + ultimoDiaMes + '-' + this.mesNum + '-' + this.anoNum + ' 23:59.', this.marginContent, this.usoPagina + 30, { align: 'left', maxWidth: this.marginRight - this.marginContent })
+    // if (ultimosCambios.length < 1) {
+    //   this.doc.text('Matriz utilizada entre 01-' + addZero(this.mesNum + 1) + '-' + this.anoNum + ' 00:00 y ' + ultimoDiaMes + '-' + this.mesNum + '-' + this.anoNum + ' 23:59, no se registraron cambios.', this.marginContent, this.usoPagina + 30, { align: 'left', maxWidth: this.marginRight - this.marginContent })
 
-      autoTable(this.doc, {
-        styles: { lineWidth: .1, halign: 'center', fontSize: 10, fillColor: undefined, lineColor: [1, 48, 51], textColor: [1, 48, 51] },
-        headStyles: { font: 'Lato', fontStyle: 'bold', fillColor: [217, 217, 217] },
-        head: [['Fecha', 'Usuario', 'Anterior', 'Actual', 'Columna']],
-        bodyStyles: { font: 'Lato', fontStyle: 'normal', fontSize: 9, fillColor: undefined },
-        body: ultimosCambios,
-        margin: { top: this.startcContent, left: this.marginContent, bottom: 80 },
-        alternateRowStyles: { fillColor: undefined },
-        startY: this.usoPagina + 60,
-        didDrawCell: (data) => {
-          if (page == data.pageCount) {
-            if (data.row.index != index) {
-              index = data.row.index
-              this.usoPagina += data.row.height
-            }
-          }
-        },
+    // } else {
+    //   this.doc.text('Matriz utilizada entre 01-' + (this.mesNum + 1) + '-' + this.anoNum + ' 00:00 y ' + ultimoDiaMes + '-' + this.mesNum + '-' + this.anoNum + ' 23:59.', this.marginContent, this.usoPagina + 30, { align: 'left', maxWidth: this.marginRight - this.marginContent })
 
-        didDrawPage: (data) => {
-          if (data.pageNumber != 1) {
-            this.implementarFooter()
-            this.implementarHeader()
-          }
-          page++
-          lastTableHeight = this.usoPagina
-          this.usoPagina = 0
-        }
-      })
+    //   autoTable(this.doc, {
+    //     styles: { lineWidth: .1, halign: 'center', fontSize: 10, fillColor: undefined, lineColor: [1, 48, 51], textColor: [1, 48, 51] },
+    //     headStyles: { font: 'Lato', fontStyle: 'bold', fillColor: [217, 217, 217] },
+    //     head: [['Fecha', 'Usuario', 'Anterior', 'Actual', 'Columna']],
+    //     bodyStyles: { font: 'Lato', fontStyle: 'normal', fontSize: 9, fillColor: undefined },
+    //     body: ultimosCambios,
+    //     margin: { top: this.startcContent, left: this.marginContent, bottom: 80 },
+    //     alternateRowStyles: { fillColor: undefined },
+    //     startY: this.usoPagina + 60,
+    //     didDrawCell: (data) => {
+    //       if (page == data.pageCount) {
+    //         if (data.row.index != index) {
+    //           index = data.row.index
+    //           this.usoPagina += data.row.height
+    //         }
+    //       }
+    //     },
 
-    }
+    //     didDrawPage: (data) => {
+    //       if (data.pageNumber != 1) {
+    //         this.implementarFooter()
+    //         this.implementarHeader()
+    //       }
+    //       page++
+    //       lastTableHeight = this.usoPagina
+    //       this.usoPagina = 0
+    //     }
+    //   })
+
+    // }
 
 
 
@@ -576,7 +578,7 @@ export class InformeMensualService {
       alternateRowStyles: { fillColor: undefined },
       head: [[{ content: 'Probabilidad de daño al esparcidor', styles: { cellWidth: 125, cellPadding: { top: 15, bottom: 15 } } }, { content: 'Longitud' }, { content: 'Apertura' }, { content: 'Áreas de criticidad' }]],
       body: matrix.matrixNombre,
-      startY: this.usoPagina + lastTableHeight + this.startcContent + 30,
+      startY: this.usoPagina + 65,
       didDrawCell: function (data) {
 
         if (data.cell.text[0].includes('Longitud')) {
