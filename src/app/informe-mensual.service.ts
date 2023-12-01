@@ -342,13 +342,12 @@ export class InformeMensualService {
     autoTable(this.doc, {
       styles: { lineWidth: .1, halign: 'center', fontSize: 10, cellWidth: 100, fillColor: undefined, lineColor: [1, 48, 51], textColor: [1, 48, 51] },
       headStyles: { font: 'Lato', fontStyle: 'bold', fillColor: [217, 217, 217] },
-      head: [['Parámetro', 'Valor']],
+      head: [['Parámetro', 'Valor [%]']],
       bodyStyles: { font: 'Lato', fontStyle: 'normal', fontSize: 9, fillColor: undefined },
       body: [
         ['Identificación', '100,00'],
         ['Clasificación', '100,00'],
         ['Comunicación', '100,00'],
-        ['Confiabilidad', '100,00'],
       ],
       margin: { top: this.usoPagina + 280, left: (((this.marginRight - (100 * 2) + this.marginContent) / 2)) },
       alternateRowStyles: { fillColor: undefined },
@@ -373,13 +372,18 @@ export class InformeMensualService {
             return i;
           }
           let d = new Date(dato.date)
-          let date = d.toLocaleString()
+          let date = d.toLocaleDateString()
           let h = addZero(d.getHours());
           let m = addZero(d.getMinutes());
           let s = addZero(d.getSeconds());
           let hora = h + ":" + m + ":" + s;
-          tabla.push([dato.camera, date, hora, dato.zonas, dato.id, dato.openning, dato.length])
-
+          tabla.push([
+            'Fecha: ' + date + '\nHora: ' + hora + '\n' + dato.id + '\nId: ' + dato.camera,
+            'IMAGEN',
+            'Zona: ' + dato.zonas +
+            '\nApertura [px]: ' + dato.openning +
+            '\nLongitud [px]: ' + dato.length,
+            'Comentarios  lorem lorem lorem'])
         }
       })
       return tabla
@@ -420,17 +424,20 @@ export class InformeMensualService {
       autoTable(this.doc, {
         styles: { lineWidth: .1, halign: 'center', fontSize: 10, fillColor: undefined, lineColor: [1, 48, 51], textColor: [1, 48, 51] },
         headStyles: { font: 'Lato', fontStyle: 'bold', fillColor: [217, 217, 217] },
-        head: [['Id Camara', 'Fecha', 'Hora', 'Zona', 'Grieta', 'Apertura', 'Longitud']],
+        head: [['fecha, Hora,\nCámara ', 'Imagen Grieta', 'Métricas', 'Obvservación']],
         bodyStyles: { font: 'Lato', fontStyle: 'normal', fontSize: 9, fillColor: undefined },
-        body: this.tablaCriticidades,
+        body: this.tablaCriticidades.reverse(),
         margin: { top: this.startcContent, left: this.marginContent, bottom: 80 },
         alternateRowStyles: { fillColor: undefined },
+        columnStyles: {2: {halign: 'left'}, 1: {cellWidth: 150}},
+        rowPageBreak: 'avoid',
         startY: this.usoPagina + 30,
         didDrawCell: (data) => {
           if (page == data.pageCount) {
             if (data.row.index != index) {
               index = data.row.index
               this.usoPagina += data.row.height
+
             }
           }
         },
@@ -678,8 +685,8 @@ export class InformeMensualService {
     this.implementarIndicadoresDeServicio()
     this.implmentarConfiabilidad()
     this.implementarAnalisis(data)
-    this.implementarParametroA2MG(dataMatrix, dataUltimosCambiosMatrix)
-    this.implementarConclusion()
+    // this.implementarParametroA2MG(dataMatrix, dataUltimosCambiosMatrix)
+    // this.implementarConclusion()
     this.implementarTablaContenido()
     this.previsualizar()
 
