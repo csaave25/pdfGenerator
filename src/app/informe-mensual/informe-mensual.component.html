@@ -1,7 +1,136 @@
-<div class="col-12" #preview style="height: 100vh; overflow: hidden;">
-</div>
-
-
-<div class=" mt-5 position-absolute top-50 start-50 translate-middle ">
-    <button type="button" class="btn btn-primary" (click)="activarInforme()" mdbRipple>Exportar</button>
+<!-- <div class="col-12" #preview style="height: 100vh; overflow: hidden;">
+</div> -->
+<div class="col-12 d-flex flex-column align-items-center ">
+    <div class="mt-4">
+        <h3>INFORME MENSUAL A2MG</h3>
+    </div>
+    <div class="mt-2 d-flex gap-2">
+        <button type="button" class="btn btn-primary" (click)="activarInforme()" mdbRipple>Exportar</button>
+        <button type="button" class="btn btn-primary" (click)="activarInforme()" mdbRipple>Descargar</button>
+    </div>
+    <div class="mt-4 d-flex col-8 justify-content-between">
+        <!-- <mdb-form-control>
+            <input mdbInput type="text" id="form1" class="form-control" />
+            <label mdbLabel class="form-label" for="form1">Example label</label>
+          </mdb-form-control> -->
+        <div>
+            <label mdbLabel class="form-label" for="mes">Mes y año</label>
+            <input mdbInput type="month" id="mes" class="form-control" />
+        </div>
+        <div>
+            <label mdbLabel class="form-label" for="elaborado">Elaborado</label>
+            <input mdbInput type="text" id="elaborado" class="form-control" />
+        </div>
+        <div>
+            <label mdbLabel class="form-label" for="Revisado">Revisado</label>
+            <input mdbInput type="text" id="Revisado" class="form-control" />
+        </div>
+        <div>
+            <label mdbLabel class="form-label" for="Aprobado">Aprobado</label>
+            <input mdbInput type="text" id="Aprobado" class="form-control" />
+        </div>
+    </div>
+    <div class="col-8 mt-4" *ngIf="dataCriticisadad && tablaDispo">
+        <div>
+            <h4>Disponibilidad del Sistema</h4>
+            <ul class="mt-3 d-flex flex-column gap-3">
+                <li class="d-flex gap-4 ">
+                    <p class="col-4">Servicio Web: {{tablaDispo.servicio_web}}</p>
+                    <mdb-form-control class="col-6">
+                        <textarea mdbInput class="form-control" id="textAreaExample" rows="1"></textarea>
+                        <label mdbLabel class="form-label" for="textAreaExample">Añadir comentario</label>
+                    </mdb-form-control>
+                </li>
+                <li class="d-flex gap-4 ">
+                    <p class="col-4">Servicio imágenes: {{tablaDispo.servicio_imagenes}}</p>
+                    <mdb-form-control class="col-6">
+                        <textarea mdbInput class="form-control" id="textAreaExample" rows="1"></textarea>
+                        <label mdbLabel class="form-label" for="textAreaExample">Añadir comentario</label>
+                    </mdb-form-control>
+                </li>
+                <li class="d-flex gap-4 ">
+                    <p class="col-4">Servicio base de datos:{{tablaDispo.servicio_db}}</p>
+                    <mdb-form-control class="col-6">
+                        <textarea mdbInput class="form-control" id="textAreaExample" rows="1"></textarea>
+                        <label mdbLabel class="form-label" for="textAreaExample">Añadir comentario</label>
+                    </mdb-form-control>
+                </li>
+                <li class="d-flex gap-4 ">
+                    <p class="col-4">Servicio API: {{tablaDispo.servicio_api}}</p>
+                    <mdb-form-control class="col-6">
+                        <textarea mdbInput class="form-control" id="textAreaExample" rows="1"></textarea>
+                        <label mdbLabel class="form-label" for="textAreaExample">Añadir comentario</label>
+                    </mdb-form-control>
+                </li>
+                <li class="d-flex gap-4 ">
+                    <p class="col-4">Servicio de computo: {{tablaDispo.servicio_computo}}</p>
+                    <mdb-form-control class="col-6">
+                        <textarea mdbInput class="form-control" id="textAreaExample" rows="1"></textarea>
+                        <label mdbLabel class="form-label" for="textAreaExample">Añadir comentario</label>
+                    </mdb-form-control>
+                </li>
+                <li class="d-flex gap-4 ">
+                    <p class="col-4">Sistema de adquisición de imágenes: {{tablaDispo.sistema_adquisicion_imagenes}}</p>
+                    <mdb-form-control class="col-6">
+                        <textarea mdbInput class="form-control" id="textAreaExample" rows="1"></textarea>
+                        <label mdbLabel class="form-label" for="textAreaExample">Añadir comentario</label>
+                    </mdb-form-control>
+                </li>
+                <li class="d-flex gap-4 ">
+                    <p class="col-4">Enlace dedicado AMSA: {{tablaDispo.enlace_dedicado}}</p>
+                    <mdb-form-control class="col-6">
+                        <textarea mdbInput class="form-control" id="textAreaExample" rows="1"></textarea>
+                        <label mdbLabel class="form-label" for="textAreaExample">Añadir comentario</label>
+                    </mdb-form-control>
+                </li>
+            </ul>
+        </div>
+        <div>
+            <h4>Confiabilidad</h4>
+            <ul class="mt-3 d-flex flex-column gap-3">
+                <li class="d-flex ">
+                    <p class="col-2">Identificación:</p>
+                    <mdb-form-control class="col-2">
+                        <input type="number" id="Identificación" class="form-control" />
+                        <label mdbLabel class="form-label" for="Identificación">Porcentaje</label>
+                    </mdb-form-control>
+                </li>
+                <li class="d-flex  ">
+                    <p class="col-2">Clasificación:</p>
+                    <mdb-form-control class="col-2">
+                        <input type="number" id="Clasificación" class="form-control" />
+                        <label mdbLabel class="form-label" for="Clasificación">Porcentaje</label>
+                    </mdb-form-control>
+                </li>
+                <li class="d-flex  ">
+                    <p class="col-2">Comunicación:</p>
+                    <mdb-form-control class="col-2">
+                        <input type="number" id="Porcentaje" class="form-control" />
+                        <label mdbLabel class="form-label" for="Comunicación">Porcentaje</label>
+                    </mdb-form-control>
+                </li>
+            </ul>
+        </div>
+        <div>
+            <h4>Análisis de Criticidades</h4>
+            <div class="d-flex flex-wrap gap-5">
+                <div class="col-5" *ngFor="let criticidad of dataCriticisadad">
+                    <div class="border border-primary p-2">
+                        <p>Fecha: {{criticidad.date}}</p>
+                        <p>{{criticidad.id}}</p>
+                        <p>Camara:{{criticidad.camera}}</p>
+                        <label class="form-label" for="customFile">Imagen Grieta</label>
+                        <input type="file" class="form-control" id="customFile" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="my-4">
+            <h4>Conclusiones y recomendaciones</h4>
+            <mdb-form-control>
+                <textarea mdbInput class="form-control" id="text2" rows="5"></textarea>
+                <label mdbLabel class="form-label" for="text2">Añadir comentario</label>
+            </mdb-form-control>
+        </div>
+    </div>
 </div>

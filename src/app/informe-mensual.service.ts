@@ -22,7 +22,7 @@ interface Data {
 export class InformeMensualService {
 
 
-  constructor(private consulta: ConsultasService, private http: HttpClient) { }
+  constructor() { }
 
 
   colores = {
@@ -46,8 +46,9 @@ export class InformeMensualService {
   contadorItem = 1
   listaContenido: Data[] = []
   tablaCriticidades = []
-  mesNum = 6
+  mesNum = 10
   anoNum = 2023
+
 
   doc = new jsPDF('p', 'pt', 'letter')
 
@@ -67,7 +68,8 @@ export class InformeMensualService {
   }
 
   implementarPortada() {
-
+    let mes = new Date(this.anoNum, this.mesNum, 1).toLocaleString('default', { month: 'long' });
+    mes = mes.charAt(0).toUpperCase() + mes.slice(1);
     let altura = 246
     let margenIzq = this.marginLeft + 72
     this.doc.addImage("assets/images/image2.jpg", 'JPG', 0, 0, 612, 792, 'marca', 'SLOW');
@@ -84,7 +86,7 @@ export class InformeMensualService {
     this.doc.text(dataInforme.faena, margenIzq, altura + 70, { align: 'left' });
     this.doc.setTextColor(this.colores.blanco)
     this.doc.setFontSize(12)
-    this.doc.text(dataInforme.fecha, margenIzq + 320, altura + 174, { align: 'left' });
+    this.doc.text(mes + ' ' + this.anoNum, margenIzq + 320, altura + 174, { align: 'left' });
   }
 
 
@@ -102,6 +104,8 @@ export class InformeMensualService {
   }
 
   implementarHeader() {
+    let mes = new Date(this.anoNum, this.mesNum, 1).toLocaleString('default', { month: 'long' });
+    mes = mes.charAt(0).toUpperCase() + mes.slice(1);
     // this.doc.addImage("assets/images/logo.png", 'PNG', this.marginLeft , 20, 222, 69, 'logo', 'SLOW'); LOGO CON PORTE IGUAL AL DE PORTADA
     this.doc.addImage("assets/images/logo.png", 'PNG', this.marginLeft, this.startPage, 160, 50, 'logo', 'SLOW');
     this.doc.setFontSize(8)
@@ -110,12 +114,14 @@ export class InformeMensualService {
     this.doc.text('Informe Mensual', this.marginRight, this.startPage + 12, { align: 'right' })
     this.doc.setTextColor(this.colores.negro)
     this.doc.text('Monitoreo de Ripios Aplicación A2MG', this.marginRight, this.startPage + 24, { align: 'right' })
-    this.doc.text('Octubre 2023', this.marginRight, this.startPage + 36, { align: 'right' })
+    this.doc.text(mes + ' ' + this.anoNum, this.marginRight, this.startPage + 36, { align: 'right' })
   }
 
 
 
   generarTablaResumen() {
+    let mes = new Date(this.anoNum, this.mesNum, 1).toLocaleString('default', { month: 'long' });
+    mes = mes.charAt(0).toUpperCase() + mes.slice(1);
 
     this.doc.addPage()
     this.doc.addImage("assets/images/marca.jpg", 'JPG', 0, 0, 612, 792, 'marca2', 'SLOW');
@@ -136,7 +142,7 @@ export class InformeMensualService {
     this.doc.text(dataInforme.faena, margenIzq, altura + 70, { align: 'left' });
     this.doc.setTextColor(this.colores.azul)
     this.doc.setFontSize(12)
-    this.doc.text(dataInforme.fecha, margenIzq + 300, altura + 174, { align: 'left' });
+    this.doc.text(mes + ' ' + this.anoNum, margenIzq + 300, altura + 174, { align: 'left' });
 
 
     autoTable(this.doc, {
@@ -207,7 +213,9 @@ export class InformeMensualService {
     })
   }
 
-  implementarIndicadoresDeServicio() {
+  implementarIndicadoresDeServicio(tablaDispo: any) {
+    console.log(tablaDispo);
+    
 
     let contenido: Data = {
       titulo: this.contadorItem + '. Indicadores de Servicio',
@@ -233,7 +241,7 @@ export class InformeMensualService {
     this.contadorItem++
     this.doc.setFont('Lato', 'normal')
     this.doc.setFontSize(11)
-    this.doc.text('La disponibilidad del sistema, indica cuánto tiempo este está operativo con respecto al tiempo programado de funcionamiento. La fórmula para calcular la disponibilidad es:', this.marginContent, this.startcContent + 60, { align: 'left', maxWidth: this.marginRight - this.marginContent })
+    this.doc.text('La disponibilidad del sistema, indica cuánto tiempo este está operativo con respecto al tiempo programado de funcionamiento. La fórmula para calcular la disponibilidad es:', this.marginContent, this.startcContent + 60, { align: 'justify', maxWidth: this.marginRight - this.marginContent })
 
 
     //formula
@@ -257,7 +265,7 @@ export class InformeMensualService {
 
     this.doc.setFont('Lato', 'normal')
     this.doc.setFontSize(11)
-    this.doc.text('Los componentes del sistema de monitoreo corresponden a Infraestructura EMT (servicio web, imágenes, base de datos, API y computo), Infraestructura ANT (sistema de adquisición de imágenes) y Enlaces (Dedicado AMSA). A continuación, en la TABLA 1 se presenta la disponibilidad del sistema. ', this.marginContent, this.startcContent + 190, { align: 'left', maxWidth: this.marginRight - this.marginContent })
+    this.doc.text('Los componentes del sistema de monitoreo corresponden a Infraestructura EMT (servicio web, imágenes, base de datos, API y computo), Infraestructura ANT (sistema de adquisición de imágenes) y Enlaces (Dedicado AMSA). A continuación, en la TABLA 1 se presenta la disponibilidad del sistema. ', this.marginContent, this.startcContent + 190, { maxWidth: this.marginRight - this.marginContent, align: 'justify' })
 
     this.doc.text('La disponibilidad comprometida corresponde al 95% para el caso de Infraestructura EMT.', this.marginContent, this.startcContent + 250, { align: 'left', maxWidth: this.marginRight - this.marginContent })
 
@@ -270,19 +278,19 @@ export class InformeMensualService {
       tableWidth: this.marginRight - this.marginContent,
       styles: { fontSize: 10, lineWidth: .1, fillColor: undefined, lineColor: [1, 48, 51], textColor: [1, 48, 51] },
       headStyles: { font: 'Lato', fontStyle: 'bold', fillColor: [217, 217, 217], halign: 'center' },
-      head: [['Indicador', 'Disponibilidad [%]', 'Observaciones']],
+      head: [[{ content: 'Indicador', styles: { minCellWidth: 250 } }, 'Disponibilidad [%]', 'Observaciones']],
       bodyStyles: { font: 'Lato', fontStyle: 'normal', fontSize: 9, fillColor: undefined, halign: 'left' },
       body: [
-        [{ content: 'Infraestructura EMT', styles: { minCellWidth: 200, font: 'Lato', fontStyle: 'bold', fillColor: [218, 218, 217], cellPadding: { left: 50, top: 5 } } }, { content: '98,40', styles: { font: 'Lato', fontStyle: 'bold', fillColor: [218, 218, 217], halign: 'center' } }, { content: '', styles: { fillColor: [218, 218, 217] } }],
-        [{ content: 'Servicio web', styles: { halign: 'left', cellPadding: { left: 75, top: 5 } } }, { content: '99,99', styles: { halign: 'center' } }, ''],
-        [{ content: 'Servicio imágenes', styles: { halign: 'left', cellPadding: { left: 75, top: 5 } } }, { content: '100,00', styles: { halign: 'center' } }, ''],
-        [{ content: 'Servicio base de datos', styles: { halign: 'left', cellPadding: { left: 75, top: 5 } } }, { content: '100,00', styles: { halign: 'center' } }, ''],
-        [{ content: 'Servicio API', styles: { halign: 'left', cellPadding: { left: 75, top: 5 } } }, { content: '100,00', styles: { halign: 'center' } }, ''],
-        [{ content: 'Servicio de computo', styles: { halign: 'left', cellPadding: { left: 75, top: 5 } } }, { content: '92,00', styles: { halign: 'center' } }, ''],
-        [{ content: 'Infraestructura ANT', styles: { font: 'Lato', fontStyle: 'bold', fillColor: [218, 218, 217], cellPadding: { left: 50, top: 5 } } }, { content: '90,11', styles: { font: 'Lato', fontStyle: 'bold', fillColor: [218, 218, 217], halign: 'center' } }, { content: '', styles: { fillColor: [218, 218, 217] } }],
-        [{ content: 'Sistema de adquisición de imágenes', styles: { halign: 'left', cellPadding: { left: 75, top: 5 } } }, { content: '90,01', styles: { halign: 'center' } }, ''],
-        [{ content: ' Enlaces', styles: { font: 'Lato', fontStyle: 'bold', fillColor: [218, 218, 217], cellPadding: { left: 50, top: 5 } } }, { content: '99,06', styles: { font: 'Lato', fontStyle: 'bold', fillColor: [218, 218, 217], halign: 'center' } }, { content: '', styles: { fillColor: [218, 218, 217] } }],
-        [{ content: 'Enlace dedicado AMSA', styles: { halign: 'left', cellPadding: { left: 75, top: 5 } } }, { content: '99,06', styles: { halign: 'center' } }, ''],
+        [{ content: 'Infraestructura EMT', styles: { minCellWidth: 200, font: 'Lato', fontStyle: 'bold', fillColor: [218, 218, 217], cellPadding: { left: 50, top: 5 } } }, { content: tablaDispo.infraestructura, styles: { font: 'Lato', fontStyle: 'bold', fillColor: [218, 218, 217], halign: 'center' } }, { content: '', styles: { fillColor: [218, 218, 217] } }],
+        [{ content: 'Servicio web', styles: { halign: 'left', cellPadding: { left: 75, top: 5 } } }, { content: tablaDispo.servicio_web, styles: { halign: 'center' } }, ''],
+        [{ content: 'Servicio imágenes', styles: { halign: 'left', cellPadding: { left: 75, top: 5 } } }, { content: tablaDispo.servicio_imagenes, styles: { halign: 'center' } }, ''],
+        [{ content: 'Servicio base de datos', styles: { halign: 'left', cellPadding: { left: 75, top: 5 } } }, { content: tablaDispo.servicio_db, styles: { halign: 'center' } }, ''],
+        [{ content: 'Servicio API', styles: { halign: 'left', cellPadding: { left: 75, top: 5 } } }, { content: tablaDispo.servicio_api, styles: { halign: 'center' } }, ''],
+        [{ content: 'Servicio de computo', styles: { halign: 'left', cellPadding: { left: 75, top: 5 } } }, { content: tablaDispo.servicio_computo, styles: { halign: 'center' } }, ''],
+        [{ content: 'Infraestructura ANT', styles: { font: 'Lato', fontStyle: 'bold', fillColor: [218, 218, 217], cellPadding: { left: 50, top: 5 } } }, { content: tablaDispo.sistema_adquisicion_imagenes, styles: { font: 'Lato', fontStyle: 'bold', fillColor: [218, 218, 217], halign: 'center' } }, { content: '', styles: { fillColor: [218, 218, 217] } }],
+        [{ content: 'Sistema de adquisición de imágenes', styles: { halign: 'left', cellPadding: { left: 75, top: 5 } } }, { content: tablaDispo.sistema_adquisicion_imagenes, styles: { halign: 'center' } }, ''],
+        [{ content: ' Enlaces', styles: { font: 'Lato', fontStyle: 'bold', fillColor: [218, 218, 217], cellPadding: { left: 50, top: 5 } } }, { content: tablaDispo.enlace_dedicado, styles: { font: 'Lato', fontStyle: 'bold', fillColor: [218, 218, 217], halign: 'center' } }, { content: '', styles: { fillColor: [218, 218, 217] } }],
+        [{ content: 'Enlace dedicado AMSA', styles: { halign: 'left', cellPadding: { left: 75, top: 5 } } }, { content: tablaDispo.enlace_dedicado, styles: { halign: 'center' } }, ''],
 
       ],
       margin: { top: this.startcContent + 285, left: this.marginContent },
@@ -362,29 +370,27 @@ export class InformeMensualService {
 
 
   implementarAnalisis(data: any) {
+    function addZero(i: any) {
+      if (i < 10) { i = "0" + i }
+      return i;
+    }
     const manejoData = () => {
       let tabla: any = []
-      data.objects.alerts.forEach((dato: any) => {
-        let fecha = new Date(dato.date).getMonth()
-        if ((fecha == this.mesNum) && !dato.fake) {
-          function addZero(i: any) {
-            if (i < 10) { i = "0" + i }
-            return i;
-          }
-          let d = new Date(dato.date)
-          let date = d.toLocaleDateString()
-          let h = addZero(d.getHours());
-          let m = addZero(d.getMinutes());
-          let s = addZero(d.getSeconds());
-          let hora = h + ":" + m + ":" + s;
-          tabla.push([
-            'Fecha: ' + date + '\nHora: ' + hora + '\n' + dato.id + '\nId: ' + dato.camera,
-            'IMAGEN',
-            'Zona: ' + dato.zonas +
-            '\nApertura [px]: ' + dato.openning +
-            '\nLongitud [px]: ' + dato.length,
-            'Comentarios  lorem lorem lorem'])
-        }
+      data.forEach((dato: any) => {
+        let d = new Date(dato.date)
+        let date = d.toLocaleDateString()
+        let h = addZero(d.getHours());
+        let m = addZero(d.getMinutes());
+        let s = addZero(d.getSeconds());
+        let hora = h + ":" + m + ":" + s;
+        tabla.push([
+          'Fecha: ' + date + '\nHora: ' + hora + '\n' + dato.id + '\nId: ' + dato.camera,
+          '',
+          'Zona: ' + dato.zonas +
+          '\nApertura [px]: ' + dato.openning +
+          '\nLongitud [px]: ' + dato.length,
+          ''])
+
       })
       return tabla
     }
@@ -425,14 +431,23 @@ export class InformeMensualService {
         styles: { lineWidth: .1, halign: 'center', fontSize: 10, fillColor: undefined, lineColor: [1, 48, 51], textColor: [1, 48, 51] },
         headStyles: { font: 'Lato', fontStyle: 'bold', fillColor: [217, 217, 217] },
         head: [['fecha, Hora,\nCámara ', 'Imagen Grieta', 'Métricas', 'Obvservación']],
-        bodyStyles: { font: 'Lato', fontStyle: 'normal', fontSize: 9, fillColor: undefined },
+        bodyStyles: { font: 'Lato', fontStyle: 'normal', fontSize: 9, fillColor: undefined, minCellHeight: 75 },
         body: this.tablaCriticidades.reverse(),
         margin: { top: this.startcContent, left: this.marginContent, bottom: 80 },
         alternateRowStyles: { fillColor: undefined },
-        columnStyles: {2: {halign: 'left'}, 1: {cellWidth: 150}},
+        columnStyles: { 3: { halign: 'left' }, 2: { halign: 'left', minCellWidth: 90 }, 1: { cellWidth: 150 }, 0: { minCellWidth: 90 } },
         rowPageBreak: 'avoid',
         startY: this.usoPagina + 30,
         didDrawCell: (data) => {
+          if (data.column.index == 1 && data.cell.section == 'body') {
+            let width = data.cell.width - 20;
+            let height = data.cell.height - 10
+            let x = data.cell.x + 10
+            let y = data.cell.y + 5
+            this.doc.addImage("assets/images/imggrieta.png", x, y, width, 65);
+          }
+
+
           if (page == data.pageCount) {
             if (data.row.index != index) {
               index = data.row.index
@@ -478,9 +493,11 @@ export class InformeMensualService {
 
       return [146, 208, 80]
     }
+    let ab = 'aa'
+
 
     dataMatrix.objects.forEach((data: any) => {
-      matrix.matrixNombre.push([data.name]);
+      matrix.matrixNombre.push([data.name.toUpperCase()]);
       matrix.matrixLongitud.push([data.length_min, data.length_max])
       matrix.matrixApertura.push([data.openning_min, data.openning_max])
       matrix.matrixAreas.push([
@@ -577,13 +594,13 @@ export class InformeMensualService {
     let doc = this.doc
 
     autoTable(doc, {
-
       margin: { left: this.marginContent },
       styles: { halign: 'center', lineWidth: .1, fillColor: undefined, lineColor: [1, 48, 51], textColor: [1, 48, 51] },
       bodyStyles: { fillColor: undefined },
       headStyles: { fillColor: [217, 217, 217] },
       alternateRowStyles: { fillColor: undefined },
       head: [[{ content: 'Probabilidad de daño al esparcidor', styles: { cellWidth: 125, cellPadding: { top: 15, bottom: 15 } } }, { content: 'Longitud' }, { content: 'Apertura' }, { content: 'Áreas de criticidad' }]],
+      columnStyles: { 0: { fillColor: [217, 217, 217] } },
       body: matrix.matrixNombre,
       startY: this.usoPagina + 65,
       didDrawCell: function (data) {
@@ -630,7 +647,7 @@ export class InformeMensualService {
       }
     })
 
-    this.usoPagina += 240 + lastTableHeight + 80
+    this.usoPagina += 240 + lastTableHeight
   }
 
   implementarConclusion() {
@@ -655,7 +672,7 @@ export class InformeMensualService {
     this.doc.setFontSize(11)
     this.doc.setTextColor(this.colores.negro)
     this.doc.setFont('Lato', 'normal')
-    this.doc.text('Con respecto a la disponibilidad de la Infraestructura EMT se cumple con los parámetros establecidos. El servicio se entregó de manera continua y sin incidentes. \n\nSe realiza el monitoreo de acuerdo a lo establecido y con base en los registros de la aplicación A2MG, se puede indicar que no se registran grietas que comprometan la estabilidad de los taludes. Las grietas registradas como alta criticidad que corresponden a falsos positivos se registran e identifican para mejorar el sistema, y así puedan ser eliminadas en próximas versiones. \n \nNo se detectan grietas de criticidad alta asociada a alguna condición de fallamiento de terreno ', this.marginContent, this.usoPagina + 30, { align: 'left', maxWidth: this.marginRight - this.marginContent })
+    this.doc.text('Con respecto a la disponibilidad de la Infraestructura EMT se cumple con los parámetros establecidos. El servicio se entregó de manera continua y sin incidentes. \n\nSe realiza el monitoreo de acuerdo a lo establecido y con base en los registros de la aplicación A2MG, se puede indicar que no se registran grietas que comprometan la estabilidad de los taludes. Las grietas registradas como alta criticidad que corresponden a falsos positivos se registran e identifican para mejorar el sistema, y así puedan ser eliminadas en próximas versiones. \n \nNo se detectan grietas de criticidad alta asociada a alguna condición de fallamiento de terreno ', this.marginContent, this.usoPagina + 30, { align: 'justify', maxWidth: this.marginRight - this.marginContent })
 
     this.usoPagina += 150
   }
@@ -678,15 +695,15 @@ export class InformeMensualService {
     x!.document.close();
   }
 
-  onPrevizualizar(data: any, dataMatrix: any, dataUltimosCambiosMatrix: any) {
+  onPrevizualizar(data: any, dataMatrix: any, dataUltimosCambiosMatrix: any, tablaDispo: any) {
     this.implementarFuentes()
     this.implementarPortada()
     this.generarTablaResumen()
-    this.implementarIndicadoresDeServicio()
+    this.implementarIndicadoresDeServicio(tablaDispo)
     this.implmentarConfiabilidad()
     this.implementarAnalisis(data)
-    // this.implementarParametroA2MG(dataMatrix, dataUltimosCambiosMatrix)
-    // this.implementarConclusion()
+    this.implementarParametroA2MG(dataMatrix, dataUltimosCambiosMatrix)
+    this.implementarConclusion()
     this.implementarTablaContenido()
     this.previsualizar()
 
