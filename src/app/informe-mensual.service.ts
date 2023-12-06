@@ -7,6 +7,7 @@ import { ConsultasService } from './consultas.service';
 import { Observable, retry } from 'rxjs'
 import { HttpClient } from '@angular/common/http';
 import { FormGroup } from '@angular/forms';
+import { justify } from './justifyText';
 
 
 
@@ -196,7 +197,10 @@ export class InformeMensualService {
   }
 
   implementarTablaContenido() {
+
     this.doc.insertPage(3)
+    this.doc.addImage("assets/images/marca.jpg", 'JPG', 0, 0, 612, 792, 'marca-x', 'SLOW');
+
     this.contadorPagina = 1
     this.implementarFooter()
     this.implementarHeader()
@@ -258,7 +262,9 @@ export class InformeMensualService {
     this.contadorItem++
     this.doc.setFont('Lato', 'normal')
     this.doc.setFontSize(11)
-    this.doc.text('La disponibilidad del sistema, indica cuánto tiempo este está operativo con respecto al tiempo programado de funcionamiento. La fórmula para calcular la disponibilidad es:', this.marginContent, this.startcContent + 60, { align: 'justify', maxWidth: this.marginRight - this.marginContent })
+    let text1 = 'La disponibilidad del sistema, indica cuánto tiempo este está operativo con respecto al tiempo programado de funcionamiento. La fórmula para calcular la disponibilidad es:'
+    justify(this.doc, text1, this.marginContent, this.startcContent + 60, this.marginRight - this.marginContent)
+    // this.doc.text('', this.marginContent, this.startcContent + 60, { align: 'justify', maxWidth: this.marginRight - this.marginContent })
 
 
     //formula
@@ -274,15 +280,17 @@ export class InformeMensualService {
     this.doc.line(this.marginContent + 190, this.startcContent + 128, this.marginContent + 270, this.startcContent + 128)
     this.doc.setFontSize(12)
     this.doc.text('=', this.marginContent + 280, this.startcContent + 130, { align: 'left' })
-    this.doc.text('Efectivo+Demoras+Reserva', this.marginContent + 306, this.startcContent + 120, { align: 'left' })
+    this.doc.text('Efectivo+Demoras+Reserva', this.marginContent + 306, this.startcContent + 120, { align: 'left', })
     this.doc.text('Tiempo', this.marginContent + 345, this.startcContent + 144, { align: 'left' })
     this.doc.setFontSize(9)
-    this.doc.text('nominal', this.marginContent + 383, this.startcContent + 148, { align: 'left' })
+    this.doc.text('nominal', this.marginContent + 383, this.startcContent + 148, { align: 'left', maxWidth: this.marginRight - this.marginContent })
     this.doc.line(this.marginContent + 300, this.startcContent + 128, this.marginContent + 450, this.startcContent + 128)
 
     this.doc.setFont('Lato', 'normal')
     this.doc.setFontSize(11)
-    this.doc.text('Los componentes del sistema de monitoreo corresponden a Infraestructura EMT (servicio web, imágenes, base de datos, API y computo), Infraestructura ANT (sistema de adquisición de imágenes) y Enlaces (Dedicado AMSA). A continuación, en la TABLA 1 se presenta la disponibilidad del sistema. ', this.marginContent, this.startcContent + 190, { maxWidth: this.marginRight - this.marginContent, align: 'justify' })
+    text1 = 'Los componentes del sistema de monitoreo corresponden a Infraestructura EMT (servicio web, imágenes, base de datos, API y cómputo), Infraestructura ANT (sistema de adquisición de imágenes) y Enlaces (Dedicado AMSA). A continuación, en la TABLA 1 se presenta la disponibilidad del sistema. '
+    justify(this.doc, text1, this.marginContent, this.startcContent + 190, this.marginRight - this.marginContent)
+    // this.doc.text('', this.marginContent, this.startcContent + 190, { align: 'justify', maxWidth: this.marginRight - this.marginContent,  })
 
     this.doc.text('La disponibilidad comprometida corresponde al 95% para el caso de Infraestructura EMT.', this.marginContent, this.startcContent + 250, { align: 'left', maxWidth: this.marginRight - this.marginContent })
 
@@ -323,7 +331,7 @@ export class InformeMensualService {
     let valor1 = inputs.controls['confiabilidad'].value.identificacion
     let valor2 = inputs.controls['confiabilidad'].value.clasificacion
     let valor3 = inputs.controls['confiabilidad'].value.comunicacion
-    let promedio = (valor1 + valor2 + valor3) / 3
+    let promedio = ((valor1 + valor2 + valor3) / 3)?.toFixed(2)
 
     if (this.usoPagina + 445 > this.totalUso)
       this.nuevaPagina()
@@ -345,18 +353,24 @@ export class InformeMensualService {
     this.doc.setFontSize(11)
     this.doc.setTextColor(this.colores.negro)
     this.doc.setFont('Lato', 'normal')
-    this.doc.text('La confiabilidad del servicio, cuantifica la cantidad de grietas alertadas anticipadamente con el sistema de monitoreo disponible, en función a la cantidad de grietas formadas en el área de cobertura asociada a la operación del esparcidor. ', this.marginContent, this.usoPagina + 30, { align: 'left', maxWidth: this.marginRight - this.marginContent })
+    let text = 'La confiabilidad del servicio, cuantifica la cantidad de grietas alertadas anticipadamente con el sistema de monitoreo disponible, en función a la cantidad de grietas formadas en el área de cobertura asociada a la operación del esparcidor. '
+    justify(this.doc, text, this.marginContent, this.usoPagina + 30, this.marginRight - this.marginContent)
+    // this.doc.text('', this.marginContent, this.usoPagina + 30, { align: 'left', maxWidth: this.marginRight - this.marginContent })
     this.doc.text('Dentro de los parámetros a considerar están:', this.marginContent, this.usoPagina + 90, { align: 'left', maxWidth: this.marginRight - this.marginContent })
 
     this.doc.setFont('Lato', 'bold')
     this.doc.text('• Identificación :', this.marginContent + 30, this.usoPagina + 120, { align: 'left', maxWidth: this.marginRight - this.marginContent })
     this.doc.setFont('Lato', 'normal')
-    this.doc.text('mide el porcentaje de agrietamientos detectados (como conjunto, no individualmente).', this.doc.getTextWidth('• Identificación :') + 40 + this.marginContent, this.usoPagina + 120, { align: 'left', maxWidth: this.marginRight - this.marginContent - 150 })
+    text = 'mide el porcentaje de agrietamientos detectados (como conjunto, no individualmente).'
+    justify(this.doc, text, this.doc.getTextWidth('• Identificación :') + 40 + this.marginContent, this.usoPagina + 120, this.marginRight - this.marginContent - 150 )
+    this.doc.text('', this.doc.getTextWidth('• Identificación :') + 40 + this.marginContent, this.usoPagina + 120, { align: 'left', maxWidth: this.marginRight - this.marginContent - 150 })
 
     this.doc.setFont('Lato', 'bold')
     this.doc.text('• Clasificación :', this.marginContent + 30, this.startcContent + 160, { align: 'left', maxWidth: this.marginRight - this.marginContent })
     this.doc.setFont('Lato', 'normal')
-    this.doc.text('se refiere a la capacidad de asignar correctamente la criticidad a las grietas.', this.doc.getTextWidth('• Identificación :') + 40 + this.marginContent, this.usoPagina + 160, { align: 'left', maxWidth: this.marginRight - this.marginContent - 150 })
+    text = 'se refiere a la capacidad de asignar correctamente la criticidad a las grietas.'
+    justify(this.doc, text, this.doc.getTextWidth('• Identificación :') + 40 + this.marginContent, this.usoPagina + 160, this.marginRight - this.marginContent - 150 )
+    // this.doc.text('', this.doc.getTextWidth('• Identificación :') + 40 + this.marginContent, this.usoPagina + 160, { align: 'left', maxWidth: this.marginRight - this.marginContent - 150 })
 
     this.doc.setFont('Lato', 'bold')
     this.doc.text('• Comunicación :', this.marginContent + 30, this.usoPagina + 200, { align: 'left', maxWidth: this.marginRight - this.marginContent })
@@ -364,7 +378,7 @@ export class InformeMensualService {
     this.doc.text('correcto aviso de EMT a ANT ante una grieta de criticidad alta.', this.doc.getTextWidth('• Identificación :') + 40 + this.marginContent, this.usoPagina + 200, { align: 'left', maxWidth: this.marginRight - this.marginContent - 150 })
 
 
-    this.doc.text('La confiabilidad del servicio durante el periodo fue del 100%, el cual se desglosa en la TABLA ' + this.contadorTabla + ' a continuación.', this.marginContent, this.usoPagina + 230, { align: 'left', maxWidth: this.marginRight - this.marginContent })
+    this.doc.text('La confiabilidad del servicio durante el periodo fue del ' + promedio + '%, el cual se desglosa en la TABLA ' + this.contadorTabla + ' a continuación.', this.marginContent, this.usoPagina + 230, { align: 'left', maxWidth: this.marginRight - this.marginContent })
 
     this.doc.setFontSize(8)
     this.doc.setFont('Lato', 'normal')
@@ -377,14 +391,14 @@ export class InformeMensualService {
       head: [['Parámetro', 'Valor [%]']],
       bodyStyles: { font: 'Lato', fontStyle: 'normal', fontSize: 9, fillColor: undefined },
       body: [
-        ['Identificación', valor1],
-        ['Clasificación', valor2],
-        ['Comunicación', valor3],
+        ['Identificación', valor1?.toFixed(2)],
+        ['Clasificación', valor2?.toFixed(2)],
+        ['Comunicación', valor3?.toFixed(2)],
       ],
       margin: { top: this.usoPagina + 280, left: (((this.marginRight - (100 * 2) + this.marginContent) / 2)) },
       alternateRowStyles: { fillColor: undefined },
       footStyles: { fillColor: [217, 217, 217] },
-      foot: [['Confiabilidad', promedio.toString().match(/^-?\d+(?:\.\d{0,2})?/)![0]]]
+      foot: [['Confiabilidad', promedio]]
     })
 
     this.usoPagina += 445
@@ -404,22 +418,23 @@ export class InformeMensualService {
     const manejoData = () => {
       let tabla: any = []
       DataCriticidad.forEach((dato: any) => {
-         
+
         let coment = comentariosCriticidad.filter((data: any) => data.id == dato.id)
         let d = new Date(dato.date)
-        let date = d.toLocaleDateString() 
+        let date = d.toLocaleDateString()
         let h = addZero(d.getHours());
         let m = addZero(d.getMinutes());
         let s = addZero(d.getSeconds());
         let hora = h + ":" + m + ":" + s;
         tabla.push([
-          'Fecha: ' + date + '\nHora: ' + hora + '\n' + dato.id + '\nId: ' + dato.camera,
+          'Fecha: ' + date + '\nHora: ' + hora + '\nCamara: ' + dato.camera + '\n' + dato.id,
           '',
           'Zona: ' + dato.zonas +
-          '\nApertura [px]: ' + dato.openning +
-          '\nLongitud [px]: ' + dato.length,
-          coment[0] ?  coment[0].comentario : ''])
-
+          '\nApertura [m]: ' + ((dato.openning * 0.83) / 100).toFixed(2) +
+          '\nLongitud [m]: ' + ((dato.length * 0.83) / 100).toFixed(2),
+          coment[0] ? coment[0].comentario : ''
+          //IMPORTANTE CAMBIAR EL VALOR DE TRANSFORMACION DE PX A METRO SEGUN EL LA ZONA (AREA)
+        ])
 
       })
 
@@ -455,6 +470,11 @@ export class InformeMensualService {
 
     } else {
       //GENERA TABLA
+      this.doc.setFontSize(11)
+      this.doc.setTextColor(this.colores.negro)
+      this.doc.setFont('Lato', 'normal')
+      this.doc.text('A continuación se muestra la tabla de criticidades altas del periodo.', this.marginContent, this.usoPagina + 30, { align: 'left', maxWidth: this.marginRight - this.marginContent })
+      this.usoPagina += 30
       let index = 0
       let lastTableHeight = 0
       let page = 1
@@ -467,11 +487,11 @@ export class InformeMensualService {
       this.doc.setFont('Lato', 'normal')
       this.contadorTabla++
 
-
+      let flag = false
       autoTable(this.doc, {
         styles: { lineWidth: .1, halign: 'center', fontSize: 10, fillColor: undefined, lineColor: [1, 48, 51], textColor: [1, 48, 51] },
         headStyles: { font: 'Lato', fontStyle: 'bold', fillColor: [217, 217, 217] },
-        head: [['fecha, Hora,\nCámara ', 'Imagen Grieta', 'Métricas', 'Obvservación']],
+        head: [['Identificador Grieta', 'Imagen Grieta', 'Métricas', 'Observación']],
         bodyStyles: { font: 'Lato', fontStyle: 'normal', fontSize: 9, fillColor: undefined, minCellHeight: 75 },
         body: this.tablaCriticidades.reverse(),
         margin: { top: this.startcContent, left: this.marginContent, bottom: 80 },
@@ -501,13 +521,22 @@ export class InformeMensualService {
             }
           }
         },
+        willDrawPage: (data) => {
+          if (!flag && data.pageNumber != 1) {
+            this.doc.addImage("assets/images/marca.jpg", 'JPG', 0, 0, 612, 792, 'marca-x', 'SLOW');
+            flag = true
+          }
+        },
 
         didDrawPage: (data) => {
           if (data.pageNumber != 1) {
             this.implementarFooter()
             this.implementarHeader()
+
+
           }
           page++
+
           lastTableHeight = this.usoPagina
           this.usoPagina = 0
         }
@@ -542,7 +571,7 @@ export class InformeMensualService {
 
 
     dataMatrix.objects.forEach((data: any) => {
-      matrix.matrixNombre.push([data.name.toUpperCase()]);
+      matrix.matrixNombre.push([{ content: data.name.toUpperCase(), styles: {} }]);
       matrix.matrixLongitud.push([data.length_min, data.length_max])
       matrix.matrixApertura.push([data.openning_min, data.openning_max])
       matrix.matrixAreas.push([
@@ -647,7 +676,7 @@ export class InformeMensualService {
     autoTable(doc, {
       margin: { left: this.marginContent },
       styles: { halign: 'center', lineWidth: .1, fillColor: undefined, lineColor: [1, 48, 51], textColor: [1, 48, 51] },
-      bodyStyles: { fillColor: undefined },
+      bodyStyles: { fontStyle: 'bold' },
       headStyles: { fillColor: [217, 217, 217] },
       alternateRowStyles: { fillColor: undefined },
       head: [[{ content: 'Probabilidad de daño al esparcidor', styles: { cellWidth: 125, cellPadding: { top: 15, bottom: 15 } } }, { content: 'Longitud' }, { content: 'Apertura' }, { content: 'Áreas de criticidad' }]],
@@ -724,7 +753,7 @@ export class InformeMensualService {
     this.doc.setFontSize(11)
     this.doc.setTextColor(this.colores.negro)
     this.doc.setFont('Lato', 'normal')
-    this.doc.text(conc? conc: '', this.marginContent, this.usoPagina + 30, { align: 'justify', maxWidth: this.marginRight - this.marginContent })
+    this.doc.text(conc ? conc : '', this.marginContent, this.usoPagina + 30, { align: 'justify', maxWidth: this.marginRight - this.marginContent })
 
     this.usoPagina += 150
   }
@@ -732,13 +761,16 @@ export class InformeMensualService {
   nuevaPagina() {
     this.usoPagina = this.startcContent
     this.doc.addPage()
-    this.doc.addImage("assets/images/marca.jpg", 'JPG', 0, 0, 612, 792, 'marca' + this.contadorPagina, 'SLOW');
+    this.doc.addImage("assets/images/marca.jpg", 'JPG', 0, 0, 612, 792, 'marca-x', 'SLOW');
     this.implementarHeader()
     this.implementarFooter()
   }
 
   previsualizar() {
+    // this.doc.setProperties({title: 'Titulo de l PDF'})
+    // var blob = this.doc.output("dataurlnewwindow",{filename: 'data.pdf'});
     var blob = this.doc.output("blob");
+
     window.open(URL.createObjectURL(blob));
     // this.doc.save()
   }

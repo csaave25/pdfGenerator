@@ -21,12 +21,12 @@ export class InformeMensualComponent implements AfterViewInit, OnInit {
   inputs = new FormGroup({
     fecha: new FormControl(),
     usrs: new FormGroup({
-      elavorado: new FormControl(),
-      cargo1: new FormControl(),
-      revisado: new FormControl(),
-      cargo2: new FormControl(),
-      aprobado: new FormControl(),
-      cargo3: new FormControl(),
+      elavorado: new FormControl(''),
+      cargo1: new FormControl(''),
+      revisado: new FormControl(''),
+      cargo2: new FormControl(''),
+      aprobado: new FormControl(''),
+      cargo3: new FormControl(''),
     }),
     disponibilidadComentario: new FormGroup({
       web: new FormControl(),
@@ -42,7 +42,7 @@ export class InformeMensualComponent implements AfterViewInit, OnInit {
       clasificacion: new FormControl(),
       comunicacion: new FormControl(),
     }),
-    conclusion: new FormControl()
+    conclusion: new FormControl('')
   })
 
   dataCriticisadad: any
@@ -65,16 +65,16 @@ export class InformeMensualComponent implements AfterViewInit, OnInit {
 
     this.rq.getDisponibilidad('noviembre').subscribe(dato => {
       let prom = (dato.servicio_web + dato.servicio_imagenes + dato.servicio_db + dato.servicio_api + dato.servicio_computo) / 5
-      let promRound = prom.toString().match(/^-?\d+(?:\.\d{0,2})?/)![0]
+      let promRound = prom
       this.tablaDispo = {
-        infraestructura: promRound,
-        servicio_web: dato.servicio_web.toString().match(/^-?\d+(?:\.\d{0,2})?/)[0],
-        servicio_imagenes: dato.servicio_imagenes.toString().match(/^-?\d+(?:\.\d{0,2})?/)[0],
-        servicio_db: dato.servicio_db.toString().match(/^-?\d+(?:\.\d{0,2})?/)[0],
-        servicio_api: dato.servicio_api.toString().match(/^-?\d+(?:\.\d{0,2})?/)[0],
-        servicio_computo: dato.servicio_computo.toString().match(/^-?\d+(?:\.\d{0,2})?/)[0],
-        sistema_adquisicion_imagenes: dato.sistema_adquisicion_imagenes.toString().match(/^-?\d+(?:\.\d{0,2})?/)[0],
-        enlace_dedicado: dato.enlace_dedicado.toString().match(/^-?\d+(?:\.\d{0,2})?/)[0],
+        infraestructura: promRound?.toFixed(2),
+        servicio_web: dato.servicio_web?.toFixed(2),
+        servicio_imagenes: dato.servicio_imagenes?.toFixed(2),
+        servicio_db: dato.servicio_db?.toFixed(2),
+        servicio_api: dato.servicio_api?.toFixed(2),
+        servicio_computo: dato.servicio_computo?.toFixed(2),
+        sistema_adquisicion_imagenes: dato.sistema_adquisicion_imagenes?.toFixed(2),
+        enlace_dedicado: dato.enlace_dedicado?.toFixed(2)
       }
 
     });//cambiar mes
