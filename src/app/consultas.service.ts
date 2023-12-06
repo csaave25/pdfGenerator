@@ -47,7 +47,7 @@ export class ConsultasService {
       dato.objects.alerts.forEach((element: any) => {
         let date = new Date(element.date).getMonth()
         if (!element.fake && fecha == date) {
-          tabla.push(element)
+          tabla.push({...element, comentario: null})
         }
       });
     });
