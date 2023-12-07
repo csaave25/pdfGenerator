@@ -405,45 +405,98 @@ export class InformeMensualService {
       foot: [['Confiabilidad', promedio]]
     })
 
-    this.usoPagina += 445
+    this.usoPagina += 430
 
-    if (this.usoPagina + 300 > this.totalUso)
+
+    if (this.usoPagina + 65 > this.totalUso)
       this.nuevaPagina()
 
+    this.doc.setFontSize(11)
+    this.doc.setTextColor(this.colores.negro)
+    this.doc.setFont('Lato', 'normal')
+    text = 'Durante el mes de noviembre, se detectan grietas de criticidad media durante la madrugada del día 26 / 11 / 23 desde la 03: 30 a través de la cámara 4(ver Figura 1) en específico la grieta C1, la cuál se mantiene hasta las 07:04 del mismo día. La detección de esta grieta es posible dado que existe iluminación en el sector.La grieta C0, identificada en el borde de la solución corresponde a un falso positivo.'
+    justify(this.doc, text, this.marginContent, this.usoPagina, this.marginRight - this.marginContent)
+
+    this.usoPagina += 65
+
+    if (this.usoPagina + 200 > this.totalUso)
+      this.nuevaPagina()
+
+    this.doc.addImage("assets/images/grieta1.png", 'PNG', 70, this.usoPagina, this.marginRight - this.marginContent, 200, 'imgx-mm' + this.contadorFigura, 'SLOW');
     this.doc.setFontSize(8)
     this.doc.setFont('Lato', 'normal')
-    this.doc.text('FIGURA ' + this.contadorFigura+': GRIETA DE CRITICIDAD MEDIA', ((this.marginRight - this.marginContent) / 2 + this.marginContent), this.usoPagina - 5, { align: 'center', maxWidth: this.marginRight - this.marginContent })
+    this.doc.text('FIGURA ' + this.contadorFigura + ': GRIETA DE CRITICIDAD MEDIA', ((this.marginRight - this.marginContent) / 2 + this.marginContent), this.usoPagina + 210, { align: 'center', maxWidth: this.marginRight - this.marginContent })
     this.contadorFigura++
 
-    autoTable(this.doc, {
-      styles: { lineWidth: .1, halign: 'center', fontSize: 10, fillColor: undefined, lineColor: [1, 48, 51], textColor: [1, 48, 51], cellWidth: this.marginRight - this.marginContent },
-      // headStyles: { font: 'Lato', fontStyle: 'bold', fillColor: [217, 217, 217] },
+    this.usoPagina += 240
 
-      bodyStyles: { font: 'Lato', fontStyle: 'normal', fontSize: 9, fillColor: undefined },
-      body: [
-        [{ content: '', styles: { minCellHeight: 200 } }],
-        [{ content: 'Este es el comentario de la figura agregada Este es el comentario de la figura agregada Este es el comentario de la figura agregada Este es el comentario de la figura agregada.\nEste es el comentario de la figura agregada Este es el comentario de la figura agregada Este es el comentario de la figura agregada Este es el comentario de la figura agregada Este es el comentario de la figura agregada \nEste es el comentario de la figura agregada Este es el comentario de la figura agregada', styles: { minCellHeight: 80, halign: 'left' } }],
-      ],
-      margin: { top: this.usoPagina, left: this.marginContent },
-      alternateRowStyles: { fillColor: undefined },
-      didDrawCell: (data) => {
-        if (data.row.index == 0 && data.cell.section == 'body') {
-          let width = data.cell.width - 20;
-          let height = data.cell.height - 10
-          let x = data.cell.x + 10
-          let y = data.cell.y + 5
+    if (this.usoPagina + 65 > this.totalUso)
+      this.nuevaPagina()
 
-          // if (imgCriticidad[imgContador]) {
-          //   this.doc.addImage(imgCriticidad[imgContador], 'png', x, y, width, 65, 'imgx' + imgContador, 'SLOW');
-          // }
-          this.doc.addImage("assets/images/Luis.jpg", 'JPG', x, y, width, height, 'imgx-mm' + 5, 'SLOW');
+    this.doc.setFontSize(11)
+    this.doc.setTextColor(this.colores.negro)
+    this.doc.setFont('Lato', 'normal')
+    text = 'Por otra parte, durante el día 26/11/23 se detectan grietas en la cámara 3, que son identificadas y clasificadas según la matriz de criticidad. En el sector inferior de la Figura 2 se pueden observar las grietas C38 (criticidad media), C33 y C39 (criticidad alta), en la Figura 3 se observan lecturas posteriores el A2MG identifica las grietas de criticidad alta, pero no la grieta C38 (criticidad media).'
+    justify(this.doc, text, this.marginContent, this.usoPagina, this.marginRight - this.marginContent)
+    this.usoPagina += 65
 
-        }
-      }
+    if (this.usoPagina + 200 > this.totalUso)
+      this.nuevaPagina()
 
-    })
+    this.doc.addImage("assets/images/grieta2.png", 'PNG', 70, this.usoPagina, this.marginRight - this.marginContent, 200, 'imgx-ms' + this.contadorFigura, 'SLOW');
+    this.doc.setFontSize(8)
+    this.doc.setFont('Lato', 'normal')
+    this.doc.text('FIGURA ' + this.contadorFigura + ': CRITICIDADES GRIETAS', ((this.marginRight - this.marginContent) / 2 + this.marginContent), this.usoPagina + 210, { align: 'center', maxWidth: this.marginRight - this.marginContent })
+    this.contadorFigura++
 
-    this.usoPagina += 330
+    this.usoPagina += 240
+
+
+    if (this.usoPagina + 200 > this.totalUso)
+      this.nuevaPagina()
+
+    this.doc.addImage("assets/images/grieta3.png", 'PNG', 70, this.usoPagina, this.marginRight - this.marginContent, 200, 'imgx-m' + this.contadorFigura, 'SLOW');
+    this.doc.setFontSize(8)
+    this.doc.setFont('Lato', 'normal')
+    this.doc.text('FIGURA ' + this.contadorFigura + ': CRITICIDADES GRIETAS', ((this.marginRight - this.marginContent) / 2 + this.marginContent), this.usoPagina + 210, { align: 'center', maxWidth: this.marginRight - this.marginContent })
+    this.contadorFigura++
+
+    this.usoPagina += 240
+
+
+    // autoTable(this.doc, {
+    //   styles: { lineWidth: .1, halign: 'center', fontSize: 10, fillColor: undefined, lineColor: [1, 48, 51], textColor: [1, 48, 51], cellWidth: this.marginRight - this.marginContent },
+    //   // headStyles: { font: 'Lato', fontStyle: 'bold', fillColor: [217, 217, 217] },
+
+    //   bodyStyles: { font: 'Lato', fontStyle: 'normal', fontSize: 9, fillColor: undefined },
+    //   body: [
+    //     [{ content: '', styles: { minCellHeight: 200 } }],
+    //     [{ content: 'Durante el mes de noviembre, se detectan grietas de criticidad media durante la madrugada del día 26 / 11 / 23 desde la 03: 30 a través de la cámara 4(ver Figura 1) en específico la grieta C1, la cuál se mantiene hasta las 07:04 del mismo día.La detección de esta grieta es posible dado que existe iluminación en el sector.La grieta C0, identificada en el borde de la solución corresponde a un falso positivo.', styles: { minCellHeight: 60, halign: 'left' } }],
+    //   ],
+    //   margin: { top: this.usoPagina, left: this.marginContent },
+    //   alternateRowStyles: { fillColor: undefined },
+    //   didDrawCell: (data) => {
+    //     if (data.row.index == 0 && data.cell.section == 'body') {
+    //       let width = data.cell.width - 20;
+    //       let height = data.cell.height - 10
+    //       let x = data.cell.x + 10
+    //       let y = data.cell.y + 5
+
+    //       // if (imgCriticidad[imgContador]) {
+    //       //   this.doc.addImage(imgCriticidad[imgContador], 'png', x, y, width, 65, 'imgx' + imgContador, 'SLOW');
+    //       // }
+    //       this.doc.addImage("assets/images/Luis.jpg", 'JPG', x, y, width, height, 'imgx-mm' + 5, 'SLOW');
+
+    //     }
+    //   }
+
+    // })
+
+    // this.doc.setFontSize(8)
+    // this.doc.setFont('Lato', 'normal')
+    // this.doc.text('FIGURA ' + this.contadorFigura + ': GRIETA DE CRITICIDAD MEDIA', ((this.marginRight - this.marginContent) / 2 + this.marginContent), this.usoPagina + 270, { align: 'center', maxWidth: this.marginRight - this.marginContent })
+    // this.contadorFigura++
+
 
 
   }
@@ -516,8 +569,11 @@ export class InformeMensualService {
       this.doc.setFontSize(11)
       this.doc.setTextColor(this.colores.negro)
       this.doc.setFont('Lato', 'normal')
-      this.doc.text('A continuación se muestra la tabla de criticidades altas del período.', this.marginContent, this.usoPagina + 30, { align: 'left', maxWidth: this.marginRight - this.marginContent })
-      this.usoPagina += 30
+      let text = 'Durante el periodo se registran grietas de criticidad alta, pero estas no están asociadas a alguna condición de fallamiento. '
+      justify(this.doc, text, this.marginContent, this.usoPagina + 30, this.marginRight - this.marginContent)
+
+      // this.doc.text('', this.marginContent, this.usoPagina + 30, { align: 'left', maxWidth: this.marginRight - this.marginContent })
+      this.usoPagina += 40
       let index = 0
       let lastTableHeight = 0
       let page = 1
@@ -796,7 +852,17 @@ export class InformeMensualService {
     this.doc.setFontSize(11)
     this.doc.setTextColor(this.colores.negro)
     this.doc.setFont('Lato', 'normal')
-    justify(this.doc, conc ? conc : '', this.marginContent, this.usoPagina + 30, this.marginRight - this.marginContent)
+
+    let text = 'Con respecto a la disponibilidad de la Infraestructura EMT este mes corresponde a 92.41%, como plan de acción para mejorar la respuesta ante la baja disponibilidad se implementó un sistema de alerta de caída de procesos.'
+    justify(this.doc, text, this.marginContent, this.usoPagina + 30, this.marginRight - this.marginContent)
+    text = 'Se realiza el monitoreo de acuerdo a lo establecido, y con base en los registros de la aplicación A2MG, se puede indicar que se registran grietas longitudinales de criticidad alta los días 25/11/23 y 26/11/23, las que no comprometen la estabilidad del esparcidor.'
+    justify(this.doc, text, this.marginContent, this.usoPagina + 80, this.marginRight - this.marginContent)
+    text = 'Las grietas registradas con alta criticidad, que corresponden a falsos positivos se registraron e identificaron para mejorar la capacidad de detección del sistema y así el algoritmo las pueda discriminar en las próximas versiones.'
+    justify(this.doc, text, this.marginContent, this.usoPagina + 118, this.marginRight - this.marginContent)
+    text = 'Las grietas detectadas el día 26/11/23 en la madrugada evidencian que el A2MG tiene la capacidad detectar grietas durante la noche. En base a lo anterior se recomienda incorporar iluminación en el sector de operación al esparcidor, para mejorar la detección de las grietas durante los periodos sin luz natural.'
+    justify(this.doc,text, this.marginContent, this.usoPagina + 168, this.marginRight - this.marginContent)
+
+    // justify(this.doc, conc ? conc : '', this.marginContent, this.usoPagina + 30, this.marginRight - this.marginContent)
     // this.doc.text(conc ? conc : '', this.marginContent, this.usoPagina + 30, { align: 'justify', maxWidth: this.marginRight - this.marginContent })
 
     this.usoPagina += 150
@@ -811,11 +877,11 @@ export class InformeMensualService {
   }
 
   previsualizar() {
-    // this.doc.setProperties({title: 'Titulo de l PDF'})
-    // var blob = this.doc.output("dataurlnewwindow",{filename: 'data.pdf'});
+    // this.doc.setProperties({ title: 'Titulo de l PDF' })
+    // var blob = this.doc.output("dataurlnewwindow", { filename: 'data.pdf' });
     // var blob = this.doc.output("blob");
     // window.open(URL.createObjectURL(blob));
-    this.doc.save('INFORME_MENSUAL_A2MG_' + (this.mesNum+1) + '_'+this.anoNum)
+    this.doc.save('INFORME_MENSUAL_A2MG_' + (this.mesNum + 1) + '_' + this.anoNum)
   }
 
   onPrevizualizar(dataCriticisdad: any, dataMatrix: any, dataUltimosCambiosMatrix: any, tablaDispo: any, imgCriticidad: any, comentariosCriticidad: any, inputs: FormGroup) {
