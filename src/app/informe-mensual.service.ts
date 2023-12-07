@@ -436,7 +436,7 @@ export class InformeMensualService {
           // if (imgCriticidad[imgContador]) {
           //   this.doc.addImage(imgCriticidad[imgContador], 'png', x, y, width, 65, 'imgx' + imgContador, 'SLOW');
           // }
-          this.doc.addImage("assets/images/image2.jpg", 'png', x, y, width, height, 'imgx' + 3, 'SLOW');
+          this.doc.addImage("assets/images/Luis.jpg", 'JPG', x, y, width, height, 'imgx-mm' + 5, 'SLOW');
 
         }
       }
@@ -470,7 +470,7 @@ export class InformeMensualService {
         let s = addZero(d.getSeconds());
         let hora = h + ":" + m + ":" + s;
         tabla.push([
-          'Fecha: ' + date + '\nHora: ' + hora + '\nCamara: ' + dato.camera + '\n' + dato.id,
+          'Fecha: ' + date + '\nHora: ' + hora + '\nCámara: ' + dato.camera + '\n' + dato.id,
           '',
           'Zona: ' + dato.zonas +
           '\nApertura [m]: ' + ((dato.openning * 0.83) / 100).toFixed(2) +
@@ -508,7 +508,7 @@ export class InformeMensualService {
       this.doc.setFontSize(11)
       this.doc.setTextColor(this.colores.negro)
       this.doc.setFont('Lato', 'normal')
-      this.doc.text('Durante el periodo no se registran grietas de criticidad alta asociadas a alguna condición de fallamiento.', this.marginContent, this.usoPagina + 30, { align: 'left', maxWidth: this.marginRight - this.marginContent })
+      this.doc.text('Durante el período no se registran grietas de criticidad alta asociadas a alguna condición de fallamiento.', this.marginContent, this.usoPagina + 30, { align: 'left', maxWidth: this.marginRight - this.marginContent })
       this.usoPagina += 65
 
     } else {
@@ -516,7 +516,7 @@ export class InformeMensualService {
       this.doc.setFontSize(11)
       this.doc.setTextColor(this.colores.negro)
       this.doc.setFont('Lato', 'normal')
-      this.doc.text('A continuación se muestra la tabla de criticidades altas del periodo.', this.marginContent, this.usoPagina + 30, { align: 'left', maxWidth: this.marginRight - this.marginContent })
+      this.doc.text('A continuación se muestra la tabla de criticidades altas del período.', this.marginContent, this.usoPagina + 30, { align: 'left', maxWidth: this.marginRight - this.marginContent })
       this.usoPagina += 30
       let index = 0
       let lastTableHeight = 0
@@ -815,7 +815,7 @@ export class InformeMensualService {
     // var blob = this.doc.output("dataurlnewwindow",{filename: 'data.pdf'});
     // var blob = this.doc.output("blob");
     // window.open(URL.createObjectURL(blob));
-    this.doc.save('INFORME_MENSUAL_2AMG_' + this.mesNum + '_'+this.anoNum)
+    this.doc.save('INFORME_MENSUAL_A2MG_' + (this.mesNum+1) + '_'+this.anoNum)
   }
 
   onPrevizualizar(dataCriticisdad: any, dataMatrix: any, dataUltimosCambiosMatrix: any, tablaDispo: any, imgCriticidad: any, comentariosCriticidad: any, inputs: FormGroup) {
