@@ -51,6 +51,7 @@ export class InformeMensualService {
   mesNum = 10
   anoNum = 2023
   contadorTabla = 1
+  contadorFigura = 1
 
 
   doc = new jsPDF('p', 'pt', 'letter')
@@ -362,14 +363,14 @@ export class InformeMensualService {
     this.doc.text('• Identificación :', this.marginContent + 30, this.usoPagina + 120, { align: 'left', maxWidth: this.marginRight - this.marginContent })
     this.doc.setFont('Lato', 'normal')
     text = 'mide el porcentaje de agrietamientos detectados (como conjunto, no individualmente).'
-    justify(this.doc, text, this.doc.getTextWidth('• Identificación :') + 40 + this.marginContent, this.usoPagina + 120, this.marginRight - this.marginContent - 150 )
+    justify(this.doc, text, this.doc.getTextWidth('• Identificación :') + 40 + this.marginContent, this.usoPagina + 120, this.marginRight - this.marginContent - 150)
     this.doc.text('', this.doc.getTextWidth('• Identificación :') + 40 + this.marginContent, this.usoPagina + 120, { align: 'left', maxWidth: this.marginRight - this.marginContent - 150 })
 
     this.doc.setFont('Lato', 'bold')
     this.doc.text('• Clasificación :', this.marginContent + 30, this.startcContent + 160, { align: 'left', maxWidth: this.marginRight - this.marginContent })
     this.doc.setFont('Lato', 'normal')
     text = 'se refiere a la capacidad de asignar correctamente la criticidad a las grietas.'
-    justify(this.doc, text, this.doc.getTextWidth('• Identificación :') + 40 + this.marginContent, this.usoPagina + 160, this.marginRight - this.marginContent - 150 )
+    justify(this.doc, text, this.doc.getTextWidth('• Identificación :') + 40 + this.marginContent, this.usoPagina + 160, this.marginRight - this.marginContent - 150)
     // this.doc.text('', this.doc.getTextWidth('• Identificación :') + 40 + this.marginContent, this.usoPagina + 160, { align: 'left', maxWidth: this.marginRight - this.marginContent - 150 })
 
     this.doc.setFont('Lato', 'bold')
@@ -378,7 +379,10 @@ export class InformeMensualService {
     this.doc.text('correcto aviso de EMT a ANT ante una grieta de criticidad alta.', this.doc.getTextWidth('• Identificación :') + 40 + this.marginContent, this.usoPagina + 200, { align: 'left', maxWidth: this.marginRight - this.marginContent - 150 })
 
 
-    this.doc.text('La confiabilidad del servicio durante el periodo fue del ' + promedio + '%, el cual se desglosa en la TABLA ' + this.contadorTabla + ' a continuación.', this.marginContent, this.usoPagina + 230, { align: 'left', maxWidth: this.marginRight - this.marginContent })
+    text = 'La confiabilidad del servicio durante el periodo fue del ' + promedio + '%, el cual se desglosa en la TABLA ' + this.contadorTabla + ' a continuación.'
+    // this.doc.text('', this.marginContent, this.usoPagina + 230, { align: 'left', maxWidth: this.marginRight - this.marginContent })
+    justify(this.doc, text, this.marginContent, this.usoPagina + 230, this.marginRight - this.marginContent)
+
 
     this.doc.setFontSize(8)
     this.doc.setFont('Lato', 'normal')
@@ -402,6 +406,45 @@ export class InformeMensualService {
     })
 
     this.usoPagina += 445
+
+    if (this.usoPagina + 300 > this.totalUso)
+      this.nuevaPagina()
+
+    this.doc.setFontSize(8)
+    this.doc.setFont('Lato', 'normal')
+    this.doc.text('FIGURA ' + this.contadorFigura+': GRIETA DE CRITICIDAD MEDIA', ((this.marginRight - this.marginContent) / 2 + this.marginContent), this.usoPagina - 5, { align: 'center', maxWidth: this.marginRight - this.marginContent })
+    this.contadorFigura++
+
+    autoTable(this.doc, {
+      styles: { lineWidth: .1, halign: 'center', fontSize: 10, fillColor: undefined, lineColor: [1, 48, 51], textColor: [1, 48, 51], cellWidth: this.marginRight - this.marginContent },
+      // headStyles: { font: 'Lato', fontStyle: 'bold', fillColor: [217, 217, 217] },
+
+      bodyStyles: { font: 'Lato', fontStyle: 'normal', fontSize: 9, fillColor: undefined },
+      body: [
+        [{ content: '', styles: { minCellHeight: 200 } }],
+        [{ content: 'Este es el comentario de la figura agregada Este es el comentario de la figura agregada Este es el comentario de la figura agregada Este es el comentario de la figura agregada.\nEste es el comentario de la figura agregada Este es el comentario de la figura agregada Este es el comentario de la figura agregada Este es el comentario de la figura agregada Este es el comentario de la figura agregada \nEste es el comentario de la figura agregada Este es el comentario de la figura agregada', styles: { minCellHeight: 80, halign: 'left' } }],
+      ],
+      margin: { top: this.usoPagina, left: this.marginContent },
+      alternateRowStyles: { fillColor: undefined },
+      didDrawCell: (data) => {
+        if (data.row.index == 0 && data.cell.section == 'body') {
+          let width = data.cell.width - 20;
+          let height = data.cell.height - 10
+          let x = data.cell.x + 10
+          let y = data.cell.y + 5
+
+          // if (imgCriticidad[imgContador]) {
+          //   this.doc.addImage(imgCriticidad[imgContador], 'png', x, y, width, 65, 'imgx' + imgContador, 'SLOW');
+          // }
+          this.doc.addImage("assets/images/image2.jpg", 'png', x, y, width, height, 'imgx' + 3, 'SLOW');
+
+        }
+      }
+
+    })
+
+    this.usoPagina += 330
+
 
   }
 
@@ -753,7 +796,8 @@ export class InformeMensualService {
     this.doc.setFontSize(11)
     this.doc.setTextColor(this.colores.negro)
     this.doc.setFont('Lato', 'normal')
-    this.doc.text(conc ? conc : '', this.marginContent, this.usoPagina + 30, { align: 'justify', maxWidth: this.marginRight - this.marginContent })
+    justify(this.doc, conc ? conc : '', this.marginContent, this.usoPagina + 30, this.marginRight - this.marginContent)
+    // this.doc.text(conc ? conc : '', this.marginContent, this.usoPagina + 30, { align: 'justify', maxWidth: this.marginRight - this.marginContent })
 
     this.usoPagina += 150
   }
@@ -769,10 +813,9 @@ export class InformeMensualService {
   previsualizar() {
     // this.doc.setProperties({title: 'Titulo de l PDF'})
     // var blob = this.doc.output("dataurlnewwindow",{filename: 'data.pdf'});
-    var blob = this.doc.output("blob");
-
-    window.open(URL.createObjectURL(blob));
-    // this.doc.save()
+    // var blob = this.doc.output("blob");
+    // window.open(URL.createObjectURL(blob));
+    this.doc.save('INFORME_MENSUAL_2AMG_' + this.mesNum + '_'+this.anoNum)
   }
 
   onPrevizualizar(dataCriticisdad: any, dataMatrix: any, dataUltimosCambiosMatrix: any, tablaDispo: any, imgCriticidad: any, comentariosCriticidad: any, inputs: FormGroup) {
