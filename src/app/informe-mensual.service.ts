@@ -414,7 +414,7 @@ export class InformeMensualService {
     this.doc.setFontSize(11)
     this.doc.setTextColor(this.colores.negro)
     this.doc.setFont('Lato', 'normal')
-    text = 'Durante el mes de noviembre, se detectan grietas de criticidad media durante la madrugada del día 26 / 11 / 23 desde la 03: 30 a través de la cámara 4(ver Figura 1) en específico la grieta C1, la cuál se mantiene hasta las 07:04 del mismo día. La detección de esta grieta es posible dado que existe iluminación en el sector.La grieta C0, identificada en el borde de la solución corresponde a un falso positivo.'
+    text = 'Durante el mes de noviembre, se detectan grietas de criticidad media durante la madrugada del día 26/11/23 desde la 03:30 a través de la cámara 4 (ver Figura 1) en específico la grieta C1, la cuál se mantiene hasta las 07:04 del mismo día. La detección de esta grieta es posible dado que existe iluminación en el sector. La grieta C0, identificada en el borde de la solución corresponde a un falso positivo.'
     justify(this.doc, text, this.marginContent, this.usoPagina, this.marginRight - this.marginContent)
 
     this.usoPagina += 65
@@ -443,7 +443,7 @@ export class InformeMensualService {
     if (this.usoPagina + 200 > this.totalUso)
       this.nuevaPagina()
 
-    this.doc.addImage("assets/images/grieta2.png", 'PNG', 70, this.usoPagina, this.marginRight - this.marginContent, 200, 'imgx-ms' + this.contadorFigura, 'SLOW');
+    this.doc.addImage("assets/images/grieta3.png", 'PNG', 70, this.usoPagina, this.marginRight - this.marginContent, 200, 'imgx-ms' + this.contadorFigura, 'SLOW');
     this.doc.setFontSize(8)
     this.doc.setFont('Lato', 'normal')
     this.doc.text('FIGURA ' + this.contadorFigura + ': CRITICIDADES GRIETAS', ((this.marginRight - this.marginContent) / 2 + this.marginContent), this.usoPagina + 210, { align: 'center', maxWidth: this.marginRight - this.marginContent })
@@ -455,7 +455,7 @@ export class InformeMensualService {
     if (this.usoPagina + 200 > this.totalUso)
       this.nuevaPagina()
 
-    this.doc.addImage("assets/images/grieta3.png", 'PNG', 70, this.usoPagina, this.marginRight - this.marginContent, 200, 'imgx-m' + this.contadorFigura, 'SLOW');
+    this.doc.addImage("assets/images/grieta2.png", 'PNG', 70, this.usoPagina, this.marginRight - this.marginContent, 200, 'imgx-m' + this.contadorFigura, 'SLOW');
     this.doc.setFontSize(8)
     this.doc.setFont('Lato', 'normal')
     this.doc.text('FIGURA ' + this.contadorFigura + ': CRITICIDADES GRIETAS', ((this.marginRight - this.marginContent) / 2 + this.marginContent), this.usoPagina + 210, { align: 'center', maxWidth: this.marginRight - this.marginContent })
@@ -858,9 +858,9 @@ export class InformeMensualService {
     text = 'Se realiza el monitoreo de acuerdo a lo establecido, y con base en los registros de la aplicación A2MG, se puede indicar que se registran grietas longitudinales de criticidad alta los días 25/11/23 y 26/11/23, las que no comprometen la estabilidad del esparcidor.'
     justify(this.doc, text, this.marginContent, this.usoPagina + 80, this.marginRight - this.marginContent)
     text = 'Las grietas registradas con alta criticidad, que corresponden a falsos positivos se registraron e identificaron para mejorar la capacidad de detección del sistema y así el algoritmo las pueda discriminar en las próximas versiones.'
-    justify(this.doc, text, this.marginContent, this.usoPagina + 118, this.marginRight - this.marginContent)
+    justify(this.doc, text, this.marginContent, this.usoPagina + 130, this.marginRight - this.marginContent)
     text = 'Las grietas detectadas el día 26/11/23 en la madrugada evidencian que el A2MG tiene la capacidad detectar grietas durante la noche. En base a lo anterior se recomienda incorporar iluminación en el sector de operación al esparcidor, para mejorar la detección de las grietas durante los periodos sin luz natural.'
-    justify(this.doc,text, this.marginContent, this.usoPagina + 168, this.marginRight - this.marginContent)
+    justify(this.doc,text, this.marginContent, this.usoPagina + 180, this.marginRight - this.marginContent)
 
     // justify(this.doc, conc ? conc : '', this.marginContent, this.usoPagina + 30, this.marginRight - this.marginContent)
     // this.doc.text(conc ? conc : '', this.marginContent, this.usoPagina + 30, { align: 'justify', maxWidth: this.marginRight - this.marginContent })
