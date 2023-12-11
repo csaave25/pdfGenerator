@@ -23,6 +23,7 @@ import { NewPDFComponent } from './new-pdf/new-pdf.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { PdfTemplateComponent } from './pdf-template/pdf-template.component';
 import { InformeMensualComponent } from './informe-mensual/informe-mensual.component';
+import { InformeEfeComponent } from './informe-efe/informe-efe/informe-efe.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { InformeMensualComponent } from './informe-mensual/informe-mensual.compo
     PdfComponent,
     NewPDFComponent,
     PdfTemplateComponent,
-    InformeMensualComponent
+    InformeMensualComponent,
+    InformeEfeComponent
   ],
   imports: [
     HttpClientModule,
