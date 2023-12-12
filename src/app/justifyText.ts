@@ -22,6 +22,7 @@ export function justify(pdfGen: jsPDF, text: string, xStart: number, yStart: num
       writeLastLine(wordsInfo, pdfGen, xStart, yStart, lineNumber, lineHeight);
     }
   }
+  
   function writeLastLine(wordsInfo: IWordInfo[], pdfGen: jsPDF, xStart: number, yStart: number, lineNumber: number, lineHeight: number) {
     const line = wordsInfo.map(x => x.text).join(' ');
     pdfGen.text(line, xStart, yStart + lineNumber * lineHeight);
