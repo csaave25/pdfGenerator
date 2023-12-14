@@ -23,7 +23,7 @@ export class InformeService {
   usoPagina = this.cominezoContenidoY
   totalUso = this.finalPagina - this.cominezoContenidoY
   contadorItem = 1
-  maxMargen = this.margenDer - this.margenContenidoIzq
+  maxMargen = this.margenDer - this.margenIzq
   puntoMedio = (this.doc.internal.pageSize.width || this.doc.internal.pageSize.getWidth()) / 2
   mes = new Date(data.ano, data.mes - 1, 1).toLocaleString('default', { month: 'long' });
 
@@ -223,6 +223,7 @@ export class InformeService {
 
   generarAnalisisDeDatos() {
     let nEstacion = 6
+
     data.seccionAnalisis.forEach(seccion => {
       this.crearNuevaPagina(this.usoPagina + 400)
 
@@ -278,8 +279,8 @@ export class InformeService {
       this.doc.text('Estado mensual sensores GCD y GCC', this.margenIzq, this.usoPagina + 30, { align: 'left', maxWidth: this.maxMargen });
       this.usoPagina += 20
 
-      this.doc.addImage("assets/EFE/Luis.jpg", 'JPG', this.margenIzq, this.usoPagina + 20, 230, 220, 'LUIS' + this.contadorPagina, 'SLOW');
-      this.doc.addImage("assets/EFE/Luis.jpg", 'JPG', this.margenDer - 320 + this.margenIzq, this.usoPagina + 20, 320, 220, 'LUIS' + this.contadorPagina, 'SLOW');
+      this.doc.addImage("assets/EFE/Luis.jpg", 'JPG', this.margenIzq, this.usoPagina + 20, 229, 220, 'LUIS' + this.contadorPagina, 'SLOW');
+      this.doc.addImage("assets/EFE/Luis.jpg", 'JPG', this.margenDer - 320 + this.margenIzq, this.usoPagina + 20, 319, 220, 'LUIS' + this.contadorPagina, 'SLOW');
       this.usoPagina += 20 + 220
 
 
@@ -302,23 +303,41 @@ export class InformeService {
 
       this.doc.setFontSize(10)
       this.doc.setFont("Lato", "bold");
-      this.doc.text('GCD Pozo 13: ', this.margenIzq + 30, this.usoPagina + 20, { align: 'left', maxWidth: this.maxMargen });
-      this.doc.text('GCC Pozo 13: ', this.margenIzq + 310, this.usoPagina + 20, { align: 'left', maxWidth: this.maxMargen });
+      this.doc.text('GCD Pozo ' + seccion.pozo + ': ', this.margenIzq + 30, this.usoPagina + 20, { align: 'left', maxWidth: this.maxMargen });
+      this.doc.text('GCC Pozo ' + seccion.pozo + ': ', this.margenIzq + 310, this.usoPagina + 20, { align: 'left', maxWidth: this.maxMargen });
 
       this.doc.setFont("Lato", "normal");
-      espaciarTextosLargos(this.doc, seccion.obsEspecificas.gcd, this.usoPagina + 20, this.margenIzq + 95, 188)
-      espaciarTextosLargos(this.doc, seccion.obsEspecificas.gcc, this.usoPagina + 20, this.margenIzq + 375, 188)
+      espaciarTextosLargos(this.doc, seccion.obsEspecificas.gcd, this.usoPagina + 20, this.margenIzq + 95, 187)
+      espaciarTextosLargos(this.doc, seccion.obsEspecificas.gcc, this.usoPagina + 20, this.margenIzq + 375, 187)
       this.usoPagina += texto1 + 30
-    
-      
-      this.crearNuevaPagina(this.usoPagina + obtenerAncho(this.doc, seccion.obsEspecificas.obsGrafico2, this.margenDer - this.margenIzq - 8 ) + 2  )
+
+
+      this.crearNuevaPagina(this.usoPagina + obtenerAncho(this.doc, seccion.obsEspecificas.obsGrafico2, this.maxMargen))
       this.doc.setFontSize(10)
       this.doc.setFont("Lato", "normal");
-      espaciarTextosLargos(this.doc, seccion.obsEspecificas.obsGrafico2, this.usoPagina, this.margenIzq + 30, this.margenDer - this.margenIzq - 8)
+      espaciarTextosLargos(this.doc, seccion.obsEspecificas.obsGrafico2, this.usoPagina, this.margenIzq , this.margenDer )
 
+      this.crearNuevaPagina(this.usoPagina + 400)
+
+      this.doc.setFontSize(10)
+      this.doc.setFont("Lato", "bold");
+      this.doc.text('Estado mensual piezómetros', this.margenIzq, this.usoPagina, { align: 'left', maxWidth: this.maxMargen });
+
+      this.doc.addImage("assets/EFE/Luis.jpg", 'JPG', this.puntoMedio - (450 / 2), this.usoPagina + 10, 450, 350, 'LUIS' + this.contadorPagina, 'SLOW');
+      this.usoPagina += 360
+
+      this.doc.setFontSize(10)
+      this.doc.setFont("Lato", "bold");
+      this.doc.text('Observaciones Piezómetro Pozo ' + seccion.pozo, this.margenIzq, this.usoPagina + 35, { align: 'left', maxWidth: this.maxMargen });
+      this.usoPagina += 35
+
+      this.doc.setFontSize(10)
+      this.doc.setFont("Lato", "normal");
+      espaciarTextosLargos(this.doc, seccion.obsPiezometro, this.usoPagina+20, this.margenIzq, this.margenDer )
 
       this.usoPagina += 250
       nEstacion++
+
     })
 
 

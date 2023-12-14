@@ -127,7 +127,8 @@ export const data = {
                 gcd: 'Tendencias estables, últimos datos del 15 de Noviembre de 2023',
                 gcc: 'Sin cortes hasta el último dato 15 de Noviembre de 2023.'
             },
-            obsPiezometro: 'No se observan variaciones significativas'
+            obsPiezometro: 'No se observan variaciones significativas.',
+            pozo: 12
         },
         {
             obsGenerales: 'Durante el periodo comprendido entre el 21 de Octubre de 2023 al 21 de Noviembre la estación se encontró en estado NORMAL.',
@@ -137,7 +138,8 @@ export const data = {
                 gcd: 'Tendencias estables*. Últimos datos del 15/10123.',
                 gcc: 'Sin cortes hasta el último dato 15 de Noviembre de 2023.'
             },
-            obsPiezometro: 'No se observan variaciones significativas'
+            obsPiezometro: 'No se observan variaciones.',
+            pozo: 13
         },
         {
             obsGenerales: 'Durante el periodo comprendido entre el 21 de Octubre de 2023 al 21 de Noviembre la estación se encontró en estado NORMAL.',
@@ -147,7 +149,8 @@ export const data = {
                 gcd: 'Tendencias estables*. Últimos datos del 15/10123.',
                 gcc: 'Sin cortes hasta el último dato 15 de Noviembre de 2023.'
             },
-            obsPiezometro: 'No se observan variaciones significativas'
+            obsPiezometro: 'No se observan variaciones significativas.',
+            pozo: 15,
         },
     ]
 }
