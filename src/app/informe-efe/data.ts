@@ -72,8 +72,17 @@ export const espaciarTextosLargos = (doc: jsPDF, texto: string, margenTop: numbe
     const arrText = dividirTexto(texto)
     if (arrText) {
         arrText.forEach(str => {
-            justify(doc, str, inicio, margenTop, anchoMax)
-            margenTop = margenTop + obtenerAncho(doc, str, anchoMax)
+            if (margenTop + obtenerAncho(doc, str, anchoMax) > 745) {
+                doc.addPage()
+                copyData(doc)
+                margenTop = 100
+                justify(doc, str, inicio, margenTop, anchoMax)
+                margenTop = margenTop + obtenerAncho(doc, str, anchoMax)
+            } else {
+                justify(doc, str, inicio, margenTop, anchoMax)
+                margenTop = margenTop + obtenerAncho(doc, str, anchoMax)
+            }
+
         })
     }
 
@@ -81,10 +90,68 @@ export const espaciarTextosLargos = (doc: jsPDF, texto: string, margenTop: numbe
 }
 
 
+export const copyData = (doc: jsPDF) => {
+    let margenIzq = 20
+    let margenDer = 562
+    let finalPagina = 760
+    let comienzoPaginaY = 20
+    let cominezoContenidoY = comienzoPaginaY + 80
+    let margenContenidoIzq = margenIzq + 50
+    let contadorPagina = 1
+    let usoPagina = cominezoContenidoY
+    let totalUso = finalPagina - cominezoContenidoY
+    let contadorItem = 1
+    let maxMargen = margenDer - margenIzq
+    let puntoMedio = (doc.internal.pageSize.width || doc.internal.pageSize.getWidth()) / 2
+    let mes2 = new Date(data.ano, data.mes - 1, 1).toLocaleString('default', { month: 'long' });
+
+    function implementarFooter() {
+        doc.setFontSize(8.5)
+        doc.setTextColor(colores.negro)
+        let calc = (margenDer + margenContenidoIzq) / 2 - 14
+        doc.setFont("Lato", 'normal')
+        doc.text('E-Mining Technology S.A. • Calle Limache 3405, Oficina 21, Viña del Mar • Teléfono: +56 32 2187440 • eminingtech.com', calc, finalPagina, { align: 'center' });
+
+        doc.setFont("Lato", 'bold')
+        doc.setFontSize(10)
+        // doc.text(contadorPagina.toString(), margenDer - 20, finalPagina - 20, { align: 'right' });
+        contadorPagina++
+    }
+
+    function implementarHeader() {
+        doc.setTextColor(colores.negro)
+        doc.addImage("assets/images/logo.png", 'PNG', margenDer - 60, comienzoPaginaY - 10, 90, 30, 'logo' + contadorPagina, 'SLOW');
+
+        doc.setFontSize(9)
+        doc.setFont('Lato', 'normal')
+        doc.text('IYV-INF-VIG-EFE-02', margenDer + 28, comienzoPaginaY + 35, { align: 'right' })
+        doc.addImage("assets/EFE/logoefe.png", 'PNG', margenIzq, comienzoPaginaY - 18, 90, 50, 'logoEfe' + contadorPagina, 'FAST')
+        doc.text(data.ano + '.' + ('0' + data.mes).slice(-2), margenIzq + 25, comienzoPaginaY + 35, { align: 'left' })
+
+        doc.setFontSize(13)
+        doc.setFont('Lato', 'normal')
+        doc.text('INFORME MENSUAL DE ANÁLISIS DE TENDENCIAS DE COMPORTAMIENTO DE LA INFRAESTRUCTURA', puntoMedio, comienzoPaginaY + 12, { align: 'center', maxWidth: puntoMedio + 20 })
+        let altura = obtenerAncho(doc, data.subTiutlo, maxMargen) + comienzoPaginaY;
+        doc.setFontSize(11)
+        let mes = mes2
+        mes = mes.charAt(0).toUpperCase() + mes.slice(1);
+        doc.text(mes + ' ' + data.ano, puntoMedio, altura + 20, { align: 'center' })
+    }
+
+    implementarFooter()
+    implementarHeader()
+    doc.setFontSize(10)
+    doc.setFont("Lato", "normal");
+
+
+}
+
+
 
 export const data = {
     ano: 2023,
     mes: 11,
+    dia: 21,
     numInfo: 5,
     titulo: 'INFORME MENSUAL N°',
     subTiutlo: 'ANÁLISIS DE TENDENCIAS DE COMPORTAMIENTO DE LA INFRAESTRUCTURA',
@@ -104,12 +171,12 @@ export const data = {
             gcc: false,
             prisma: false
         },
-        estadogeneral: 'La plataforma posee comunicación con piezómetros, Geo Centinelas de Corte y Deformación (GCC y GCC). Además de tener cargadas la información de desplazamientos de los prismas del sector de interés.\nDesde la ultima revisión de información han ocurrido dos eventos que gatillan el modo vigilancia el 29 de Octubre y 10 de Noviembre.\nEl comportamiento del Talud de Acceso a Puente Las Cucharas se mantiene estable, con todas las estaciones en estado Normal.\nDesde el 21 de Octubre hasta el 21 de Noviembre de 2023 no se superaron los umbrales establecidos, emitiéndose un reporte post sismo el 6 de Noviembre (5.1 Mw).',
+        estadogeneral: 'La plataforma posee comunicación con piezómetros, Geo Centinelas de Corte y Deformación (GCC y GCC). Además de tener cargadas la información de desplazamientos de los prismas del sector de interés.\nDesde la ultima revisión de información han ocurrido dos eventos que gatillan el modo vigilancia el 29 de Octubre y 10 de Noviembre.\nEl comportamiento del Talud de Acceso a Puente Las Cucharas se mantiene estable, con todas las estaciones en estado Normal.\nDesde el 21 de Octubre hasta el 21 de Noviembre de 2023 no se superaron los umbrales establecidos, emitiéndose un reporte post sismo el 6 de Noviembre (5.1 Mw)',
         observaciones: {
             piezometro: 'No se observan variaciones significativas a lo largo del mes.',
             gcd: 'Vegetación suele tapar los pequeños paneles de los equipos haciendo que los equipos se descarguen.',
-            gcc: 'Sin corte hasta el 15/11/2023.Prismas 04, 05, 06 y 09 sin lectura debido a que la vegetación obstaculiza la toma de datos.\nPrisma 21 con lecturas no representativas del talud debido a que el prisma no se encuentra fijo. Prismas 04, 05, 06 y 09 sin lectura debido a  que la vegetación obstaculiza la toma de datos.\nPrisma 21 con lecturas no representativas del talud debido a que el prisma no se encuentra fijo.  que la vegetación obstaculiza la toma de datos.\nPrisma 21 con lecturas no representativas del talud debido a que el prisma no se encuentra fijo. \nque la vegetación obstaculiza la toma de datos.\nPrisma 21 con lecturas no representativas del talud debido a que el prisma no se encuentra fijo.',
-            prisma: 'Prismas 04, 05, 06 y 09 sin lectura debido a que la vegetación obstaculiza la toma de datos.\nPrisma 21 con lecturas no representativas del talud debido a que el prisma no se encuentra fijo. \nPrisma 21 con lecturas no representativas del talud debido a que el prisma no se encuentra fijo. \nPrisma 21 con lecturas no representativas del talud debido a que el prisma no se encuentra fijo. \nPrisma 21 con lecturas no representativas del talud debido a que el prisma no se encuentra fijo.'
+            gcc: 'Sin corte hasta el 15/11/2023.',
+            prisma: 'Prismas 04, 05, 06 y 09 sin lectura debido a que la vegetación obstaculiza la toma de datos.\nPrisma 21 con lecturas no representativas del talud debido a que el prisma no se encuentra fijo.'
         },
         tablaMonitoreo: {
             alarmas: 0,
@@ -134,11 +201,11 @@ export const data = {
             obsGenerales: 'Durante el periodo comprendido entre el 21 de Octubre de 2023 al 21 de Noviembre la estación se encontró en estado NORMAL.',
             obsEspecificas: {
                 obsGrafico1: '',
-                obsGrafico2: 'Dada la sensibilidad del sensor, se puede producir cambios bruscos en las lecturas debido a reacomodos puntuales de material producto de la perforación misma o por precipitaciones.\nSi bien se observan cambios bruscos no existe en general una tendencia que apunte hacia un fallamiento.\nLas ventanas en gris muestran periodos en donde los nodos se descargaron y no registraron datos.',
+                obsGrafico2: 'Dada la sensibilidad del sensor, se puede producir cambios bruscos en las lecturas debido a reacomodos puntuales de material producto de la perforación misma o por precipitaciones.\nSi bien se observan cambios bruscos no existe en general una tendencia que apunte hacia un fallamiento.\nLas ventanas en gris muestran periodos en donde los nodos se descargaron y no registraron datos. Dada la sensibilidad del sensor, se puede producir cambios bruscos en las lecturas debido a reacomodos puntuales de material producto de la perforación misma o por precipitaciones.\nSi bien se observan cambios bruscos no existe en general una tendencia que apunte hacia un fallamiento.\nLas ventanas en gris muestran periodos en donde los nodos se descargaron y no registraron datos. Dada la sensibilidad del sensor, se puede producir cambios bruscos en las lecturas debido a reacomodos puntuales de material producto de la perforación misma o por precipitaciones.\nSi bien se observan cambios bruscos no existe en general una tendencia que apunte hacia un fallamiento.\nLas ventanas en gris muestran periodos en donde los nodos se descargaron y no registraron datos.',
                 gcd: 'Tendencias estables*. Últimos datos del 15/10123.',
                 gcc: 'Sin cortes hasta el último dato 15 de Noviembre de 2023.'
             },
-            obsPiezometro: 'No se observan variaciones.',
+            obsPiezometro: 'No se observan variaciones.  Dada la sensibilidad del sensor, se puede producir cambios bruscos en las lecturas debido a reacomodos puntuales de material producto de la perforación misma o por precipitaciones.\nSi bien se observan cambios bruscos no existe en general una tendencia que apunte hacia un fallamiento.\nLas ventanas en gris muestran periodos en donde los nodos se descargaron y no registraron datos. Dada la sensibilidad del sensor, se puede producir cambios bruscos en las lecturas debido a reacomodos puntuales de material producto de la perforación misma o por precipitaciones.\nSi bien se observan cambios bruscos no existe en general una tendencia que apunte hacia un fallamiento.\nLas ventanas en gris muestran periodos en donde los nodos se descargaron y no registraron datos.  Dada la sensibilidad del sensor, se puede producir cambios bruscos en las lecturas debido a reacomodos puntuales de material producto de la perforación misma o por precipitaciones.\nSi bien se observan cambios bruscos no existe en general una tendencia que apunte hacia un fallamiento.\nLas ventanas en gris muestran periodos en donde los nodos se descargaron y no registraron datos. Dada la sensibilidad del sensor, se puede producir cambios bruscos en las lecturas debido a reacomodos puntuales de material producto de la perforación misma o por precipitaciones.\nSi bien se observan cambios bruscos no existe en general una tendencia que apunte hacia un fallamiento.\nLas ventanas en gris muestran periodos en donde los nodos se descargaron y no registraron datos.',
             pozo: 13
         },
         {
@@ -153,6 +220,10 @@ export const data = {
             pozo: 15,
             pozo2: 16
         },
-    ]
+    ],
+    seccionPrismas: {
+        obsGenerales: '-Datos históricos cargados en la plataforma.\n-Prismas 04, 05, 06 y 09 sin lecturas (en rojo) debido a que vegetación impide correcta captura de datos.\n-Prisma 14 presentó lectura anómala en la medición de Agosto 2023, sin embargo, ahora muestra lecturas parecidas al resto de prismas.\n-Prisma 21 presenta lecturas no representativas del talud debido a que la base del prisma no se encuentra fija.\n-El resto de prismas (07, 08, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 y 20) presentan una condición inactiva (velocidad tiende a 0).',
+
+    }
 }
 

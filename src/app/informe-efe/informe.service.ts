@@ -138,9 +138,11 @@ export class InformeService {
 
     this.doc.setFont("Lato", "normal");
 
-    let start = this.usoPagina + 310
-    this.usoPagina = espaciarTextosLargos(this.doc, data.seccion1.estadogeneral, start, this.margenIzq, this.margenDer)
+    this.usoPagina = this.usoPagina + 310
 
+    this.usoPagina = espaciarTextosLargos(this.doc, data.seccion1.estadogeneral, this.usoPagina, this.margenIzq, this.margenDer)
+
+    this.crearNuevaPagina(this.usoPagina + 50)
     //Observaciones
     this.doc.setFontSize(10)
     this.doc.setFont("Lato", "bold");
@@ -149,7 +151,7 @@ export class InformeService {
     let page = 1
     autoTable(this.doc, {
       // theme: 'grid',
-      styles: { halign: 'left', font: 'Lato', fontStyle: 'normal', fontSize: 10, fillColor: undefined, lineColor: [1, 48, 51], textColor: [1, 48, 51], cellPadding: {bottom: 6} },
+      styles: { halign: 'left', font: 'Lato', fontStyle: 'normal', fontSize: 10, fillColor: undefined, lineColor: [1, 48, 51], textColor: [1, 48, 51], cellPadding: { bottom: 6 } },
       headStyles: { font: 'Lato', fontStyle: 'bold', fillColor: undefined, lineWidth: .1 },
       body: [['Piezómetros:', data.seccion1.observaciones.piezometro], ['GCD:', data.seccion1.observaciones.gcd], ['GCC:', data.seccion1.observaciones.gcc], ['Prismas:', data.seccion1.observaciones.prisma]],
       margin: { left: this.margenIzq, top: this.cominezoContenidoY, bottom: 50 },
@@ -175,7 +177,7 @@ export class InformeService {
           this.doc.addImage("assets/images/marca.jpg", 'JPG', 0, 0, 612, 792, 'marca-x', 'SLOW');
           this.implementarHeader()
           this.implementarFooter()
-          
+
 
         }
       },
@@ -183,11 +185,11 @@ export class InformeService {
 
     this.crearNuevaPagina(this.usoPagina + 89)
 
-    this.usoPagina +=20
+    this.usoPagina += 20
     //Tabla de monitoreo geotecnico
     this.doc.setFontSize(10)
     this.doc.setFont("Lato", "bold");
-    this.doc.text('Monitoreo Geotécnico', this.puntoMedio, this.usoPagina , { align: 'center', maxWidth: this.maxMargen });
+    this.doc.text('Monitoreo Geotécnico', this.puntoMedio, this.usoPagina, { align: 'center', maxWidth: this.maxMargen });
 
     autoTable(this.doc, {
       theme: 'grid',
@@ -220,7 +222,7 @@ export class InformeService {
 
   generarAnalisisDeDatos() {
     let nEstacion = 6
-    
+
     data.seccionAnalisis.forEach(seccion => {
       this.crearNuevaPagina(this.usoPagina + 800)
 
@@ -244,15 +246,15 @@ export class InformeService {
       this.doc.setFillColor(89, 238, 33);
       this.doc.circle(this.margenDer - 205, this.usoPagina + 20, 5, "FD");
       this.doc.text('Normal', this.margenDer - 194, this.usoPagina + 25, { align: 'left', maxWidth: this.maxMargen });
-  
+
       this.doc.setFillColor(237, 243, 38);
-      this.doc.circle(this.margenDer - 205, this.usoPagina+ 40, 5, "FD");
+      this.doc.circle(this.margenDer - 205, this.usoPagina + 40, 5, "FD");
       this.doc.text('Precaución', this.margenDer - 194, this.usoPagina + 45, { align: 'left', maxWidth: this.maxMargen });
-  
+
       this.doc.setFillColor(238, 166, 33);
       this.doc.circle(this.margenDer - 205, this.usoPagina + 60, 5, "FD");
       this.doc.text('Alerta', this.margenDer - 194, this.usoPagina + 65, { align: 'left', maxWidth: this.maxMargen });
-  
+
       this.doc.setFillColor(238, 42, 33);
       this.doc.circle(this.margenDer - 205, this.usoPagina + 80, 5, "FD");
       this.doc.text('Alarma', this.margenDer - 194, this.usoPagina + 85, { align: 'left', maxWidth: this.maxMargen });
@@ -310,10 +312,10 @@ export class InformeService {
       this.usoPagina += texto1 + 30
 
 
-      this.crearNuevaPagina(this.usoPagina + obtenerAncho(this.doc, seccion.obsEspecificas.obsGrafico2, this.maxMargen))
+      // this.crearNuevaPagina(this.usoPagina + obtenerAncho(this.doc, seccion.obsEspecificas.obsGrafico2, this.maxMargen))
       this.doc.setFontSize(10)
       this.doc.setFont("Lato", "normal");
-      espaciarTextosLargos(this.doc, seccion.obsEspecificas.obsGrafico2, this.usoPagina, this.margenIzq, this.margenDer)
+      this.usoPagina = espaciarTextosLargos(this.doc, seccion.obsEspecificas.obsGrafico2, this.usoPagina, this.margenIzq, this.margenDer) + 10
 
       this.crearNuevaPagina(this.usoPagina + 400)
 
@@ -339,13 +341,180 @@ export class InformeService {
 
       this.doc.setFontSize(10)
       this.doc.setFont("Lato", "normal");
-      espaciarTextosLargos(this.doc, seccion.obsPiezometro, this.usoPagina + 20, this.margenIzq, this.margenDer)
-
-      this.usoPagina += 250
+      this.usoPagina = espaciarTextosLargos(this.doc, seccion.obsPiezometro, this.usoPagina + 20, this.margenIzq, this.margenDer)
       nEstacion++
 
     })
 
+
+  }
+
+  generarAnalisisPrismas() {
+    this.crearNuevaPagina(800)
+    this.doc.setFontSize(12)
+    this.doc.setFont("Lato", "bold");
+    this.doc.text('Análisis de prismas', this.margenIzq, this.usoPagina, { align: 'left', maxWidth: this.maxMargen });
+    this.usoPagina += 12
+    let mes1 = new Date(data.ano, data.mes - 2, 1).toLocaleString('default', { month: 'long' });
+    let mes2 = new Date(data.ano, data.mes - 1, 1).toLocaleString('default', { month: 'long' });
+
+    this.doc.setFontSize(10)
+    this.doc.setFont("Lato", "normal");
+    this.doc.text('Período: ' + data.dia + ' de ' + mes1 + ' a ' + data.dia + ' de ' + mes2 + ' de ' + data.ano, this.margenIzq, this.usoPagina, { align: 'left', maxWidth: this.maxMargen });
+
+    this.usoPagina += 10
+
+    this.doc.addImage("assets/EFE/Luis.jpg", 'JPG', this.margenIzq, this.usoPagina, 420, 320, 'LUIS' + this.contadorPagina, 'SLOW');
+
+    //tabla
+    this.doc.setFontSize(10)
+    this.doc.setFont("Lato", "bold");
+    this.doc.text('Leyenda', this.margenIzq + 502, this.usoPagina + 10, { align: 'center', maxWidth: this.maxMargen });
+    this.doc.setFontSize(10)
+    this.doc.setFont("Lato", "normal");
+    this.doc.text('(mm)', this.margenIzq + 502, this.usoPagina + 20, { align: 'center', maxWidth: this.maxMargen });
+
+    this.doc.setFontSize(10)
+    this.doc.setFont("Lato", "normal");
+    this.doc.setFillColor(238, 42, 33);
+    this.doc.circle(this.margenIzq + 477, this.usoPagina + 40, 5, "FD");
+    this.doc.text('100 - 150', this.margenIzq + 488, this.usoPagina + 43, { align: 'left', maxWidth: this.maxMargen });
+    this.usoPagina += 40
+
+    this.doc.setFillColor(238, 42, 33);
+    this.doc.circle(this.margenIzq + 477, this.usoPagina + 22, 5, "FD");
+    this.doc.text('50 - 100', this.margenIzq + 488, this.usoPagina + 25, { align: 'left', maxWidth: this.maxMargen });
+    this.usoPagina += 20
+
+    this.doc.setFillColor(238, 42, 33);
+    this.doc.circle(this.margenIzq + 477, this.usoPagina + 22, 5, "FD");
+    this.doc.text('25 - 50', this.margenIzq + 488, this.usoPagina + 25, { align: 'left', maxWidth: this.maxMargen });
+    this.usoPagina += 20
+
+    this.doc.setFillColor(238, 42, 33);
+    this.doc.circle(this.margenIzq + 477, this.usoPagina + 22, 5, "FD");
+    this.doc.text('5 - 25', this.margenIzq + 488, this.usoPagina + 25, { align: 'left', maxWidth: this.maxMargen });
+    this.usoPagina += 20
+
+    this.doc.setFillColor(238, 42, 33);
+    this.doc.circle(this.margenIzq + 477, this.usoPagina + 22, 5, "FD");
+    this.doc.text('-5 - 5', this.margenIzq + 488, this.usoPagina + 25, { align: 'left', maxWidth: this.maxMargen });
+    this.usoPagina += 20
+
+    this.doc.setFillColor(238, 42, 33);
+    this.doc.circle(this.margenIzq + 477, this.usoPagina + 22, 5, "FD");
+    this.doc.text('-25 - -5', this.margenIzq + 488, this.usoPagina + 25, { align: 'left', maxWidth: this.maxMargen });
+    this.usoPagina += 20
+
+    this.doc.setFillColor(238, 42, 33);
+    this.doc.circle(this.margenIzq + 477, this.usoPagina + 22, 5, "FD");
+    this.doc.text('-50 - -25', this.margenIzq + 488, this.usoPagina + 25, { align: 'left', maxWidth: this.maxMargen });
+    this.usoPagina += 20
+
+    this.doc.setFillColor(238, 42, 33);
+    this.doc.circle(this.margenIzq + 477, this.usoPagina + 22, 5, "FD");
+    this.doc.text('-100 - -50', this.margenIzq + 488, this.usoPagina + 25, { align: 'left', maxWidth: this.maxMargen });
+    this.usoPagina += 20
+
+    this.doc.setFillColor(238, 42, 33);
+    this.doc.circle(this.margenIzq + 477, this.usoPagina + 22, 5, "FD");
+    this.doc.text('-150 - -100', this.margenIzq + 488, this.usoPagina + 25, { align: 'left', maxWidth: this.maxMargen });
+    this.usoPagina += 20
+
+    this.doc.setFillColor(238, 42, 33);
+    this.doc.circle(this.margenIzq + 477, this.usoPagina + 22, 5, "FD");
+    this.doc.text('-200 - -150', this.margenIzq + 488, this.usoPagina + 25, { align: 'left', maxWidth: this.maxMargen });
+    this.usoPagina += 20
+
+    let str = 'El desplazamiento es calculado a partir de la distancia inclinada.'
+    justify(this.doc, str, this.margenIzq + 430, this.usoPagina + 30, 146)
+    this.usoPagina += 115
+
+    //Observaciones generales
+
+    this.doc.setFontSize(10)
+    this.doc.setFont("Lato", "bold");
+    this.doc.text('Observaciones generales', this.margenIzq, this.usoPagina + 8, { align: 'left', maxWidth: this.maxMargen });
+
+
+
+
+    //PRISMAS P04-12
+    this.crearNuevaPagina(800)
+    this.doc.setFontSize(12)
+    this.doc.setFont("Lato", "bold");
+    this.doc.text('Análisis de prismas P04-P12', this.margenIzq, this.usoPagina, { align: 'left', maxWidth: this.maxMargen });
+    this.usoPagina += 12
+    mes1 = new Date(data.ano, data.mes - 2, 1).toLocaleString('default', { month: 'long' });
+    mes2 = new Date(data.ano, data.mes - 1, 1).toLocaleString('default', { month: 'long' });
+
+    this.doc.setFontSize(10)
+    this.doc.setFont("Lato", "normal");
+    this.doc.text('Período: ' + data.dia + ' de ' + mes1 + ' a ' + data.dia + ' de ' + mes2 + ' de ' + data.ano, this.margenIzq, this.usoPagina, { align: 'left', maxWidth: this.maxMargen });
+
+    this.usoPagina += 10
+
+    this.doc.addImage("assets/EFE/Luis.jpg", 'JPG', this.margenIzq, this.usoPagina, 320, 240, 'LUIS' + this.contadorPagina, 'SLOW');
+
+    //tabla
+    this.doc.setFontSize(10)
+    this.doc.setFont("Lato", "bold");
+    this.doc.text('Leyenda', this.margenIzq + 502, this.usoPagina + 10, { align: 'center', maxWidth: this.maxMargen });
+    this.doc.setFontSize(10)
+    this.doc.setFont("Lato", "normal");
+    this.doc.text('(mm)', this.margenIzq + 502, this.usoPagina + 20, { align: 'center', maxWidth: this.maxMargen });
+
+    this.doc.setFontSize(10)
+    this.doc.setFont("Lato", "normal");
+    this.doc.setFillColor(238, 42, 33);
+    this.doc.circle(this.margenIzq + 477, this.usoPagina + 40, 5, "FD");
+    this.doc.text('100 - 150', this.margenIzq + 488, this.usoPagina + 43, { align: 'left', maxWidth: this.maxMargen });
+    this.usoPagina += 40
+
+    this.doc.setFillColor(238, 42, 33);
+    this.doc.circle(this.margenIzq + 477, this.usoPagina + 22, 5, "FD");
+    this.doc.text('50 - 100', this.margenIzq + 488, this.usoPagina + 25, { align: 'left', maxWidth: this.maxMargen });
+    this.usoPagina += 20
+
+    this.doc.setFillColor(238, 42, 33);
+    this.doc.circle(this.margenIzq + 477, this.usoPagina + 22, 5, "FD");
+    this.doc.text('25 - 50', this.margenIzq + 488, this.usoPagina + 25, { align: 'left', maxWidth: this.maxMargen });
+    this.usoPagina += 20
+
+    this.doc.setFillColor(238, 42, 33);
+    this.doc.circle(this.margenIzq + 477, this.usoPagina + 22, 5, "FD");
+    this.doc.text('5 - 25', this.margenIzq + 488, this.usoPagina + 25, { align: 'left', maxWidth: this.maxMargen });
+    this.usoPagina += 20
+
+    this.doc.setFillColor(238, 42, 33);
+    this.doc.circle(this.margenIzq + 477, this.usoPagina + 22, 5, "FD");
+    this.doc.text('-5 - 5', this.margenIzq + 488, this.usoPagina + 25, { align: 'left', maxWidth: this.maxMargen });
+    this.usoPagina += 20
+
+    this.doc.setFillColor(238, 42, 33);
+    this.doc.circle(this.margenIzq + 477, this.usoPagina + 22, 5, "FD");
+    this.doc.text('-25 - -5', this.margenIzq + 488, this.usoPagina + 25, { align: 'left', maxWidth: this.maxMargen });
+    this.usoPagina += 20
+
+    this.doc.setFillColor(238, 42, 33);
+    this.doc.circle(this.margenIzq + 477, this.usoPagina + 22, 5, "FD");
+    this.doc.text('-50 - -25', this.margenIzq + 488, this.usoPagina + 25, { align: 'left', maxWidth: this.maxMargen });
+    this.usoPagina += 20
+
+    this.doc.setFillColor(238, 42, 33);
+    this.doc.circle(this.margenIzq + 477, this.usoPagina + 22, 5, "FD");
+    this.doc.text('-100 - -50', this.margenIzq + 488, this.usoPagina + 25, { align: 'left', maxWidth: this.maxMargen });
+    this.usoPagina += 20
+
+    this.doc.setFillColor(238, 42, 33);
+    this.doc.circle(this.margenIzq + 477, this.usoPagina + 22, 5, "FD");
+    this.doc.text('-150 - -100', this.margenIzq + 488, this.usoPagina + 25, { align: 'left', maxWidth: this.maxMargen });
+    this.usoPagina += 20
+
+    this.doc.setFillColor(238, 42, 33);
+    this.doc.circle(this.margenIzq + 477, this.usoPagina + 22, 5, "FD");
+    this.doc.text('-200 - -150', this.margenIzq + 488, this.usoPagina + 25, { align: 'left', maxWidth: this.maxMargen });
+    this.usoPagina += 135
 
   }
 
@@ -506,7 +675,8 @@ export class InformeService {
     this.implementarPortada()
     this.generarTablaResumen()
     this.generarSeccion1()
-    this.generarAnalisisDeDatos()
+    // this.generarAnalisisDeDatos()
+    this.generarAnalisisPrismas()
   }
 
   generarInforme() {
