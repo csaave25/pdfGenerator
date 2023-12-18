@@ -108,8 +108,8 @@ export const data = {
         observaciones: {
             piezometro: 'No se observan variaciones significativas a lo largo del mes.',
             gcd: 'Vegetación suele tapar los pequeños paneles de los equipos haciendo que los equipos se descarguen.',
-            gcc: 'Sin corte hasta el 15/11/2023.',
-            prisma: 'Prismas 04, 05, 06 y 09 sin lectura debido a que la vegetación obstaculiza la toma de datos.\nPrisma 21 con lecturas no representativas del talud debido a que el prisma no se encuentra fijo.'
+            gcc: 'Sin corte hasta el 15/11/2023.Prismas 04, 05, 06 y 09 sin lectura debido a que la vegetación obstaculiza la toma de datos.\nPrisma 21 con lecturas no representativas del talud debido a que el prisma no se encuentra fijo. Prismas 04, 05, 06 y 09 sin lectura debido a  que la vegetación obstaculiza la toma de datos.\nPrisma 21 con lecturas no representativas del talud debido a que el prisma no se encuentra fijo.  que la vegetación obstaculiza la toma de datos.\nPrisma 21 con lecturas no representativas del talud debido a que el prisma no se encuentra fijo. \nque la vegetación obstaculiza la toma de datos.\nPrisma 21 con lecturas no representativas del talud debido a que el prisma no se encuentra fijo.',
+            prisma: 'Prismas 04, 05, 06 y 09 sin lectura debido a que la vegetación obstaculiza la toma de datos.\nPrisma 21 con lecturas no representativas del talud debido a que el prisma no se encuentra fijo. \nPrisma 21 con lecturas no representativas del talud debido a que el prisma no se encuentra fijo. \nPrisma 21 con lecturas no representativas del talud debido a que el prisma no se encuentra fijo. \nPrisma 21 con lecturas no representativas del talud debido a que el prisma no se encuentra fijo.'
         },
         tablaMonitoreo: {
             alarmas: 0,
@@ -151,6 +151,7 @@ export const data = {
             },
             obsPiezometro: 'No se observan variaciones significativas.',
             pozo: 15,
+            pozo2: 16
         },
     ]
 }
