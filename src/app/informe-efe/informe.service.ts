@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { jsPDF } from 'jspdf'
 import autoTable from 'jspdf-autotable'
 import { font, latoRegular, montBold, montMedium, montSemi } from 'src/assets/fonts/fonts';
-import { colores, data, dividirTexto, espaciarTextosLargos, justify, obtenerAncho } from './data';
+import {  colores, data, dividirTexto, espaciarTextosLargos, espaciarTextosLargos2, justify, obtenerAncho } from './data';
 
 @Injectable({
   providedIn: 'root'
@@ -349,7 +349,7 @@ export class InformeService {
 
   }
 
-  generarAnalisisPrismas() {
+  generarAnalisisGeneralPrismas() {
     this.crearNuevaPagina(800)
     this.doc.setFontSize(12)
     this.doc.setFont("Lato", "bold");
@@ -427,94 +427,123 @@ export class InformeService {
     this.usoPagina += 20
 
     let str = 'El desplazamiento es calculado a partir de la distancia inclinada.'
-    justify(this.doc, str, this.margenIzq + 430, this.usoPagina + 30, 146)
+    justify(this.doc, str, this.margenIzq + 430, this.usoPagina + 30, 140)
     this.usoPagina += 115
 
     //Observaciones generales
-
     this.doc.setFontSize(10)
     this.doc.setFont("Lato", "bold");
     this.doc.text('Observaciones generales', this.margenIzq, this.usoPagina + 8, { align: 'left', maxWidth: this.maxMargen });
 
+  }
+
+  generarAnalisisPrismas() {
+
+    data.seccionPrismas.analisisPrismas.forEach(elm => {
 
 
+      //PRISMAS P04-12
+      this.crearNuevaPagina(800)
+      this.doc.setFontSize(12)
+      this.doc.setFont("Lato", "bold");
+      this.doc.text('Análisis de prismas ' + elm.prismas, this.margenIzq, this.usoPagina, { align: 'left', maxWidth: this.maxMargen });
+      this.usoPagina += 12
+      let mes1 = new Date(data.ano, data.mes - 2, 1).toLocaleString('default', { month: 'long' });
+      let mes2 = new Date(data.ano, data.mes - 1, 1).toLocaleString('default', { month: 'long' });
 
-    //PRISMAS P04-12
+      this.doc.setFontSize(10)
+      this.doc.setFont("Lato", "normal");
+      this.doc.text('Período: ' + data.dia + ' de ' + mes1 + ' a ' + data.dia + ' de ' + mes2 + ' de ' + data.ano, this.margenIzq, this.usoPagina, { align: 'left', maxWidth: this.maxMargen });
+
+      this.usoPagina += 10
+
+      this.doc.addImage("assets/EFE/Luis.jpg", 'JPG', this.margenIzq, this.usoPagina, 320, 240, 'LUIS' + this.contadorPagina, 'SLOW');
+
+      //tabla
+      this.doc.setFontSize(10)
+      this.doc.setFont("Lato", "bold");
+      this.doc.text('Leyenda', this.margenIzq + 450, this.usoPagina + 10, { align: 'center', maxWidth: this.maxMargen });
+      this.doc.setFontSize(10)
+      this.doc.setFont("Lato", "normal");
+      this.doc.text('(mm)', this.margenIzq + 450, this.usoPagina + 20, { align: 'center', maxWidth: this.maxMargen });
+
+      this.doc.setFontSize(10)
+      this.doc.setFont("Lato", "normal");
+      this.doc.setFillColor(238, 42, 33);
+      this.doc.circle(this.margenIzq + 425, this.usoPagina + 40, 5, "FD");
+      this.doc.text('100 - 150', this.margenIzq + 436, this.usoPagina + 43, { align: 'left', maxWidth: this.maxMargen });
+      this.usoPagina += 40
+
+      this.doc.setFillColor(238, 42, 33);
+      this.doc.circle(this.margenIzq + 425, this.usoPagina + 22, 5, "FD");
+      this.doc.text('50 - 100', this.margenIzq + 436, this.usoPagina + 25, { align: 'left', maxWidth: this.maxMargen });
+      this.usoPagina += 20
+
+      this.doc.setFillColor(238, 42, 33);
+      this.doc.circle(this.margenIzq + 425, this.usoPagina + 22, 5, "FD");
+      this.doc.text('25 - 50', this.margenIzq + 436, this.usoPagina + 25, { align: 'left', maxWidth: this.maxMargen });
+      this.usoPagina += 20
+
+      this.doc.setFillColor(238, 42, 33);
+      this.doc.circle(this.margenIzq + 425, this.usoPagina + 22, 5, "FD");
+      this.doc.text('5 - 25', this.margenIzq + 436, this.usoPagina + 25, { align: 'left', maxWidth: this.maxMargen });
+      this.usoPagina += 20
+
+      this.doc.setFillColor(238, 42, 33);
+      this.doc.circle(this.margenIzq + 425, this.usoPagina + 22, 5, "FD");
+      this.doc.text('-5 - 5', this.margenIzq + 436, this.usoPagina + 25, { align: 'left', maxWidth: this.maxMargen });
+      this.usoPagina += 20
+
+      this.doc.setFillColor(238, 42, 33);
+      this.doc.circle(this.margenIzq + 425, this.usoPagina + 22, 5, "FD");
+      this.doc.text('-25 - -5', this.margenIzq + 436, this.usoPagina + 25, { align: 'left', maxWidth: this.maxMargen });
+      this.usoPagina += 20
+
+      this.doc.setFillColor(238, 42, 33);
+      this.doc.circle(this.margenIzq + 425, this.usoPagina + 22, 5, "FD");
+      this.doc.text('-50 - -25', this.margenIzq + 436, this.usoPagina + 25, { align: 'left', maxWidth: this.maxMargen });
+      this.usoPagina += 20
+
+      this.doc.setFillColor(238, 42, 33);
+      this.doc.circle(this.margenIzq + 425, this.usoPagina + 22, 5, "FD");
+      this.doc.text('-100 - -50', this.margenIzq + 436, this.usoPagina + 25, { align: 'left', maxWidth: this.maxMargen });
+      this.usoPagina += 20
+
+      this.doc.setFillColor(238, 42, 33);
+      this.doc.circle(this.margenIzq + 425, this.usoPagina + 22, 5, "FD");
+      this.doc.text('-150 - -100', this.margenIzq + 436, this.usoPagina + 25, { align: 'left', maxWidth: this.maxMargen });
+      this.usoPagina += 20
+
+      this.doc.setFillColor(238, 42, 33);
+      this.doc.circle(this.margenIzq + 425, this.usoPagina + 22, 5, "FD");
+      this.doc.text('-200 - -150', this.margenIzq + 436, this.usoPagina + 25, { align: 'left', maxWidth: this.maxMargen });
+      this.usoPagina += 50
+
+      //segunda img
+      this.doc.addImage("assets/EFE/Luis.jpg", 'JPG', this.margenIzq, this.usoPagina, this.margenDer, 240, 'LUIS' + this.contadorPagina, 'SLOW');
+      this.usoPagina += 254
+
+
+      //Observaciones generales
+    this.doc.setFontSize(10)
+    this.doc.setFont("Lato", "bold");
+    this.doc.text('Observaciones generales', this.margenIzq, this.usoPagina + 10, { align: 'left', maxWidth: this.maxMargen });
+    });
+  }
+
+  conclusion(){
     this.crearNuevaPagina(800)
+
     this.doc.setFontSize(12)
     this.doc.setFont("Lato", "bold");
-    this.doc.text('Análisis de prismas P04-P12', this.margenIzq, this.usoPagina, { align: 'left', maxWidth: this.maxMargen });
-    this.usoPagina += 12
-    mes1 = new Date(data.ano, data.mes - 2, 1).toLocaleString('default', { month: 'long' });
-    mes2 = new Date(data.ano, data.mes - 1, 1).toLocaleString('default', { month: 'long' });
+    this.doc.text('Conclusiones', this.margenIzq, this.usoPagina, { align: 'left', maxWidth: this.maxMargen });
+    this.usoPagina += 20
 
     this.doc.setFontSize(10)
     this.doc.setFont("Lato", "normal");
-    this.doc.text('Período: ' + data.dia + ' de ' + mes1 + ' a ' + data.dia + ' de ' + mes2 + ' de ' + data.ano, this.margenIzq, this.usoPagina, { align: 'left', maxWidth: this.maxMargen });
+    // this.doc.text(data.conclusion, this.margenIzq, this.usoPagina, { align: 'left', maxWidth: this.maxMargen });
+    espaciarTextosLargos2(this.doc,data.conclusion,this.usoPagina, this.margenIzq, this.margenDer )
 
-    this.usoPagina += 10
-
-    this.doc.addImage("assets/EFE/Luis.jpg", 'JPG', this.margenIzq, this.usoPagina, 320, 240, 'LUIS' + this.contadorPagina, 'SLOW');
-
-    //tabla
-    this.doc.setFontSize(10)
-    this.doc.setFont("Lato", "bold");
-    this.doc.text('Leyenda', this.margenIzq + 502, this.usoPagina + 10, { align: 'center', maxWidth: this.maxMargen });
-    this.doc.setFontSize(10)
-    this.doc.setFont("Lato", "normal");
-    this.doc.text('(mm)', this.margenIzq + 502, this.usoPagina + 20, { align: 'center', maxWidth: this.maxMargen });
-
-    this.doc.setFontSize(10)
-    this.doc.setFont("Lato", "normal");
-    this.doc.setFillColor(238, 42, 33);
-    this.doc.circle(this.margenIzq + 477, this.usoPagina + 40, 5, "FD");
-    this.doc.text('100 - 150', this.margenIzq + 488, this.usoPagina + 43, { align: 'left', maxWidth: this.maxMargen });
-    this.usoPagina += 40
-
-    this.doc.setFillColor(238, 42, 33);
-    this.doc.circle(this.margenIzq + 477, this.usoPagina + 22, 5, "FD");
-    this.doc.text('50 - 100', this.margenIzq + 488, this.usoPagina + 25, { align: 'left', maxWidth: this.maxMargen });
-    this.usoPagina += 20
-
-    this.doc.setFillColor(238, 42, 33);
-    this.doc.circle(this.margenIzq + 477, this.usoPagina + 22, 5, "FD");
-    this.doc.text('25 - 50', this.margenIzq + 488, this.usoPagina + 25, { align: 'left', maxWidth: this.maxMargen });
-    this.usoPagina += 20
-
-    this.doc.setFillColor(238, 42, 33);
-    this.doc.circle(this.margenIzq + 477, this.usoPagina + 22, 5, "FD");
-    this.doc.text('5 - 25', this.margenIzq + 488, this.usoPagina + 25, { align: 'left', maxWidth: this.maxMargen });
-    this.usoPagina += 20
-
-    this.doc.setFillColor(238, 42, 33);
-    this.doc.circle(this.margenIzq + 477, this.usoPagina + 22, 5, "FD");
-    this.doc.text('-5 - 5', this.margenIzq + 488, this.usoPagina + 25, { align: 'left', maxWidth: this.maxMargen });
-    this.usoPagina += 20
-
-    this.doc.setFillColor(238, 42, 33);
-    this.doc.circle(this.margenIzq + 477, this.usoPagina + 22, 5, "FD");
-    this.doc.text('-25 - -5', this.margenIzq + 488, this.usoPagina + 25, { align: 'left', maxWidth: this.maxMargen });
-    this.usoPagina += 20
-
-    this.doc.setFillColor(238, 42, 33);
-    this.doc.circle(this.margenIzq + 477, this.usoPagina + 22, 5, "FD");
-    this.doc.text('-50 - -25', this.margenIzq + 488, this.usoPagina + 25, { align: 'left', maxWidth: this.maxMargen });
-    this.usoPagina += 20
-
-    this.doc.setFillColor(238, 42, 33);
-    this.doc.circle(this.margenIzq + 477, this.usoPagina + 22, 5, "FD");
-    this.doc.text('-100 - -50', this.margenIzq + 488, this.usoPagina + 25, { align: 'left', maxWidth: this.maxMargen });
-    this.usoPagina += 20
-
-    this.doc.setFillColor(238, 42, 33);
-    this.doc.circle(this.margenIzq + 477, this.usoPagina + 22, 5, "FD");
-    this.doc.text('-150 - -100', this.margenIzq + 488, this.usoPagina + 25, { align: 'left', maxWidth: this.maxMargen });
-    this.usoPagina += 20
-
-    this.doc.setFillColor(238, 42, 33);
-    this.doc.circle(this.margenIzq + 477, this.usoPagina + 22, 5, "FD");
-    this.doc.text('-200 - -150', this.margenIzq + 488, this.usoPagina + 25, { align: 'left', maxWidth: this.maxMargen });
-    this.usoPagina += 135
 
   }
 
@@ -673,10 +702,12 @@ export class InformeService {
   crearInforme() {
     this.implementarFuentes()
     this.implementarPortada()
-    this.generarTablaResumen()
-    this.generarSeccion1()
+    // this.generarTablaResumen()
+    // this.generarSeccion1()
     // this.generarAnalisisDeDatos()
-    this.generarAnalisisPrismas()
+    // this.generarAnalisisGeneralPrismas()
+    // this.generarAnalisisPrismas()
+    this.conclusion()
   }
 
   generarInforme() {

@@ -12,17 +12,6 @@ export const colores = {
     amarillo: '#C2C71B'
 }
 
-export const obtenerAncho = (pdfGen: jsPDF, texto: string, margen: number) => {
-    let dimensiones = pdfGen.getTextDimensions(texto)
-    let tamanoFuente = pdfGen.getFontSize()
-    let lines = dimensiones.w / margen
-    let valor = Math.trunc(lines) + 1.7 // Creo que 1.7 (espaciado) se multiplica por la cantidad de lineas
-    return tamanoFuente * valor
-}
-
-export const dividirTexto = (text: string) => {
-    return text.split('\n')
-}
 
 export function justify(pdfGen: jsPDF, text: string, xStart: number, yStart: number, textWidth: number) {
     text = text.replace(/(?:\r\n|\r|\n)/g, ' ');
@@ -74,7 +63,7 @@ export const espaciarTextosLargos = (doc: jsPDF, texto: string, margenTop: numbe
         arrText.forEach(str => {
             if (margenTop + obtenerAncho(doc, str, anchoMax) > 745) {
                 doc.addPage()
-                copyData(doc)
+                genradorDeHeaderYFooter(doc)
                 margenTop = 100
                 justify(doc, str, inicio, margenTop, anchoMax)
                 margenTop = margenTop + obtenerAncho(doc, str, anchoMax)
@@ -82,15 +71,75 @@ export const espaciarTextosLargos = (doc: jsPDF, texto: string, margenTop: numbe
                 justify(doc, str, inicio, margenTop, anchoMax)
                 margenTop = margenTop + obtenerAncho(doc, str, anchoMax)
             }
-
         })
     }
 
     return margenTop
 }
 
+export const obtenerAncho = (pdfGen: jsPDF, texto: string, margen: number) => {
+    let dimensiones = pdfGen.getTextDimensions(texto)
+    let tamanoFuente = pdfGen.getFontSize()
+    let lines = dimensiones.w / margen
+    let valor = Math.trunc(lines) + 1.7 // Creo que 1.7 (espaciado) se multiplica por la cantidad de lineas
+    return tamanoFuente * valor
+}
 
-export const copyData = (doc: jsPDF) => {
+export const dividirTexto = (text: string) => {
+    return text.split('\n')
+}
+
+
+export const dividirPorGuiones = (str: string) => {
+    let divisiones = str.split('-')
+    return divisiones
+
+}
+
+
+export const espaciarTextosLargos2 = (doc: jsPDF, textos: string, margenTop: number, inicio: number, anchoMax: number) => {
+    let text = dividirTexto(textos)
+    // text = text.splice(1,text.length-1)
+    let init = inicio + 15
+    let ancho = anchoMax - 15
+
+    text.forEach(texto => {
+        let arrText = dividirPorGuiones(texto)
+        if (arrText) {
+            console.log(arrText[0]);
+            
+            if (arrText[0] == '') {
+                if (margenTop + obtenerAncho(doc, arrText[1], anchoMax) > 745) {
+                    doc.addPage()
+                    genradorDeHeaderYFooter(doc)
+                    margenTop = 100
+                    doc.text('•', inicio, margenTop, { align: 'left' })
+                    justify(doc, arrText[1], init, margenTop, ancho)
+                    margenTop = margenTop + obtenerAncho(doc, arrText[1], ancho)
+                } else {
+                    doc.text('•', inicio, margenTop, { align: 'left' })
+                    justify(doc, arrText[1], init, margenTop, ancho)
+                    margenTop = margenTop + obtenerAncho(doc, arrText[1], ancho)
+                }
+            } else {
+                if (margenTop + obtenerAncho(doc, arrText[0], anchoMax) > 745) {
+                    doc.addPage()
+                    genradorDeHeaderYFooter(doc)
+                    margenTop = 100
+                    justify(doc, arrText[0], inicio, margenTop, anchoMax)
+                    margenTop = margenTop + obtenerAncho(doc, arrText[0], anchoMax)
+                } else {
+                    justify(doc, arrText[0], inicio, margenTop, anchoMax)
+                    margenTop = margenTop + obtenerAncho(doc, arrText[0], anchoMax)
+                }
+            }
+        }
+    })
+    return margenTop
+}
+
+
+export const genradorDeHeaderYFooter = (doc: jsPDF) => {
     let margenIzq = 20
     let margenDer = 562
     let finalPagina = 760
@@ -224,6 +273,20 @@ export const data = {
     seccionPrismas: {
         obsGenerales: '-Datos históricos cargados en la plataforma.\n-Prismas 04, 05, 06 y 09 sin lecturas (en rojo) debido a que vegetación impide correcta captura de datos.\n-Prisma 14 presentó lectura anómala en la medición de Agosto 2023, sin embargo, ahora muestra lecturas parecidas al resto de prismas.\n-Prisma 21 presenta lecturas no representativas del talud debido a que la base del prisma no se encuentra fija.\n-El resto de prismas (07, 08, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 y 20) presentan una condición inactiva (velocidad tiende a 0).',
 
-    }
+        analisisPrismas: [
+            {
+                prismas: 'P04-P12',
+                obs: '-P04, 05, 06 y 09 sin lectura debido a que vegetación impide correcta captura de datos.\nP07, 08,10, 11 y 12 presentan bajos desplazamientos, que no se asocian a desplazamientos superficiales del talud. Sus lecturas están dentro de los márgenes de error del equipo. Su condición es inactiva.',
+
+            },
+            {
+                prismas: 'P13-P21',
+                obs: '- P13, 14, 15, 16, 17, 18, 19 y 20 presentan bajos desplazamientos, que no se asocian a desplazamientos superficiales del talud. Sus lecturas están dentro de los márgenes de error del equipo.\n-P21 muestra lecturas anómalas producto a que el prisma no se encuentra fijo.'
+            }
+        ]
+
+    },
+
+    conclusion: 'Estos datos son los que se hablan por hablar y que no estan\n-El monitoreo se encuentra en estado *Normal*.\n-La plataforma posee una comunicación con piezómetros, Geo Centinelas de Corte y Deformación (GCC y GCC), sumado a información de agua caída producto de las lluvias.\n-Durante el mes se presentan 2 instancias de vigilancia, siendo el 29 de Octubre y el 10 de Noviembre.\nEsto es una prueba\n-Durante el mes se envió un reporte post sismo el 6 de Noviembre (5.1 Mw).\n-No se observaron variaciones significativas en las lecturas de piezómetros a lo largo del mes, aún cuando se presentaron 2 episodios de precipitación mayor a 10 mm/día.\n-No se observaron variaciones en las lecturas de los instrumentos posterior al evento sísmico del 6 de Noviembre, el cual fue de una magnitud mediana y su epicentro estuvo cerca (30 Km al Oeste de Valparaíso).\n-La comunicación de algunos equipos como Geo Centinelas se ve interrumpida por problemas de sombra en algunos sensores, los cuales pueden descargarse, sin embargo, al recuperar la energía se recupera la conexión, por lo que se hace necesario realizar una visita para limpiar equipos, vegetación y corroborar el estado de los prismas, puesto que permite hacer un contraste entre las diferentes mediciones.'
 }
 
