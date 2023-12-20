@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { jsPDF } from 'jspdf'
 import autoTable from 'jspdf-autotable'
 import { font, latoRegular, montBold, montMedium, montSemi } from 'src/assets/fonts/fonts';
-import {  colores, data, dividirTexto, espaciarTextosLargos, espaciarTextosLargos2, justify, obtenerAncho } from './data';
+import {  colores, data, espaciarTextosLargos, espaciarTextosLargos2, justify, obtenerAncho } from './data';
+import { FormControl, FormGroup } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root'
@@ -531,7 +532,7 @@ export class InformeService {
     });
   }
 
-  conclusion(){
+  conclusion(input: any){
     this.crearNuevaPagina(800)
 
     this.doc.setFontSize(12)
@@ -542,7 +543,7 @@ export class InformeService {
     this.doc.setFontSize(10)
     this.doc.setFont("Lato", "normal");
     // this.doc.text(data.conclusion, this.margenIzq, this.usoPagina, { align: 'left', maxWidth: this.maxMargen });
-    espaciarTextosLargos2(this.doc,data.conclusion,this.usoPagina, this.margenIzq, this.margenDer )
+    espaciarTextosLargos2(this.doc,input.value,this.usoPagina, this.margenIzq, this.margenDer )
 
 
   }
@@ -699,7 +700,7 @@ export class InformeService {
     }
   }
 
-  crearInforme() {
+  crearInforme(inputs: FormGroup) {
     this.implementarFuentes()
     this.implementarPortada()
     // this.generarTablaResumen()
@@ -707,11 +708,11 @@ export class InformeService {
     // this.generarAnalisisDeDatos()
     // this.generarAnalisisGeneralPrismas()
     // this.generarAnalisisPrismas()
-    this.conclusion()
+    this.conclusion(inputs.controls['textAreaTest'])
   }
 
-  generarInforme() {
-    this.crearInforme()
+  generarInforme(inputs: FormGroup) {
+    this.crearInforme(inputs)
     this.doc.setProperties({ title: 'Informe Mensual EFE' })
     this.doc.output('pdfobjectnewwindow')
   }

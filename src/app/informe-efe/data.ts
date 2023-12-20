@@ -85,56 +85,73 @@ export const obtenerAncho = (pdfGen: jsPDF, texto: string, margen: number) => {
     return tamanoFuente * valor
 }
 
-export const dividirTexto = (text: string) => {
+const dividirTexto = (text: string) => {
     return text.split('\n')
 }
 
+const saltoDePagina = (str: string, doc: jsPDF, ancho: number, usopag: number) => {
+    if (usopag + obtenerAncho(doc, str, ancho) > 745) {
+        doc.addPage()
+        genradorDeHeaderYFooter(doc)
+        return 100
+    }
+    return usopag
+}
 
-export const dividirPorGuiones = (str: string) => {
-    let divisiones = str.split('-')
-    return divisiones
+const textosConNegrita = (doc: jsPDF, str: string, init: number, margenTop: number, ancho: number) => {
+    //-Esto es una *prueba* de todas maneras. Esto es una *prueba* de todas maneras. Esto es una *prueba* de todas maneras. Esto es una *prueba* de todas maneras. Esto es una *prueba* de todas maneras. Esto es una *prueba* de todas maneras.
+    let textCopy = ''
+    let fontSize = doc.getFontSize()
+
+    // if(doc.getTextDimensions(str).w/ancho < 1){
+    if (str[0] != '*') {
+        let txts = str.split('*');
+        console.log(txts);
+        txts.forEach((txt, index) => {
+            if (index % 2 != 0) {
+                doc.setFont('Lato', 'bold')
+                init += doc.getStringUnitWidth(textCopy.trim()) * fontSize
+                justify(doc, txt, init, margenTop, ancho - init)
+                console.log('entro');
+                textCopy = txt
+
+            } else {
+                doc.setFont('Lato', 'normal')
+
+                init += doc.getStringUnitWidth(textCopy.trim()) * fontSize
+                justify(doc, txt, init, margenTop, ancho - init)
+                textCopy = txt
+            }
+        })
+    }
+    // }
 
 }
 
 
 export const espaciarTextosLargos2 = (doc: jsPDF, textos: string, margenTop: number, inicio: number, anchoMax: number) => {
-    let text = dividirTexto(textos)
-    // text = text.splice(1,text.length-1)
-    let init = inicio + 15
-    let ancho = anchoMax - 15
-
-    text.forEach(texto => {
-        let arrText = dividirPorGuiones(texto)
-        if (arrText) {
-            console.log(arrText[0]);
-            
-            if (arrText[0] == '') {
-                if (margenTop + obtenerAncho(doc, arrText[1], anchoMax) > 745) {
-                    doc.addPage()
-                    genradorDeHeaderYFooter(doc)
-                    margenTop = 100
-                    doc.text('•', inicio, margenTop, { align: 'left' })
-                    justify(doc, arrText[1], init, margenTop, ancho)
-                    margenTop = margenTop + obtenerAncho(doc, arrText[1], ancho)
-                } else {
-                    doc.text('•', inicio, margenTop, { align: 'left' })
-                    justify(doc, arrText[1], init, margenTop, ancho)
-                    margenTop = margenTop + obtenerAncho(doc, arrText[1], ancho)
-                }
+    if (textos) {
+        let text = dividirTexto(textos)
+        let init = inicio + 15
+        let ancho = anchoMax - 15
+        text.forEach(texto => {
+            if (texto[0] == '-') {
+                let txt = texto.slice(1, texto.length)
+                margenTop = saltoDePagina(txt, doc, ancho, margenTop)
+                doc.text('•', inicio, margenTop, { align: 'left' })
+                justify(doc, txt, init, margenTop, ancho)
+                margenTop = margenTop + obtenerAncho(doc, txt, ancho)
             } else {
-                if (margenTop + obtenerAncho(doc, arrText[0], anchoMax) > 745) {
-                    doc.addPage()
-                    genradorDeHeaderYFooter(doc)
-                    margenTop = 100
-                    justify(doc, arrText[0], inicio, margenTop, anchoMax)
-                    margenTop = margenTop + obtenerAncho(doc, arrText[0], anchoMax)
+                if (texto.length == 0) {
+                    margenTop += 17
                 } else {
-                    justify(doc, arrText[0], inicio, margenTop, anchoMax)
-                    margenTop = margenTop + obtenerAncho(doc, arrText[0], anchoMax)
+                    margenTop = saltoDePagina(texto, doc, ancho, margenTop)
+                    justify(doc, texto, inicio, margenTop, anchoMax)
+                    margenTop = margenTop + obtenerAncho(doc, texto, anchoMax)
                 }
             }
-        }
-    })
+        })
+    }
     return margenTop
 }
 
@@ -287,6 +304,5 @@ export const data = {
 
     },
 
-    conclusion: 'Estos datos son los que se hablan por hablar y que no estan\n-El monitoreo se encuentra en estado *Normal*.\n-La plataforma posee una comunicación con piezómetros, Geo Centinelas de Corte y Deformación (GCC y GCC), sumado a información de agua caída producto de las lluvias.\n-Durante el mes se presentan 2 instancias de vigilancia, siendo el 29 de Octubre y el 10 de Noviembre.\nEsto es una prueba\n-Durante el mes se envió un reporte post sismo el 6 de Noviembre (5.1 Mw).\n-No se observaron variaciones significativas en las lecturas de piezómetros a lo largo del mes, aún cuando se presentaron 2 episodios de precipitación mayor a 10 mm/día.\n-No se observaron variaciones en las lecturas de los instrumentos posterior al evento sísmico del 6 de Noviembre, el cual fue de una magnitud mediana y su epicentro estuvo cerca (30 Km al Oeste de Valparaíso).\n-La comunicación de algunos equipos como Geo Centinelas se ve interrumpida por problemas de sombra en algunos sensores, los cuales pueden descargarse, sin embargo, al recuperar la energía se recupera la conexión, por lo que se hace necesario realizar una visita para limpiar equipos, vegetación y corroborar el estado de los prismas, puesto que permite hacer un contraste entre las diferentes mediciones.'
+    conclusion: 'Estos datos son los que se hablan por hablar y que no estan\n-El monitoreo se encuentra en estado *Normal*.\n-La plataforma posee una comunicación con piezómetros, Geo Centinelas de Corte y Deformación (GCC y GCC), sumado a información de agua caída producto de las lluvias.\n-Durante el mes se presentan 2 instancias de vigilancia, siendo el 29 de Octubre y el 10 de Noviembre.\nEsto es una prueba\n-Durante el mes se envió un reporte post sismo el 6 de Noviembre (5.1 Mw).\n-No se observaron variaciones significativas en las lecturas de piezómetros a lo largo del mes, aún cuando se presentaron 2 episodios de precipitación mayor a 10 mm/día.\n-No se observaron variaciones en las lecturas de los instrumentos posterior al evento sísmico del 6 de Noviembre, el cual fue de una magnitud mediana y su epicentro estuvo cerca (30 Km al Oeste de Valparaíso).\n-La comunicación de algunos equipos como Geo Centinelas se ve interrumpida por problemas de sombra en algunos sensores, los cuales pueden descargarse, sin embargo, al recuperar la energía se recupera la conexión, por lo que se hace necesario realizar una visita para limpiar equipos, vegetación y corroborar el estado de los prismas, puesto que permite hacer un contraste entre las diferentes mediciones.\n\nEsto es el final de algo...'
 }
-

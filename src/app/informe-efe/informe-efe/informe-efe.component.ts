@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { InformeService } from '../informe.service';
+import { FormControl, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-informe-efe',
@@ -11,5 +12,8 @@ export class InformeEfeComponent {
   constructor(private servicio : InformeService){}
 
   service = this.servicio
+  dataInputs = new FormGroup({
+    textAreaTest : new FormControl()
+  })
   
 }

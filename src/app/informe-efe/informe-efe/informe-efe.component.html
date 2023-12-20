@@ -1,3 +1,7 @@
-<div class="d-flex justify-content-center mt-5">
-    <button type="button" class="btn btn-primary" (click)="service.generarInforme()" mdbRipple>mostrar</button>
+<div class="d-flex justify-content-center align-items-center flex-column mt-5" [formGroup]="dataInputs">
+    <button type="button" class="btn btn-primary" (click)="service.generarInforme(dataInputs)" mdbRipple>mostrar</button>
+    <mdb-form-control class="mt-5 col-4">
+        <textarea mdbInput class="form-control" id="textAreaExample" rows="4" formControlName="textAreaTest"></textarea>
+        <label mdbLabel class="form-label" for="textAreaExample">Message</label>
+    </mdb-form-control>
 </div>
