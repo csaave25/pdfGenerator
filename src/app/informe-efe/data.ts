@@ -12,7 +12,6 @@ export const colores = {
     amarillo: '#C2C71B'
 }
 
-
 export function justify(pdfGen: jsPDF, text: string, xStart: number, yStart: number, textWidth: number) {
     text = text.replace(/(?:\r\n|\r|\n)/g, ' ');
     text = text.replace(/ +(?= )/g, '');
@@ -22,7 +21,7 @@ export function justify(pdfGen: jsPDF, text: string, xStart: number, yStart: num
     let wordsInfo: IWordInfo[] = [];
     let lineLength = 0;
     for (const word of words) {
-        const wordLength = pdfGen.getTextWidth(word + ' ');
+        const wordLength = pdfGen.getTextWidth(word.replace('*', "").replace('*', "") + ' ');
         if (wordLength + lineLength > textWidth) {
             writeLine(pdfGen, wordsInfo, lineLength, lineNumber++, xStart, yStart, lineHeight, textWidth);
             wordsInfo = [];
@@ -37,8 +36,22 @@ export function justify(pdfGen: jsPDF, text: string, xStart: number, yStart: num
 }
 
 function writeLastLine(wordsInfo: IWordInfo[], pdfGen: jsPDF, xStart: number, yStart: number, lineNumber: number, lineHeight: number) {
+
+    //-Esto es una *prueba* de todas maneras. Esto es una *prueba* de todas maneras. Esto es una *prueba* de todas maneras. Esto es una *prueba* de todas maneras. Esto es una *prueba* de todas maneras. Esto es una *prueba* de todas maneras. Esto es una *prueba* de todas maneras. Esto es una *prueba* de todas maneras. Esto es una *prueba* de todas maneras.
+
     const line = wordsInfo.map(x => x.text).join(' ');
-    pdfGen.text(line, xStart, yStart + lineNumber * lineHeight);
+    console.log(line);
+    let txt = line.split('*')
+    let lastWordWidth = 0
+    txt.forEach((str, index) => {
+        if (index % 2 != 0) {
+            pdfGen.setFont('Lato', 'bold')
+        } else {
+            pdfGen.setFont('Lato', 'normal')
+        }
+        pdfGen.text(str, xStart + lastWordWidth, yStart + lineNumber * lineHeight);
+        lastWordWidth += pdfGen.getTextWidth(str)
+    })
 }
 
 function writeLine(pdfGen: jsPDF, wordsInfo: IWordInfo[], lineLength: number, lineNumber: number, xStart: number, yStart: number, lineHeight: number, textWidth: number) {
@@ -47,7 +60,12 @@ function writeLine(pdfGen: jsPDF, wordsInfo: IWordInfo[], lineLength: number, li
     let x = xStart;
     const y = yStart + lineNumber * lineHeight;
     for (const wordInfo of wordsInfo) {
-        pdfGen.text(wordInfo.text, x, y);
+        if(wordInfo.text.includes('*')){
+            pdfGen.setFont('Lato', 'bold')
+        }else{
+            pdfGen.setFont('Lato', 'normal')
+        }
+        pdfGen.text(wordInfo.text.replace('*', "").replace('*', ""), x, y);
         x += wordInfo.wordLength + wordSpacing;
     }
 }
@@ -98,37 +116,6 @@ const saltoDePagina = (str: string, doc: jsPDF, ancho: number, usopag: number) =
     return usopag
 }
 
-const textosConNegrita = (doc: jsPDF, str: string, init: number, margenTop: number, ancho: number) => {
-    //-Esto es una *prueba* de todas maneras. Esto es una *prueba* de todas maneras. Esto es una *prueba* de todas maneras. Esto es una *prueba* de todas maneras. Esto es una *prueba* de todas maneras. Esto es una *prueba* de todas maneras.
-    let textCopy = ''
-    let fontSize = doc.getFontSize()
-
-    // if(doc.getTextDimensions(str).w/ancho < 1){
-    if (str[0] != '*') {
-        let txts = str.split('*');
-        console.log(txts);
-        txts.forEach((txt, index) => {
-            if (index % 2 != 0) {
-                doc.setFont('Lato', 'bold')
-                init += doc.getStringUnitWidth(textCopy.trim()) * fontSize
-                justify(doc, txt, init, margenTop, ancho - init)
-                console.log('entro');
-                textCopy = txt
-
-            } else {
-                doc.setFont('Lato', 'normal')
-
-                init += doc.getStringUnitWidth(textCopy.trim()) * fontSize
-                justify(doc, txt, init, margenTop, ancho - init)
-                textCopy = txt
-            }
-        })
-    }
-    // }
-
-}
-
-
 export const espaciarTextosLargos2 = (doc: jsPDF, textos: string, margenTop: number, inicio: number, anchoMax: number) => {
     if (textos) {
         let text = dividirTexto(textos)
@@ -154,7 +141,6 @@ export const espaciarTextosLargos2 = (doc: jsPDF, textos: string, margenTop: num
     }
     return margenTop
 }
-
 
 export const genradorDeHeaderYFooter = (doc: jsPDF) => {
     let margenIzq = 20
