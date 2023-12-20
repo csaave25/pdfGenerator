@@ -40,7 +40,6 @@ function writeLastLine(wordsInfo: IWordInfo[], pdfGen: jsPDF, xStart: number, yS
     //-Esto es una *prueba* de todas maneras. Esto es una *prueba* de todas maneras. Esto es una *prueba* de todas maneras. Esto es una *prueba* de todas maneras. Esto es una *prueba* de todas maneras. Esto es una *prueba* de todas maneras. Esto es una *prueba* de todas maneras. Esto es una *prueba* de todas maneras. Esto es una *prueba* de todas maneras.
 
     const line = wordsInfo.map(x => x.text).join(' ');
-    console.log(line);
     let txt = line.split('*')
     let lastWordWidth = 0
     txt.forEach((str, index) => {
@@ -116,7 +115,7 @@ const saltoDePagina = (str: string, doc: jsPDF, ancho: number, usopag: number) =
     return usopag
 }
 
-export const espaciarTextosLargos2 = (doc: jsPDF, textos: string, margenTop: number, inicio: number, anchoMax: number) => {
+export const formateadoraDeTexto = (doc: jsPDF, textos: string, margenTop: number, inicio: number, anchoMax: number) => {
     if (textos) {
         let text = dividirTexto(textos)
         let init = inicio + 15
@@ -202,7 +201,7 @@ export const genradorDeHeaderYFooter = (doc: jsPDF) => {
 
 export const data = {
     ano: 2023,
-    mes: 11,
+    mes: 8,
     dia: 21,
     numInfo: 5,
     titulo: 'INFORME MENSUAL N°',
@@ -261,7 +260,7 @@ export const data = {
             pozo: 13
         },
         {
-            obsGenerales: 'Durante el periodo comprendido entre el 21 de Octubre de 2023 al 21 de Noviembre la estación se encontró en estado NORMAL.',
+            obsGenerales: 'Durante el periodo comprendido entre el 21 de Octubre de 2023 al 21 de Noviembre la estación se encontró en estado *normal*.',
             obsEspecificas: {
                 obsGrafico1: '',
                 obsGrafico2: 'Se observa un canal saturado a 2,9m de profundidad, pero que no se correlaciona con la deformación que muestran los demás canales.',
@@ -279,12 +278,12 @@ export const data = {
         analisisPrismas: [
             {
                 prismas: 'P04-P12',
-                obs: '-P04, 05, 06 y 09 sin lectura debido a que vegetación impide correcta captura de datos.\nP07, 08,10, 11 y 12 presentan bajos desplazamientos, que no se asocian a desplazamientos superficiales del talud. Sus lecturas están dentro de los márgenes de error del equipo. Su condición es inactiva.',
+                obs: '-P04, 05, 06 y 09 sin lectura debido a que vegetación impide correcta captura de datos.\n-P07, 08,10, 11 y 12 presentan bajos desplazamientos, que no se asocian a desplazamientos superficiales del talud. Sus lecturas están dentro de los márgenes de error del equipo. Su condición es inactiva.',
 
             },
             {
                 prismas: 'P13-P21',
-                obs: '- P13, 14, 15, 16, 17, 18, 19 y 20 presentan bajos desplazamientos, que no se asocian a desplazamientos superficiales del talud. Sus lecturas están dentro de los márgenes de error del equipo.\n-P21 muestra lecturas anómalas producto a que el prisma no se encuentra fijo.'
+                obs: '-P13, 14, 15, 16, 17, 18, 19 y 20 presentan bajos desplazamientos, que no se asocian a desplazamientos superficiales del talud. Sus lecturas están dentro de los márgenes de error del equipo.\n-P21 muestra lecturas anómalas producto a que el prisma no se encuentra fijo.'
             }
         ]
 

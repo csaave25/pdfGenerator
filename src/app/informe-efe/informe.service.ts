@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { jsPDF } from 'jspdf'
 import autoTable from 'jspdf-autotable'
 import { font, latoRegular, montBold, montMedium, montSemi } from 'src/assets/fonts/fonts';
-import {  colores, data, espaciarTextosLargos, espaciarTextosLargos2, justify, obtenerAncho } from './data';
+import { colores, data, formateadoraDeTexto, justify, obtenerAncho } from './data';
 import { FormControl, FormGroup } from '@angular/forms';
 
 @Injectable({
@@ -115,19 +115,19 @@ export class InformeService {
     this.doc.setFont("Lato", "normal");
 
     this.doc.setLineWidth(0.1);
-    this.doc.setFillColor(89, 238, 33);
+    this.doc.setFillColor(146, 208, 80);
     this.doc.circle(this.margenDer - 130, this.usoPagina + 165, 5, "FD");
     this.doc.text('Normal', this.margenDer - 119, this.usoPagina + 170, { align: 'left', maxWidth: this.maxMargen });
 
-    this.doc.setFillColor(237, 243, 38);
+    this.doc.setFillColor(255, 255, 0);
     this.doc.circle(this.margenDer - 130, this.usoPagina + 185, 5, "FD");
     this.doc.text('Precaución', this.margenDer - 119, this.usoPagina + 190, { align: 'left', maxWidth: this.maxMargen });
 
-    this.doc.setFillColor(238, 166, 33);
+    this.doc.setFillColor(228, 108, 10);
     this.doc.circle(this.margenDer - 130, this.usoPagina + 205, 5, "FD");
     this.doc.text('Alerta', this.margenDer - 119, this.usoPagina + 210, { align: 'left', maxWidth: this.maxMargen });
 
-    this.doc.setFillColor(238, 42, 33);
+    this.doc.setFillColor(255, 0, 0);
     this.doc.circle(this.margenDer - 130, this.usoPagina + 225, 5, "FD");
     this.doc.text('Alarma', this.margenDer - 119, this.usoPagina + 230, { align: 'left', maxWidth: this.maxMargen });
 
@@ -141,7 +141,7 @@ export class InformeService {
 
     this.usoPagina = this.usoPagina + 310
 
-    this.usoPagina = espaciarTextosLargos(this.doc, data.seccion1.estadogeneral, this.usoPagina, this.margenIzq, this.margenDer)
+    this.usoPagina = formateadoraDeTexto(this.doc, data.seccion1.estadogeneral, this.usoPagina, this.margenIzq, this.margenDer)
 
     this.crearNuevaPagina(this.usoPagina + 50)
     //Observaciones
@@ -208,11 +208,11 @@ export class InformeService {
         let x = data.cell.x + 5
         let y = data.cell.y + 3
         if (data.column.index == 0 && data.row.index == 0) {
-          this.doc.setFillColor(238, 42, 33);
+          this.doc.setFillColor(255, 0, 0);
           this.doc.circle(x + width - 20, y + 7, 4, "FD");
         }
         if (data.column.index == 0 && data.row.index == 1) {
-          this.doc.setFillColor(238, 166, 33);
+          this.doc.setFillColor(228, 108, 10);
           this.doc.circle(x + width - 20, y + 7, 4, "FD");
         }
       }
@@ -244,15 +244,15 @@ export class InformeService {
       this.doc.setFont("Lato", "normal");
 
       this.doc.setLineWidth(0.1);
-      this.doc.setFillColor(89, 238, 33);
+      this.doc.setFillColor(146, 208, 80);
       this.doc.circle(this.margenDer - 205, this.usoPagina + 20, 5, "FD");
       this.doc.text('Normal', this.margenDer - 194, this.usoPagina + 25, { align: 'left', maxWidth: this.maxMargen });
 
-      this.doc.setFillColor(237, 243, 38);
+      this.doc.setFillColor(255, 255, 0);
       this.doc.circle(this.margenDer - 205, this.usoPagina + 40, 5, "FD");
       this.doc.text('Precaución', this.margenDer - 194, this.usoPagina + 45, { align: 'left', maxWidth: this.maxMargen });
 
-      this.doc.setFillColor(238, 166, 33);
+      this.doc.setFillColor(228, 108, 10);
       this.doc.circle(this.margenDer - 205, this.usoPagina + 60, 5, "FD");
       this.doc.text('Alerta', this.margenDer - 194, this.usoPagina + 65, { align: 'left', maxWidth: this.maxMargen });
 
@@ -271,7 +271,7 @@ export class InformeService {
 
       this.doc.setFontSize(10)
       this.doc.setFont("Lato", "normal");
-      this.usoPagina += 20 + espaciarTextosLargos(this.doc, seccion.obsGenerales, this.usoPagina + 20, this.margenDer - 215, 215 + this.margenIzq)
+      this.usoPagina += 20 + formateadoraDeTexto(this.doc, seccion.obsGenerales, this.usoPagina + 20, this.margenDer - 215, 215 + this.margenIzq)
 
       //Estado mensual sensores
       this.usoPagina = this.cominezoContenidoY + 230
@@ -308,15 +308,15 @@ export class InformeService {
       this.doc.text('GCC Pozo ' + seccion.pozo + ': ', this.margenIzq + 310, this.usoPagina + 20, { align: 'left', maxWidth: this.maxMargen });
 
       this.doc.setFont("Lato", "normal");
-      espaciarTextosLargos(this.doc, seccion.obsEspecificas.gcd, this.usoPagina + 20, this.margenIzq + 95, 187)
-      espaciarTextosLargos(this.doc, seccion.obsEspecificas.gcc, this.usoPagina + 20, this.margenIzq + 375, 187)
+      formateadoraDeTexto(this.doc, seccion.obsEspecificas.gcd, this.usoPagina + 20, this.margenIzq + 95, 187)
+      formateadoraDeTexto(this.doc, seccion.obsEspecificas.gcc, this.usoPagina + 20, this.margenIzq + 375, 187)
       this.usoPagina += texto1 + 30
 
 
       // this.crearNuevaPagina(this.usoPagina + obtenerAncho(this.doc, seccion.obsEspecificas.obsGrafico2, this.maxMargen))
       this.doc.setFontSize(10)
       this.doc.setFont("Lato", "normal");
-      this.usoPagina = espaciarTextosLargos(this.doc, seccion.obsEspecificas.obsGrafico2, this.usoPagina, this.margenIzq, this.margenDer) + 10
+      this.usoPagina = formateadoraDeTexto(this.doc, seccion.obsEspecificas.obsGrafico2, this.usoPagina, this.margenIzq, this.margenDer) + 10
 
       this.crearNuevaPagina(this.usoPagina + 400)
 
@@ -342,7 +342,7 @@ export class InformeService {
 
       this.doc.setFontSize(10)
       this.doc.setFont("Lato", "normal");
-      this.usoPagina = espaciarTextosLargos(this.doc, seccion.obsPiezometro, this.usoPagina + 20, this.margenIzq, this.margenDer)
+      this.usoPagina = formateadoraDeTexto(this.doc, seccion.obsPiezometro, this.usoPagina + 20, this.margenIzq, this.margenDer)
       nEstacion++
 
     })
@@ -377,52 +377,52 @@ export class InformeService {
 
     this.doc.setFontSize(10)
     this.doc.setFont("Lato", "normal");
-    this.doc.setFillColor(238, 42, 33);
+    this.doc.setFillColor(94, 79, 162);
     this.doc.circle(this.margenIzq + 477, this.usoPagina + 40, 5, "FD");
     this.doc.text('100 - 150', this.margenIzq + 488, this.usoPagina + 43, { align: 'left', maxWidth: this.maxMargen });
     this.usoPagina += 40
 
-    this.doc.setFillColor(238, 42, 33);
+    this.doc.setFillColor(50, 136, 189);
     this.doc.circle(this.margenIzq + 477, this.usoPagina + 22, 5, "FD");
     this.doc.text('50 - 100', this.margenIzq + 488, this.usoPagina + 25, { align: 'left', maxWidth: this.maxMargen });
     this.usoPagina += 20
 
-    this.doc.setFillColor(238, 42, 33);
+    this.doc.setFillColor(102, 194, 165);
     this.doc.circle(this.margenIzq + 477, this.usoPagina + 22, 5, "FD");
     this.doc.text('25 - 50', this.margenIzq + 488, this.usoPagina + 25, { align: 'left', maxWidth: this.maxMargen });
     this.usoPagina += 20
 
-    this.doc.setFillColor(238, 42, 33);
+    this.doc.setFillColor(171, 221, 164);
     this.doc.circle(this.margenIzq + 477, this.usoPagina + 22, 5, "FD");
     this.doc.text('5 - 25', this.margenIzq + 488, this.usoPagina + 25, { align: 'left', maxWidth: this.maxMargen });
     this.usoPagina += 20
 
-    this.doc.setFillColor(238, 42, 33);
+    this.doc.setFillColor(230, 245, 152);
     this.doc.circle(this.margenIzq + 477, this.usoPagina + 22, 5, "FD");
     this.doc.text('-5 - 5', this.margenIzq + 488, this.usoPagina + 25, { align: 'left', maxWidth: this.maxMargen });
     this.usoPagina += 20
 
-    this.doc.setFillColor(238, 42, 33);
+    this.doc.setFillColor(254, 224, 139);
     this.doc.circle(this.margenIzq + 477, this.usoPagina + 22, 5, "FD");
     this.doc.text('-25 - -5', this.margenIzq + 488, this.usoPagina + 25, { align: 'left', maxWidth: this.maxMargen });
     this.usoPagina += 20
 
-    this.doc.setFillColor(238, 42, 33);
+    this.doc.setFillColor(253, 174, 97);
     this.doc.circle(this.margenIzq + 477, this.usoPagina + 22, 5, "FD");
     this.doc.text('-50 - -25', this.margenIzq + 488, this.usoPagina + 25, { align: 'left', maxWidth: this.maxMargen });
     this.usoPagina += 20
 
-    this.doc.setFillColor(238, 42, 33);
+    this.doc.setFillColor(244, 109, 67);
     this.doc.circle(this.margenIzq + 477, this.usoPagina + 22, 5, "FD");
     this.doc.text('-100 - -50', this.margenIzq + 488, this.usoPagina + 25, { align: 'left', maxWidth: this.maxMargen });
     this.usoPagina += 20
 
-    this.doc.setFillColor(238, 42, 33);
+    this.doc.setFillColor(213, 62, 79);
     this.doc.circle(this.margenIzq + 477, this.usoPagina + 22, 5, "FD");
     this.doc.text('-150 - -100', this.margenIzq + 488, this.usoPagina + 25, { align: 'left', maxWidth: this.maxMargen });
     this.usoPagina += 20
 
-    this.doc.setFillColor(238, 42, 33);
+    this.doc.setFillColor(158, 1, 66);
     this.doc.circle(this.margenIzq + 477, this.usoPagina + 22, 5, "FD");
     this.doc.text('-200 - -150', this.margenIzq + 488, this.usoPagina + 25, { align: 'left', maxWidth: this.maxMargen });
     this.usoPagina += 20
@@ -470,52 +470,52 @@ export class InformeService {
 
       this.doc.setFontSize(10)
       this.doc.setFont("Lato", "normal");
-      this.doc.setFillColor(238, 42, 33);
+      this.doc.setFillColor(94, 79, 162);
       this.doc.circle(this.margenIzq + 425, this.usoPagina + 40, 5, "FD");
       this.doc.text('100 - 150', this.margenIzq + 436, this.usoPagina + 43, { align: 'left', maxWidth: this.maxMargen });
       this.usoPagina += 40
 
-      this.doc.setFillColor(238, 42, 33);
+      this.doc.setFillColor(50, 136, 189);
       this.doc.circle(this.margenIzq + 425, this.usoPagina + 22, 5, "FD");
       this.doc.text('50 - 100', this.margenIzq + 436, this.usoPagina + 25, { align: 'left', maxWidth: this.maxMargen });
       this.usoPagina += 20
 
-      this.doc.setFillColor(238, 42, 33);
+      this.doc.setFillColor(102, 194, 165);
       this.doc.circle(this.margenIzq + 425, this.usoPagina + 22, 5, "FD");
       this.doc.text('25 - 50', this.margenIzq + 436, this.usoPagina + 25, { align: 'left', maxWidth: this.maxMargen });
       this.usoPagina += 20
 
-      this.doc.setFillColor(238, 42, 33);
+      this.doc.setFillColor(171, 221, 164);
       this.doc.circle(this.margenIzq + 425, this.usoPagina + 22, 5, "FD");
       this.doc.text('5 - 25', this.margenIzq + 436, this.usoPagina + 25, { align: 'left', maxWidth: this.maxMargen });
       this.usoPagina += 20
 
-      this.doc.setFillColor(238, 42, 33);
+      this.doc.setFillColor(230, 245, 152);
       this.doc.circle(this.margenIzq + 425, this.usoPagina + 22, 5, "FD");
       this.doc.text('-5 - 5', this.margenIzq + 436, this.usoPagina + 25, { align: 'left', maxWidth: this.maxMargen });
       this.usoPagina += 20
 
-      this.doc.setFillColor(238, 42, 33);
+      this.doc.setFillColor(254, 224, 139);
       this.doc.circle(this.margenIzq + 425, this.usoPagina + 22, 5, "FD");
       this.doc.text('-25 - -5', this.margenIzq + 436, this.usoPagina + 25, { align: 'left', maxWidth: this.maxMargen });
       this.usoPagina += 20
 
-      this.doc.setFillColor(238, 42, 33);
+      this.doc.setFillColor(253, 174, 97);
       this.doc.circle(this.margenIzq + 425, this.usoPagina + 22, 5, "FD");
       this.doc.text('-50 - -25', this.margenIzq + 436, this.usoPagina + 25, { align: 'left', maxWidth: this.maxMargen });
       this.usoPagina += 20
 
-      this.doc.setFillColor(238, 42, 33);
+      this.doc.setFillColor(244, 109, 67);
       this.doc.circle(this.margenIzq + 425, this.usoPagina + 22, 5, "FD");
       this.doc.text('-100 - -50', this.margenIzq + 436, this.usoPagina + 25, { align: 'left', maxWidth: this.maxMargen });
       this.usoPagina += 20
 
-      this.doc.setFillColor(238, 42, 33);
+      this.doc.setFillColor(213, 62, 79);
       this.doc.circle(this.margenIzq + 425, this.usoPagina + 22, 5, "FD");
       this.doc.text('-150 - -100', this.margenIzq + 436, this.usoPagina + 25, { align: 'left', maxWidth: this.maxMargen });
       this.usoPagina += 20
 
-      this.doc.setFillColor(238, 42, 33);
+      this.doc.setFillColor(158, 1, 66);
       this.doc.circle(this.margenIzq + 425, this.usoPagina + 22, 5, "FD");
       this.doc.text('-200 - -150', this.margenIzq + 436, this.usoPagina + 25, { align: 'left', maxWidth: this.maxMargen });
       this.usoPagina += 50
@@ -526,13 +526,16 @@ export class InformeService {
 
 
       //Observaciones generales
-    this.doc.setFontSize(10)
-    this.doc.setFont("Lato", "bold");
-    this.doc.text('Observaciones generales', this.margenIzq, this.usoPagina + 10, { align: 'left', maxWidth: this.maxMargen });
+      this.doc.setFontSize(10)
+      this.doc.setFont("Lato", "bold");
+      this.doc.text('Observaciones generales', this.margenIzq, this.usoPagina + 10, { align: 'left', maxWidth: this.maxMargen });
+      this.usoPagina += 10
+
+      this.usoPagina = formateadoraDeTexto(this.doc, elm.obs, this.usoPagina + 20, this.margenIzq, this.margenDer)
     });
   }
 
-  conclusion(input: any){
+  conclusion(input: any) {
     this.crearNuevaPagina(800)
 
     this.doc.setFontSize(12)
@@ -543,7 +546,7 @@ export class InformeService {
     this.doc.setFontSize(10)
     this.doc.setFont("Lato", "normal");
     // this.doc.text(data.conclusion, this.margenIzq, this.usoPagina, { align: 'left', maxWidth: this.maxMargen });
-    espaciarTextosLargos2(this.doc,input.value,this.usoPagina, this.margenIzq, this.margenDer )
+    formateadoraDeTexto(this.doc, input.value, this.usoPagina, this.margenIzq, this.margenDer)
 
 
   }
@@ -703,11 +706,11 @@ export class InformeService {
   crearInforme(inputs: FormGroup) {
     this.implementarFuentes()
     this.implementarPortada()
-    // this.generarTablaResumen()
-    // this.generarSeccion1()
-    // this.generarAnalisisDeDatos()
-    // this.generarAnalisisGeneralPrismas()
-    // this.generarAnalisisPrismas()
+    this.generarTablaResumen()
+    this.generarSeccion1()
+    this.generarAnalisisDeDatos()
+    this.generarAnalisisGeneralPrismas()
+    this.generarAnalisisPrismas()
     this.conclusion(inputs.controls['textAreaTest'])
   }
 
