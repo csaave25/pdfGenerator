@@ -436,6 +436,8 @@ export class InformeService {
     this.doc.setFont("Lato", "bold");
     this.doc.text('Observaciones generales', this.margenIzq, this.usoPagina + 8, { align: 'left', maxWidth: this.maxMargen });
 
+    this.usoPagina= formateadoraDeTexto(this.doc,data.seccionPrismas.obsGenerales,this.usoPagina+ 28,this.margenIzq,this.margenDer)
+
   }
 
   generarAnalisisPrismas() {
