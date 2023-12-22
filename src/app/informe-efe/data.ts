@@ -201,7 +201,7 @@ export const genradorDeHeaderYFooter = (doc: jsPDF) => {
 
 export const data = {
     ano: 2023,
-    mes: 8,
+    mes: 10,
     dia: 21,
     numInfo: 5,
     titulo: 'INFORME MENSUAL N°',

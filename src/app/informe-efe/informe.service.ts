@@ -4,13 +4,14 @@ import autoTable from 'jspdf-autotable'
 import { font, latoRegular, montBold, montMedium, montSemi } from 'src/assets/fonts/fonts';
 import { colores, data, formateadoraDeTexto, justify, obtenerAncho } from './data';
 import { FormControl, FormGroup } from '@angular/forms';
+import { ApiService } from './api.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class InformeService {
 
-  constructor() { }
+  constructor(private api: ApiService) { }
 
 
   doc = new jsPDF('p', 'pt', 'letter')
@@ -436,7 +437,7 @@ export class InformeService {
     this.doc.setFont("Lato", "bold");
     this.doc.text('Observaciones generales', this.margenIzq, this.usoPagina + 8, { align: 'left', maxWidth: this.maxMargen });
 
-    this.usoPagina= formateadoraDeTexto(this.doc,data.seccionPrismas.obsGenerales,this.usoPagina+ 28,this.margenIzq,this.margenDer)
+    this.usoPagina = formateadoraDeTexto(this.doc, data.seccionPrismas.obsGenerales, this.usoPagina + 28, this.margenIzq, this.margenDer)
 
   }
 
@@ -718,8 +719,18 @@ export class InformeService {
 
   generarInforme(inputs: FormGroup) {
     this.crearInforme(inputs)
-    this.doc.setProperties({ title: 'Informe Mensual EFE' })
-    this.doc.output('pdfobjectnewwindow')
+    this.doc.setProperties({title: 'INFORME_EFE'})
+    this.doc.output('pdfobjectnewwindow', { filename: 'REPOSRTE_MENSUAL_' + this.mes.toUpperCase() + '_' + data.ano })
+  }
+
+  subirInforme(inputs: FormGroup) {
+    this.crearInforme(inputs)
+    // let doc =  this.doc.output('dataurl', {filename: 'REPOSRTE_MENSUAL_'+ this.mes.toUpperCase() + '_'+ data.ano}) 
+    this.doc.setProperties({title: 'Este es un ejemplo'})   
+    let doc = this.doc.output('blob')
+    this.api.sendPDF(doc)
+ 
+    
   }
 
 

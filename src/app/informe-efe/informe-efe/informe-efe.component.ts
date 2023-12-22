@@ -21,11 +21,8 @@ export class InformeEfeComponent implements OnInit {
   ngOnInit(): void {
 
     this.api.getGeocentinelas().subscribe(data => {
-
       this.api.getProfundidadGeocentinela().subscribe(res => {
-
         this.api.getEstadoCentinela().subscribe(dta => {
-
           data.objects.forEach((cen: any) => {
             let geo: any = []
             res.forEach((element: any) => {
@@ -48,14 +45,18 @@ export class InformeEfeComponent implements OnInit {
               estacion: cen.estacion,
               profundidades: geo
             })
-
           })
-    
         })
       })
-
-
     })
+
+
+
+    // this.api.getPDF().subscribe(data => {
+    //   console.log(data);  
+
+    // })
+
 
   }
 
