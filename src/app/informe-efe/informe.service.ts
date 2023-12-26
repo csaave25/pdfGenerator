@@ -719,18 +719,25 @@ export class InformeService {
 
   generarInforme(inputs: FormGroup) {
     this.crearInforme(inputs)
-    this.doc.setProperties({title: 'INFORME_EFE'})
+    this.doc.setProperties({ title: 'INFORME_EFE' })
     this.doc.output('pdfobjectnewwindow', { filename: 'REPOSRTE_MENSUAL_' + this.mes.toUpperCase() + '_' + data.ano })
   }
 
   subirInforme(inputs: FormGroup) {
+    let dataForm = new FormData()
+
     this.crearInforme(inputs)
-    // let doc =  this.doc.output('dataurl', {filename: 'REPOSRTE_MENSUAL_'+ this.mes.toUpperCase() + '_'+ data.ano}) 
-    this.doc.setProperties({title: 'Este es un ejemplo'})   
-    let doc = this.doc.output('blob')
-    this.api.sendPDF(doc)
- 
-    
+    this.doc.setProperties({ title: 'REPORTE-EFE' })
+    var blob = this.doc.output('blob')
+
+    let d = new Date();
+    let localDate = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate()
+    let localTime = d.toLocaleTimeString();
+
+    // dataForm.append('file', blob, 'REPORTE-MENSUAL-3.pdf')
+    // dataForm.append('fecha',  '2023-12-12 12:00:01')
+    // this.api.sendPDF(dataForm)
+
   }
 
 
