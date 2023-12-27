@@ -14,7 +14,7 @@ export class InformeService {
   constructor(private api: ApiService) { }
 
 
-  doc = new jsPDF('p', 'pt', 'letter')
+  doc = new jsPDF('p', 'pt', 'letter', true)
   margenIzq = 20
   margenDer = 562
   finalPagina = 760
@@ -37,7 +37,7 @@ export class InformeService {
     this.doc.text('Análisis de datos estaciones', this.margenIzq, this.usoPagina, { align: 'left', maxWidth: this.maxMargen });
     this.usoPagina += 10
 
-    this.doc.addImage("assets/EFE/estacion7.png", 'PNG',this.margenIzq, this.usoPagina, 370, 270, 'estacioness', 'SLOW');
+    this.doc.addImage("assets/EFE/estaciones.png", 'PNG', this.margenIzq, this.usoPagina, 370, 270, 'estacioness', 'FAST');
 
     this.doc.setTextColor(colores.negro)
     this.doc.setFontSize(10)
@@ -48,20 +48,20 @@ export class InformeService {
 
     if (data.seccion1.estadoIntrumentos.piezometro) {
       this.doc.setTextColor(colores.verde)
-      this.doc.addImage("assets/EFE/checkmark.png", 'PNG', this.margenDer - 165, this.usoPagina + 20, 12, 12, 'check' + this.contadorPagina, 'SLOW');
+      this.doc.addImage("assets/EFE/checkmark.png", 'PNG', this.margenDer - 165, this.usoPagina + 20, 12, 12, 'check-1' + this.contadorPagina, 'FAST');
     } else {
       this.doc.setTextColor(colores.amarillo)
-      this.doc.addImage("assets/EFE/caution.png", 'PNG', this.margenDer - 165, this.usoPagina + 20, 12, 12, 'caution' + this.contadorPagina, 'SLOW');
+      this.doc.addImage("assets/EFE/caution.png", 'PNG', this.margenDer - 165, this.usoPagina + 20, 12, 12, 'caution-1' + this.contadorPagina, 'FAST');
     }
     this.doc.text('Piezómetros', this.margenDer - 150, this.usoPagina + 30, { align: 'left', maxWidth: this.maxMargen });
 
 
     if (data.seccion1.estadoIntrumentos.gcd) {
       this.doc.setTextColor(colores.verde)
-      this.doc.addImage("assets/EFE/checkmark.png", 'PNG', this.margenDer - 165, this.usoPagina + 40, 12, 12, 'check' + this.contadorPagina, 'SLOW');
+      this.doc.addImage("assets/EFE/checkmark.png", 'PNG', this.margenDer - 165, this.usoPagina + 40, 12, 12, 'check-2' + this.contadorPagina, 'FAST');
     } else {
       this.doc.setTextColor(colores.amarillo)
-      this.doc.addImage("assets/EFE/caution.png", 'PNG', this.margenDer - 165, this.usoPagina + 40, 12, 12, 'caution' + this.contadorPagina, 'SLOW');
+      this.doc.addImage("assets/EFE/caution.png", 'PNG', this.margenDer - 165, this.usoPagina + 40, 12, 12, 'caution-2' + this.contadorPagina, 'FAST');
     }
     this.doc.text('GCD: Geo Centinela Deformación', this.margenDer - 150, this.usoPagina + 50, { align: 'left', maxWidth: this.maxMargen });
 
@@ -69,10 +69,10 @@ export class InformeService {
 
     if (data.seccion1.estadoIntrumentos.gcc) {
       this.doc.setTextColor(colores.verde)
-      this.doc.addImage("assets/EFE/checkmark.png", 'PNG', this.margenDer - 165, this.usoPagina + 60, 12, 12, 'check' + this.contadorPagina, 'SLOW');
+      this.doc.addImage("assets/EFE/checkmark.png", 'PNG', this.margenDer - 165, this.usoPagina + 60, 12, 12, undefined , 'FAST');
     } else {
       this.doc.setTextColor(colores.amarillo)
-      this.doc.addImage("assets/EFE/caution.png", 'PNG', this.margenDer - 165, this.usoPagina + 60, 12, 12, 'caution' + this.contadorPagina, 'SLOW');
+      this.doc.addImage("assets/EFE/caution.png", 'PNG', this.margenDer - 165, this.usoPagina + 60, 12, 12, undefined, 'FAST');
     }
 
     this.doc.text('GCC: Geo Centinela Corte', this.margenDer - 150, this.usoPagina + 70, { align: 'left', maxWidth: this.maxMargen });
@@ -80,11 +80,11 @@ export class InformeService {
 
     if (data.seccion1.estadoIntrumentos.prisma) {
       this.doc.setTextColor(colores.verde)
-      this.doc.addImage("assets/EFE/checkmark.png", 'PNG', this.margenDer - 165, this.usoPagina + 80, 12, 12, 'check' + this.contadorPagina, 'SLOW');
+      this.doc.addImage("assets/EFE/checkmark.png", 'PNG', this.margenDer - 165, this.usoPagina + 80, 12, 12, 'check-4' + this.contadorPagina, 'FAST');
 
     } else {
       this.doc.setTextColor(colores.amarillo)
-      this.doc.addImage("assets/EFE/caution.png", 'PNG', this.margenDer - 165, this.usoPagina + 80, 12, 12, 'caution' + this.contadorPagina, 'SLOW');
+      this.doc.addImage("assets/EFE/caution.png", 'PNG', this.margenDer - 165, this.usoPagina + 80, 12, 12, 'caution-4' + this.contadorPagina, 'FAST');
 
     }
 
@@ -105,9 +105,9 @@ export class InformeService {
         let x = data.cell.x + 5
         let y = data.cell.y + 3
         if (data.column.index == 0) {
-          this.doc.addImage("assets/EFE/checkmark.png", 'PNG', x, y, 11, 11, 'check' + this.contadorPagina, 'SLOW');
+          this.doc.addImage("assets/EFE/checkmark.png", 'PNG', x, y, 11, 11, 'check-5' + this.contadorPagina, 'FAST');
         } else {
-          this.doc.addImage("assets/EFE/caution.png", 'PNG', x + 6, y, 11, 11, 'caution' + this.contadorPagina, 'SLOW');
+          this.doc.addImage("assets/EFE/caution.png", 'PNG', x + 6, y, 11, 11, 'caution-5' + this.contadorPagina, 'FAST');
         }
       }
     })
@@ -182,7 +182,7 @@ export class InformeService {
       willDrawPage: (data) => {
         if (page != data.pageNumber) {
           this.usoPagina = this.cominezoContenidoY
-          this.doc.addImage("assets/images/marca.jpg", 'JPG', 0, 0, 612, 792, 'marca-x', 'SLOW');
+          this.doc.addImage("assets/images/marca.jpg", 'JPG', 0, 0, 612, 792, 'marca-x-20', 'FAST');
           this.implementarHeader()
           this.implementarFooter()
 
@@ -231,15 +231,22 @@ export class InformeService {
   generarAnalisisDeDatos() {
     let nEstacion = 6
 
-    data.seccionAnalisis.forEach(seccion => {
+    data.seccionAnalisis.forEach((seccion, index) => {
       this.crearNuevaPagina(this.usoPagina + 800)
 
       this.doc.setFontSize(10)
       this.doc.setFont("Lato", "bold");
       this.doc.text('Análisis de datos estación ' + nEstacion, this.margenIzq, this.usoPagina, { align: 'left', maxWidth: this.maxMargen });
       this.usoPagina += 10
-
-      this.doc.addImage("assets/EFE/Luis.jpg", 'JPG', this.margenIzq, this.usoPagina, 320, 220, 'LUIS' + this.contadorPagina, 'SLOW');
+      if (index == 0) {
+        // this.doc.addImage("assets/EFE/estacion6.png", 'PNG', this.margenIzq, this.usoPagina, 320, 220, undefined, 'FAST');
+      }
+      if (index == 1) {
+        // this.doc.addImage("assets/EFE/estacion7.png", 'PNG', this.margenIzq, this.usoPagina, 320, 220, undefined, 'FAST');
+      }
+      if (index == 1) {
+        // this.doc.addImage("assets/EFE/estacion8.png", 'PNG', this.margenIzq, this.usoPagina, 320, 220, undefined, 'FAST');
+      }
 
       //Tabla de criterios
       this.doc.setTextColor(colores.negro)
@@ -287,8 +294,8 @@ export class InformeService {
       this.doc.text('Estado mensual sensores GCD y GCC', this.margenIzq, this.usoPagina + 30, { align: 'left', maxWidth: this.maxMargen });
       this.usoPagina += 20
 
-      this.doc.addImage("assets/EFE/Luis.jpg", 'JPG', this.margenIzq, this.usoPagina + 20, 229, 220, 'LUIS' + this.contadorPagina, 'SLOW');
-      this.doc.addImage("assets/EFE/Luis.jpg", 'JPG', this.margenDer - 320 + this.margenIzq, this.usoPagina + 20, 319, 220, 'LUIS' + this.contadorPagina, 'SLOW');
+      // this.doc.addImage("assets/EFE/Luis.jpg", 'JPG', this.margenIzq, this.usoPagina + 20, 229, 220, 'LUIS 3' + this.contadorPagina, 'FAST');
+      // this.doc.addImage("assets/EFE/Luis.jpg", 'JPG', this.margenDer - 320 + this.margenIzq, this.usoPagina + 20, 319, 220, 'LUIS 4' + this.contadorPagina, 'FAST');
       this.usoPagina += 20 + 220
 
 
@@ -331,7 +338,7 @@ export class InformeService {
       this.doc.setFont("Lato", "bold");
       this.doc.text('Estado mensual piezómetros', this.margenIzq, this.usoPagina, { align: 'left', maxWidth: this.maxMargen });
 
-      this.doc.addImage("assets/EFE/Luis.jpg", 'JPG', this.puntoMedio - (450 / 2), this.usoPagina + 10, 450, 350, 'LUIS' + this.contadorPagina, 'SLOW');
+      // this.doc.addImage("assets/EFE/Luis.jpg", 'JPG', this.puntoMedio - (450 / 2), this.usoPagina + 10, 450, 350, 'LUIS 5' + this.contadorPagina, 'FAST');
       this.usoPagina += 360
 
       if (nEstacion == 8) {
@@ -372,7 +379,7 @@ export class InformeService {
 
     this.usoPagina += 10
 
-    this.doc.addImage("assets/EFE/Luis.jpg", 'JPG', this.margenIzq, this.usoPagina, 420, 320, 'LUIS' + this.contadorPagina, 'SLOW');
+    // this.doc.addImage("assets/EFE/Luis.jpg", 'JPG', this.margenIzq, this.usoPagina, 420, 320, 'LUIS 6' + this.contadorPagina, 'FAST');
 
     //tabla
     this.doc.setFontSize(10)
@@ -467,7 +474,7 @@ export class InformeService {
 
       this.usoPagina += 10
 
-      this.doc.addImage("assets/EFE/Luis.jpg", 'JPG', this.margenIzq, this.usoPagina, 320, 240, 'LUIS' + this.contadorPagina, 'SLOW');
+      // this.doc.addImage("assets/EFE/Luis.jpg", 'JPG', this.margenIzq, this.usoPagina, 320, 240, 'LUIS 7' + this.contadorPagina, 'FAST');
 
       //tabla
       this.doc.setFontSize(10)
@@ -530,7 +537,7 @@ export class InformeService {
       this.usoPagina += 50
 
       //segunda img
-      this.doc.addImage("assets/EFE/Luis.jpg", 'JPG', this.margenIzq, this.usoPagina, this.margenDer, 240, 'LUIS' + this.contadorPagina, 'SLOW');
+      // this.doc.addImage("assets/EFE/Luis.jpg", 'JPG', this.margenIzq, this.usoPagina, this.margenDer, 240, 'LUIS 8' + this.contadorPagina, 'FAST');
       this.usoPagina += 254
 
 
@@ -564,8 +571,8 @@ export class InformeService {
     let mes = this.mes
     mes = mes.charAt(0).toUpperCase() + mes.slice(1);
     this.doc.addPage()
-    this.doc.addImage("assets/images/marca.jpg", 'JPG', 0, 0, 612, 792, 'marca-x', 'SLOW');
-    this.doc.addImage("assets/images/logo.png", 'PNG', this.margenIzq, this.comienzoPaginaY, 160, 50, 'logo-x', 'SLOW');
+    this.doc.addImage("assets/images/marca.jpg", 'JPG', 0, 0, 612, 792, 'marca-x2', 'FAST');
+    this.doc.addImage("assets/images/logo.png", 'PNG', this.margenIzq, this.comienzoPaginaY, 160, 50, 'logo-x2', 'FAST');
 
     let altura = 246
     let margenIzq = this.margenIzq + 72
@@ -633,7 +640,7 @@ export class InformeService {
     mes = mes.charAt(0).toUpperCase() + mes.slice(1);
     let altura = 246
     let margenIzq = this.margenIzq + 72
-    this.doc.addImage("assets/images/image2.jpg", 'JPG', 0, 0, 612, 792, 'marca-1', 'SLOW');
+    this.doc.addImage("assets/images/image2.jpg", 'JPG', 0, 0, 612, 792, 'marca-1', 'FAST');
     this.doc.setTextColor(colores.blanco)
     this.doc.setFont("Montserrat", "bold");
     this.doc.setFontSize(22)
@@ -667,7 +674,7 @@ export class InformeService {
 
   implementarHeader() {
     this.doc.setTextColor(colores.negro)
-    this.doc.addImage("assets/images/logo.png", 'PNG', this.margenDer - 60, this.comienzoPaginaY - 10, 90, 30, 'logo' + this.contadorPagina, 'SLOW');
+    this.doc.addImage("assets/images/logo.png", 'PNG', this.margenDer - 60, this.comienzoPaginaY - 10, 90, 30, 'logo' + this.contadorPagina, 'FAST');
 
     this.doc.setFontSize(9)
     this.doc.setFont('Lato', 'normal')
@@ -701,7 +708,7 @@ export class InformeService {
   nuevaPagina() {
     this.usoPagina = this.cominezoContenidoY
     this.doc.addPage()
-    this.doc.addImage("assets/images/marca.jpg", 'JPG', 0, 0, 612, 792, 'marca-x', 'SLOW');
+    // this.doc.addImage("assets/images/marca.jpg", 'JPG', 0, 0, 612, 792, 'marca-x3'+ Math.random(), 'FAST');
     this.implementarHeader()
     this.implementarFooter()
   }
@@ -718,15 +725,15 @@ export class InformeService {
     this.generarTablaResumen()
     this.generarSeccion1()
     this.generarAnalisisDeDatos()
-    this.generarAnalisisGeneralPrismas()
-    this.generarAnalisisPrismas()
-    this.conclusion(inputs.controls['textAreaTest'])
+    // this.generarAnalisisGeneralPrismas()
+    // this.generarAnalisisPrismas()
+    // this.conclusion(inputs.controls['textAreaTest'])
   }
 
   generarInforme(inputs: FormGroup) {
     this.crearInforme(inputs)
     this.doc.setProperties({ title: 'INFORME_EFE' })
-    this.doc.output('dataurlnewwindow', { filename: 'REPORTE_MENSUAL_' + this.mes.toUpperCase() + '_' + data.ano })
+    this.doc.output('pdfobjectnewwindow', { filename: 'REPORTE_MENSUAL_' + this.mes.toUpperCase() + '_' + data.ano })
     // this.doc.save()
   }
 
