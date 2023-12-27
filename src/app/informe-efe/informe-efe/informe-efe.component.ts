@@ -23,8 +23,10 @@ export class InformeEfeComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadGCC()
-    this.loadGCCDeformacion()
-    this.crearGraficosDeformacion()
+    // this.loadGCCDeformacion()
+
+
+
 
 
   }
@@ -69,6 +71,9 @@ export class InformeEfeComponent implements OnInit {
   }
 
   loadGCCDeformacion() {
+    let dateMin = new Date("2023/11/01")
+    let dateMax = new Date("2023/12/24")
+
     this.api.getGeocentinalasDeformacion().subscribe(data => {
       let gcc10: any[] = [[], [], [], []]
       let gcc8: any[] = [[], [], [], []]
@@ -76,52 +81,111 @@ export class InformeEfeComponent implements OnInit {
 
       data.objects.forEach((elemento: any) => {
         let dateElemento = new Date(elemento.fecha)
-        let dateFilter = new Date("2023-12-16")
 
-        if (dateElemento > dateFilter) {
+        if (dateElemento > dateMin && dateElemento < dateMax) {
           if (elemento.nombre == "GCC10") {
             if (elemento.canal == 1)
               gcc10[0].push({
+                profundidad: elemento.profundidad,
+                canal: elemento.canal,
                 medicion: elemento.medicion,
-                fecha: elemento.fecha
+                fecha: elemento.fecha,
+                gid: elemento.gid
               })
             if (elemento.canal == 2)
               gcc10[1].push({
+                profundidad: elemento.profundidad,
+                canal: elemento.canal,
                 medicion: elemento.medicion,
-                fecha: elemento.fecha
+                fecha: elemento.fecha,
+                gid: elemento.gid
               })
             if (elemento.canal == 3)
               gcc10[2].push({
+                profundidad: elemento.profundidad,
+                canal: elemento.canal,
                 medicion: elemento.medicion,
-                fecha: elemento.fecha
+                fecha: elemento.fecha,
+                gid: elemento.gid
               })
             if (elemento.canal == 4)
               gcc10[3].push({
+                profundidad: elemento.profundidad,
+                canal: elemento.canal,
                 medicion: elemento.medicion,
-                fecha: elemento.fecha
+                fecha: elemento.fecha,
+                gid: elemento.gid
               })
           }
 
-          if (elemento.nombre == "GCC8") {
+          if (elemento.nombre == "GCC08") {
             if (elemento.canal == 1)
-              gcc8[0].push(elemento)
+              gcc8[0].push({
+                profundidad: elemento.profundidad,
+                canal: elemento.canal,
+                medicion: elemento.medicion,
+                fecha: elemento.fecha,
+                gid: elemento.gid
+              })
             if (elemento.canal == 2)
-              gcc8[1].push(elemento)
+              gcc8[1].push({
+                profundidad: elemento.profundidad,
+                canal: elemento.canal,
+                medicion: elemento.medicion,
+                fecha: elemento.fecha,
+                gid: elemento.gid
+              })
             if (elemento.canal == 3)
-              gcc8[2].push(elemento)
+              gcc8[2].push({
+                profundidad: elemento.profundidad,
+                canal: elemento.canal,
+                medicion: elemento.medicion,
+                fecha: elemento.fecha,
+                gid: elemento.gid
+              })
             if (elemento.canal == 4)
-              gcc8[3].push(elemento)
+              gcc8[3].push({
+                profundidad: elemento.profundidad,
+                canal: elemento.canal,
+                medicion: elemento.medicion,
+                fecha: elemento.fecha,
+                gid: elemento.gid
+              })
           }
 
-          if (elemento.nombre == "GCC7") {
+          if (elemento.nombre == "GCC07") {
             if (elemento.canal == 1)
-              gcc7[0].push(elemento)
+              gcc7[0].push({
+                profundidad: elemento.profundidad,
+                canal: elemento.canal,
+                medicion: elemento.medicion,
+                fecha: elemento.fecha,
+                gid: elemento.gid
+              })
             if (elemento.canal == 2)
-              gcc7[1].push(elemento)
+              gcc7[1].push({
+                profundidad: elemento.profundidad,
+                canal: elemento.canal,
+                medicion: elemento.medicion,
+                fecha: elemento.fecha,
+                gid: elemento.gid
+              })
             if (elemento.canal == 3)
-              gcc7[2].push(elemento)
+              gcc7[2].push({
+                profundidad: elemento.profundidad,
+                canal: elemento.canal,
+                medicion: elemento.medicion,
+                fecha: elemento.fecha,
+                gid: elemento.gid
+              })
             if (elemento.canal == 4)
-              gcc7[3].push(elemento)
+              gcc7[3].push({
+                profundidad: elemento.profundidad,
+                canal: elemento.canal,
+                medicion: elemento.medicion,
+                fecha: elemento.fecha,
+                gid: elemento.gid
+              })
           }
         }
 
@@ -131,27 +195,128 @@ export class InformeEfeComponent implements OnInit {
       this.geocentinelasDeformacion.push(gcc8)
       this.geocentinelasDeformacion.push(gcc7)
 
+      this.crearGraficosDeformacion()
+
 
     })
   }
 
-
   crearGraficosDeformacion() {
-    const xValues = [50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150];
-    const yValues = [7, 8, 8, 9, 9, 9, 10, 11, 14, 14, 15];
+    let i = 0
 
-    new Chart("chart", {
-      type: "line",
-      data: {
-        labels: xValues,
-        datasets: [{
-          backgroundColor: "rgba(0,0,255,1.0)",
-          borderColor: "rgba(0,0,255,0.1)",
-          data: yValues
-        }]
-      },
-      options: {}
+    this.geocentinelasDeformacion.forEach((element: any) => {
+      let data: any[] = []
+      element.forEach((elm: any) => {
+        let dataGCD = {
+          numbers: [] as any,
+          dates: [] as any,
+          canal: '',
+          profundidad: 0,
+          gid: 0
+        }
+
+        elm.reverse().forEach((el: any) => {
+
+          dataGCD.dates.push(el.fecha.slice(0, 10))
+          dataGCD.numbers.push(el.medicion)
+          dataGCD.profundidad = el.profundidad
+          dataGCD.canal = el.canal
+          dataGCD.gid = el.gid
+        })
+
+        data.push(dataGCD)
+
+
+      })
+
+
+
+      if (i < 3) {
+        new Chart("chart" + i, {
+          type: "line",
+          data: {
+            labels: data[0].dates,
+            datasets: [
+              {
+                label: data[0].canal + '/ ' + Math.abs(data[0].profundidad) + '[m]',
+                data: data[0].numbers,
+                borderWidth: 1
+              },
+              {
+                label: data[1].canal + '/ ' + Math.abs(data[1].profundidad) + '[m]',
+                data: data[1].numbers,
+                borderWidth: 1
+              },
+              {
+                label: data[2].canal + '/ ' + Math.abs(data[2].profundidad) + '[m]',
+                data: data[2].numbers,
+                borderWidth: 1
+              },
+              {
+                label: data[3].canal + '/ ' + Math.abs(data[3].profundidad) + '[m]',
+                data: data[3].numbers,
+                borderWidth: 1
+              },
+              // {
+              //   data: [15,15,30,31] 
+              // }
+            ]
+          },
+          options: {
+            // maintainAspectRatio: false,
+            responsive: true,
+            elements: {
+              point: {
+                radius: 0
+              }
+            },
+            plugins: {
+              title: {
+                display: true,
+                text: 'Canal / Prof.'
+              }
+            },
+            scales: {
+              x: {
+                title: {
+                  display: true,
+                  text: 'Fecha'
+                },
+                ticks: {
+
+                  // For a category axis, the val is the index so the lookup via getLabelForValue is needed
+                  maxTicksLimit: 7,
+                  autoSkip: true,
+                  includeBounds: true
+                }
+              },
+              y: {
+                title: {
+                  display: true,
+                  text: 'Deformación [%]'
+                },
+                min: 0,
+                max: 100,
+                ticks: {
+                  // forces step size to be 50 units
+                  stepSize: 20
+                }
+              }
+            }
+          }
+        });
+
+        i++
+      }
+
+
     });
+
+    // let labels = [...new Set(dataGCD10.dates)];
+
+
+
+
   }
 
 

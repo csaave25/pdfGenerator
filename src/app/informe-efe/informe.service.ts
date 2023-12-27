@@ -31,7 +31,13 @@ export class InformeService {
 
 
   generarSeccion1() {
-    this.doc.addImage("assets/EFE/Luis.jpg", 'JPG', this.margenIzq, this.usoPagina, 370, 270, 'LUIS' + this.contadorPagina, 'SLOW');
+
+    this.doc.setFontSize(10)
+    this.doc.setFont("Lato", "bold");
+    this.doc.text('Análisis de datos estaciones', this.margenIzq, this.usoPagina, { align: 'left', maxWidth: this.maxMargen });
+    this.usoPagina += 10
+
+    this.doc.addImage("assets/EFE/estacion7.png", 'PNG',this.margenIzq, this.usoPagina, 370, 270, 'estacioness', 'SLOW');
 
     this.doc.setTextColor(colores.negro)
     this.doc.setFontSize(10)
@@ -720,7 +726,8 @@ export class InformeService {
   generarInforme(inputs: FormGroup) {
     this.crearInforme(inputs)
     this.doc.setProperties({ title: 'INFORME_EFE' })
-    this.doc.output('pdfobjectnewwindow', { filename: 'REPOSRTE_MENSUAL_' + this.mes.toUpperCase() + '_' + data.ano })
+    this.doc.output('dataurlnewwindow', { filename: 'REPORTE_MENSUAL_' + this.mes.toUpperCase() + '_' + data.ano })
+    // this.doc.save()
   }
 
   subirInforme(inputs: FormGroup) {
@@ -731,11 +738,9 @@ export class InformeService {
     var blob = this.doc.output('blob')
 
     let d = new Date();
-    let localDate = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate()
-    let localTime = d.toLocaleTimeString();
 
-    // dataForm.append('file', blob, 'REPORTE-MENSUAL-3.pdf')
-    // dataForm.append('fecha',  '2023-12-12 12:00:01')
+    dataForm.append('file', blob, 'REPORTE-MENSUAL-3.pdf')
+    dataForm.append('fecha', '2023-12-12 12:00:01')
     // this.api.sendPDF(dataForm)
 
   }
