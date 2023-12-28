@@ -8,8 +8,6 @@ export class ApiService {
 
   constructor(private http: HttpClient) { }
 
-  // geoCentinelas: any
-
   private urlGeocentinelas = "https://consultasefe.emt.cl/api/geocentinelas"
   private urlEstadoGeocentinelas = "https://consultasefe.emt.cl/api/geocentinelas/corte/estado"
   private urlProfundidadGeocentinela = "https://consultasefe.emt.cl/api/geocentinelas/corte"

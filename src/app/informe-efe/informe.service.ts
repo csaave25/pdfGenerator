@@ -1,10 +1,11 @@
-import { Injectable } from '@angular/core';
+import { ElementRef, Injectable, QueryList } from '@angular/core';
 import { jsPDF } from 'jspdf'
 import autoTable from 'jspdf-autotable'
 import { font, latoRegular, montBold, montMedium, montSemi } from 'src/assets/fonts/fonts';
 import { colores, data, formateadoraDeTexto, justify, obtenerAncho } from './data';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { ApiService } from './api.service';
+import html2canvas from 'html2canvas';
 
 @Injectable({
   providedIn: 'root'
@@ -28,9 +29,13 @@ export class InformeService {
   maxMargen = this.margenDer - this.margenIzq
   puntoMedio = (this.doc.internal.pageSize.width || this.doc.internal.pageSize.getWidth()) / 2
   mes = new Date(data.ano, data.mes - 1, 1).toLocaleString('default', { month: 'long' });
+  date = data.ano + '-' + data.mes + '-' + data.dia + ' 12:01:32'
 
 
   generarSeccion1() {
+
+
+
 
     this.doc.setFontSize(10)
     this.doc.setFont("Lato", "bold");
@@ -69,7 +74,7 @@ export class InformeService {
 
     if (data.seccion1.estadoIntrumentos.gcc) {
       this.doc.setTextColor(colores.verde)
-      this.doc.addImage("assets/EFE/checkmark.png", 'PNG', this.margenDer - 165, this.usoPagina + 60, 12, 12, undefined , 'FAST');
+      this.doc.addImage("assets/EFE/checkmark.png", 'PNG', this.margenDer - 165, this.usoPagina + 60, 12, 12, undefined, 'FAST');
     } else {
       this.doc.setTextColor(colores.amarillo)
       this.doc.addImage("assets/EFE/caution.png", 'PNG', this.margenDer - 165, this.usoPagina + 60, 12, 12, undefined, 'FAST');
@@ -228,7 +233,7 @@ export class InformeService {
     this.usoPagina += 89
   }
 
-  generarAnalisisDeDatos() {
+  generarAnalisisDeDatos(arrGCC: any[], arrGCD: any[], gcdElements: QueryList<ElementRef>) {
     let nEstacion = 6
 
     data.seccionAnalisis.forEach((seccion, index) => {
@@ -239,13 +244,13 @@ export class InformeService {
       this.doc.text('Análisis de datos estación ' + nEstacion, this.margenIzq, this.usoPagina, { align: 'left', maxWidth: this.maxMargen });
       this.usoPagina += 10
       if (index == 0) {
-        // this.doc.addImage("assets/EFE/estacion6.png", 'PNG', this.margenIzq, this.usoPagina, 320, 220, undefined, 'FAST');
+        this.doc.addImage("assets/EFE/estacion6.png", 'PNG', this.margenIzq, this.usoPagina, 320, 220, undefined, 'FAST');
       }
       if (index == 1) {
-        // this.doc.addImage("assets/EFE/estacion7.png", 'PNG', this.margenIzq, this.usoPagina, 320, 220, undefined, 'FAST');
+        this.doc.addImage("assets/EFE/estacion7.png", 'PNG', this.margenIzq, this.usoPagina, 320, 220, undefined, 'FAST');
       }
-      if (index == 1) {
-        // this.doc.addImage("assets/EFE/estacion8.png", 'PNG', this.margenIzq, this.usoPagina, 320, 220, undefined, 'FAST');
+      if (index == 2) {
+        this.doc.addImage("assets/EFE/estacion8.png", 'PNG', this.margenIzq, this.usoPagina, 320, 220, undefined, 'FAST');
       }
 
       //Tabla de criterios
@@ -294,8 +299,12 @@ export class InformeService {
       this.doc.text('Estado mensual sensores GCD y GCC', this.margenIzq, this.usoPagina + 30, { align: 'left', maxWidth: this.maxMargen });
       this.usoPagina += 20
 
-      // this.doc.addImage("assets/EFE/Luis.jpg", 'JPG', this.margenIzq, this.usoPagina + 20, 229, 220, 'LUIS 3' + this.contadorPagina, 'FAST');
+
+      // this.doc.addImage(arrGCC[index], 'PNG', this.margenIzq, this.usoPagina + 20, 229, 220, 'scren' + index, 'FAST');
+      this.doc.addImage(arrGCC[index], 'PNG', this.margenIzq, this.usoPagina + 20, 170, 220, 'gccgraph' + index, 'FAST');
+
       // this.doc.addImage("assets/EFE/Luis.jpg", 'JPG', this.margenDer - 320 + this.margenIzq, this.usoPagina + 20, 319, 220, 'LUIS 4' + this.contadorPagina, 'FAST');
+      this.doc.addImage(arrGCD[index], 'PNG', this.margenDer - 320 + this.margenIzq, this.usoPagina + 20, 319, 220, 'gcdgraph' + index, 'FAST');
       this.usoPagina += 20 + 220
 
 
@@ -318,12 +327,12 @@ export class InformeService {
 
       this.doc.setFontSize(10)
       this.doc.setFont("Lato", "bold");
-      this.doc.text('GCD Pozo ' + seccion.pozo + ': ', this.margenIzq + 30, this.usoPagina + 20, { align: 'left', maxWidth: this.maxMargen });
-      this.doc.text('GCC Pozo ' + seccion.pozo + ': ', this.margenIzq + 310, this.usoPagina + 20, { align: 'left', maxWidth: this.maxMargen });
+      this.doc.text('GCC Pozo ' + seccion.pozo + ': ', this.margenIzq + 30, this.usoPagina + 20, { align: 'left', maxWidth: this.maxMargen });
+      this.doc.text('GCD Pozo ' + seccion.pozo + ': ', this.margenIzq + 310, this.usoPagina + 20, { align: 'left', maxWidth: this.maxMargen });
 
       this.doc.setFont("Lato", "normal");
-      formateadoraDeTexto(this.doc, seccion.obsEspecificas.gcd, this.usoPagina + 20, this.margenIzq + 95, 187)
-      formateadoraDeTexto(this.doc, seccion.obsEspecificas.gcc, this.usoPagina + 20, this.margenIzq + 375, 187)
+      formateadoraDeTexto(this.doc, seccion.obsEspecificas.gcc, this.usoPagina + 20, this.margenIzq + 95, 187)
+      formateadoraDeTexto(this.doc, seccion.obsEspecificas.gcd, this.usoPagina + 20, this.margenIzq + 375, 187)
       this.usoPagina += texto1 + 30
 
 
@@ -708,7 +717,7 @@ export class InformeService {
   nuevaPagina() {
     this.usoPagina = this.cominezoContenidoY
     this.doc.addPage()
-    // this.doc.addImage("assets/images/marca.jpg", 'JPG', 0, 0, 612, 792, 'marca-x3'+ Math.random(), 'FAST');
+    this.doc.addImage("assets/images/marca.jpg", 'JPG', 0, 0, 612, 792, 'marca-x3' + Math.random(), 'FAST');
     this.implementarHeader()
     this.implementarFooter()
   }
@@ -719,36 +728,33 @@ export class InformeService {
     }
   }
 
-  crearInforme(inputs: FormGroup) {
+  crearInforme(inputs: FormGroup, arrGCC: any[], arrGCD: any[],gcdElements: QueryList<ElementRef>) {
+  
     this.implementarFuentes()
     this.implementarPortada()
     this.generarTablaResumen()
     this.generarSeccion1()
-    this.generarAnalisisDeDatos()
-    // this.generarAnalisisGeneralPrismas()
-    // this.generarAnalisisPrismas()
-    // this.conclusion(inputs.controls['textAreaTest'])
+    this.generarAnalisisDeDatos(arrGCC, arrGCD, gcdElements)
+    this.generarAnalisisGeneralPrismas()
+    this.generarAnalisisPrismas()
+    this.conclusion(inputs.controls['textAreaTest'])
   }
 
-  generarInforme(inputs: FormGroup) {
-    this.crearInforme(inputs)
+  generarInforme(inputs: FormGroup, arrGCC: any[], arrGCD: any[], gcdElements: QueryList<ElementRef>) {
+    this.crearInforme(inputs, arrGCC, arrGCD, gcdElements)
     this.doc.setProperties({ title: 'INFORME_EFE' })
-    this.doc.output('pdfobjectnewwindow', { filename: 'REPORTE_MENSUAL_' + this.mes.toUpperCase() + '_' + data.ano })
-    // this.doc.save()
+    // this.doc.output('pdfobjectnewwindow', { filename: 'REPORTE_MENSUAL_' + this.mes.toUpperCase() + '_' + data.ano })
+    this.doc.save('TESTING_REPORTE_MENSUAL_' + data.numReporte + '_' + this.date)
   }
 
-  subirInforme(inputs: FormGroup) {
+  subirInforme(inputs: FormGroup, arrGCC: any[], arrGCD: any[], gcdElements: QueryList<ElementRef>) {
     let dataForm = new FormData()
-
-    this.crearInforme(inputs)
-    this.doc.setProperties({ title: 'REPORTE-EFE' })
+    this.crearInforme(inputs, arrGCC, arrGCD, gcdElements)
+    this.doc.setProperties({ title: 'REPORTE EFE' })
     var blob = this.doc.output('blob')
-
-    let d = new Date();
-
-    dataForm.append('file', blob, 'REPORTE-MENSUAL-3.pdf')
-    dataForm.append('fecha', '2023-12-12 12:00:01')
-    // this.api.sendPDF(dataForm)
+    dataForm.append('file', blob, 'REPORTE_MENSUAL_' + data.numReporte)
+    dataForm.append('fecha', this.date)
+    this.api.sendPDF(dataForm)
 
   }
 

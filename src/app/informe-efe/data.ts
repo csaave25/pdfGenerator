@@ -118,13 +118,15 @@ const saltoDePagina = (str: string, doc: jsPDF, ancho: number, usopag: number) =
 export const formateadoraDeTexto = (doc: jsPDF, textos: string, margenTop: number, inicio: number, anchoMax: number) => {
     if (textos) {
         let text = dividirTexto(textos)
-        let init = inicio + 15
-        let ancho = anchoMax - 15
+        let init = inicio + 18
+        let ancho = anchoMax - 18
         text.forEach(texto => {
             if (texto[0] == '-') {
                 let txt = texto.slice(1, texto.length)
                 margenTop = saltoDePagina(txt, doc, ancho, margenTop)
-                doc.text('•', inicio, margenTop, { align: 'left' })
+                doc.setFont("Lato", 'bold')
+                doc.text('    •', inicio, margenTop, { align: 'left' })
+                doc.setFont("Lato", 'normal')
                 justify(doc, txt, init, margenTop, ancho)
                 margenTop = margenTop + obtenerAncho(doc, txt, ancho)
             } else {
@@ -201,8 +203,9 @@ export const genradorDeHeaderYFooter = (doc: jsPDF) => {
 
 export const data = {
     ano: 2023,
-    mes: 10,
+    mes: 12,
     dia: 21,
+    numReporte:6,
     numInfo: 5,
     titulo: 'INFORME MENSUAL N°',
     subTiutlo: 'ANÁLISIS DE TENDENCIAS DE COMPORTAMIENTO DE LA INFRAESTRUCTURA',

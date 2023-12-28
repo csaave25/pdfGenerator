@@ -1,42 +1,79 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, QueryList, ViewChildren, AfterViewInit, AfterContentChecked, afterRender } from '@angular/core';
 import { InformeService } from '../informe.service';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Chart } from 'chart.js';
 import { GraficosService } from '../graficos.service';
 import { ApiService } from '../api.service';
-
-
+import html2canvas from 'html2canvas';
 
 @Component({
   selector: 'app-informe-efe',
   templateUrl: './informe-efe.component.html',
   styleUrls: ['./informe-efe.component.scss']
 })
-export class InformeEfeComponent implements OnInit {
+export class InformeEfeComponent implements OnInit, AfterViewInit, AfterContentChecked {
 
   constructor(private servicio: InformeService, private graficos: GraficosService, private api: ApiService) { }
+
+  @ViewChildren("geocentinela") geoElements!: QueryList<ElementRef>;
+  @ViewChildren("GCD") gcdElements!: QueryList<ElementRef>;
 
   geocentinelas: any[] = []
   geocentinelasDeformacion: any[] = []
   chart: any
-
-
-  ngOnInit(): void {
-    this.loadGCC()
-    // this.loadGCCDeformacion()
-
-
-
-
-
-  }
-
+  arrGCC: any[] = []
+  arrGCD: any[] = []
+  loadCharts1 = false;
+  loadCharts2 = false;
   service = this.servicio
   dataInputs = new FormGroup({
     textAreaTest: new FormControl()
   })
 
 
+  ngOnInit() {
+    this.loadGCC()
+    this.loadGCCDeformacion()
+  }
+  ngAfterViewInit(): void {
+  }
+  ngAfterContentChecked(): void {
+
+    this.loadScreenshotGCC()
+    // this.loadScreenshotGCD()
+  }
+
+  loadScreenshotGCC() {
+    if (this.geoElements && !this.loadCharts1) {
+      if (this.geoElements.length) {
+        this.geoElements.forEach(e => {
+          let element = e.nativeElement
+          html2canvas(element).then((canvas) => {
+            const base64image = canvas.toDataURL("image/png");
+            const img = new Image()
+            img.src = base64image
+            this.arrGCC.push(img)
+          });
+        })
+        this.loadCharts1 = true
+      }
+
+    }
+  }
+
+  loadScreenshotGCD() {
+    this.gcdElements.forEach(e => {
+      let element = e.nativeElement
+      html2canvas(element).then((canvas) => {
+        const base64image = canvas.toDataURL("image/png");
+        const img = new Image()
+        img.src = base64image
+        this.arrGCD.push(img)
+      });
+    })
+
+
+  }
 
   loadGCC() {
     this.api.getGeocentinelas().subscribe(data => {
@@ -198,6 +235,7 @@ export class InformeEfeComponent implements OnInit {
       this.crearGraficosDeformacion()
 
 
+
     })
   }
 
@@ -232,8 +270,17 @@ export class InformeEfeComponent implements OnInit {
 
 
       if (i < 3) {
+
         new Chart("chart" + i, {
           type: "line",
+          plugins: [{
+            id: 'loadData', afterRender: (chart) => {
+              if (chart.id == "2"){
+                this.loadScreenshotGCD()
+                this.loadCharts2 = true
+              }
+            }
+          }],
           data: {
             labels: data[0].dates,
             datasets: [
@@ -262,6 +309,7 @@ export class InformeEfeComponent implements OnInit {
               // }
             ]
           },
+
           options: {
             // maintainAspectRatio: false,
             responsive: true,
@@ -271,10 +319,12 @@ export class InformeEfeComponent implements OnInit {
               }
             },
             plugins: {
+
               title: {
                 display: true,
                 text: 'Canal / Prof.'
-              }
+              },
+
             },
             scales: {
               x: {
@@ -309,14 +359,19 @@ export class InformeEfeComponent implements OnInit {
         i++
       }
 
-
+      this.loadCharts2 = true
     });
 
     // let labels = [...new Set(dataGCD10.dates)];
 
+  }
 
+  crearInforme() {
+    this.service.generarInforme(this.dataInputs, this.arrGCC, this.arrGCD, this.gcdElements)
+  }
 
-
+  subirInforme() {
+    this.service.subirInforme(this.dataInputs, this.arrGCC, this.arrGCD, this.gcdElements)
   }
 
 
