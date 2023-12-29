@@ -33,14 +33,13 @@ export class InformeEfeComponent implements OnInit, AfterViewInit, AfterContentC
 
   ngOnInit() {
     this.loadGCC()
-    this.loadGCCDeformacion()
+    this.loadPrismas()
+    // this.loadGCCDeformacion()
   }
   ngAfterViewInit(): void {
   }
   ngAfterContentChecked(): void {
-
     this.loadScreenshotGCC()
-    // this.loadScreenshotGCD()
   }
 
   loadScreenshotGCC() {
@@ -108,8 +107,8 @@ export class InformeEfeComponent implements OnInit, AfterViewInit, AfterContentC
   }
 
   loadGCCDeformacion() {
-    let dateMin = new Date("2023/11/01")
-    let dateMax = new Date("2023/12/24")
+    let dateMin = new Date("2023/10/21")
+    let dateMax = new Date("2023/11/21")
 
     this.api.getGeocentinalasDeformacion().subscribe(data => {
       let gcc10: any[] = [[], [], [], []]
@@ -239,9 +238,61 @@ export class InformeEfeComponent implements OnInit, AfterViewInit, AfterContentC
     })
   }
 
+  loadPrismas() {
+    let dateMin = new Date("2023/11/01")
+    let dateMax = new Date("2023/12/24")
+    let dateLabels: any[] = []
+
+    this.api.getNombrePrismas().subscribe(res => {
+      let dataPrismas: any[] = []
+      let intento: any
+      this.api.getDataPrismas().subscribe(data => {
+        res.objects.forEach((prisma: any) => {
+          if (prisma.gid != 27) {
+            data.objects.forEach((obj: any) => {
+              let date = new Date(obj.fecha)
+              if (obj.prisma_id == prisma.gid) {
+                // let indexPrisma = dataPrismas.indexOf((data: any) => data.gid == prisma.gid)
+
+                let indexPrisma = dataPrismas.findIndex(data => data.gid == prisma.gid)
+                if (indexPrisma == -1) {
+                  let newData = {
+                    gid: prisma.gid,
+                    nombre: prisma.prisma_codigo,
+                    date: [obj.fecha] as any[],
+                    desplazamiento: [obj.d_acumulado] as any
+                  }
+                  dataPrismas.push(newData)
+                  dateLabels.push(obj.fecha.slice(0,10))
+                } else {
+                  // let indexPrisma = dataPrismas.findIndex(data =>  data.gid == prisma.gid)
+                  // console.log(indexPrisma);
+
+                  dataPrismas[indexPrisma].date.push(obj.fecha)
+                  dataPrismas[indexPrisma].desplazamiento.push(obj.d_acumulado)
+
+                }
+              }
+
+            })
+          }
+        })
+
+        dataPrismas.sort((data: any, data2: any) => (data.nombre > data2.nombre) ? 1 : (data2.nombre > data.nombre) ? -1 : 0)
+        let dataGraph1 = dataPrismas.slice(3, 12)
+        let dataGraph2 = dataPrismas.slice(12, dataPrismas.length)
+        dateLabels = [...new Set(dateLabels)];
+        dateLabels.sort((data: any, data2: any) => (data > data2) ? 1 : (data2 > data) ? -1 : 0)
+        this.crearGraficosPrismas(dataGraph1, dataGraph2,dateLabels)
+
+      })
+    })
+
+  }
+
   crearGraficosDeformacion() {
     let i = 0
-
+    Chart.defaults.font.size = 8;
     this.geocentinelasDeformacion.forEach((element: any) => {
       let data: any[] = []
       element.forEach((elm: any) => {
@@ -273,9 +324,10 @@ export class InformeEfeComponent implements OnInit, AfterViewInit, AfterContentC
 
         new Chart("chart" + i, {
           type: "line",
+
           plugins: [{
             id: 'loadData', afterRender: (chart) => {
-              if (chart.id == "2"){
+              if (chart.id == "2") {
                 this.loadScreenshotGCD()
                 this.loadCharts2 = true
               }
@@ -319,7 +371,18 @@ export class InformeEfeComponent implements OnInit, AfterViewInit, AfterContentC
               }
             },
             plugins: {
-
+              legend: {
+                title: {
+                  font: {
+                    weight: 'normal'
+                  }
+                },
+                labels: {
+                  font: {
+                    size: 8
+                  }
+                }
+              },
               title: {
                 display: true,
                 text: 'Canal / Prof.'
@@ -327,11 +390,13 @@ export class InformeEfeComponent implements OnInit, AfterViewInit, AfterContentC
 
             },
             scales: {
+
               x: {
-                title: {
-                  display: true,
-                  text: 'Fecha'
-                },
+                // title: {
+                //   display: true,
+                //   text: 'Fecha',
+
+                // },
                 ticks: {
 
                   // For a category axis, the val is the index so the lookup via getLabelForValue is needed
@@ -349,7 +414,8 @@ export class InformeEfeComponent implements OnInit, AfterViewInit, AfterContentC
                 max: 100,
                 ticks: {
                   // forces step size to be 50 units
-                  stepSize: 20
+                  stepSize: 20,
+
                 }
               }
             }
@@ -364,6 +430,96 @@ export class InformeEfeComponent implements OnInit, AfterViewInit, AfterContentC
 
     // let labels = [...new Set(dataGCD10.dates)];
 
+  }
+
+  crearGraficosPrismas(dataGraph1: any[], dataGraph2: any[], dateLabels: any[]) {
+
+    function loadData(dataGraph: any[]) {
+      let data: any[] = []
+      dataGraph1.forEach(prisma => {
+        let newData = {
+          label: prisma.nombre,
+          data: prisma.desplazamiento,
+          borderWidth: 1
+        }
+        data.push(newData)
+      })
+      return data
+    }
+
+    let loadData1 = loadData(dataGraph1)
+    let loadData2 = loadData(dataGraph2)
+
+
+    new Chart("prismas1", {
+      type: "line",
+      // plugins: [{
+      //   id: 'loadData', afterRender: (chart) => {
+      //     if (chart.id == "2") {
+      //       this.loadScreenshotGCD()
+      //       this.loadCharts2 = true
+      //     }
+      //   }
+      // }],
+      data: {
+        labels: dateLabels,
+        datasets: loadData1
+      },
+
+      options: {
+        // maintainAspectRatio: false,
+        responsive: true,
+        elements: {
+          point: {
+            radius: 0
+          }
+        },
+        plugins: {
+          legend: {
+            title: {
+              font: {
+                weight: 'normal'
+              }
+            },
+            labels: {
+              font: {
+                size: 8
+              }
+            }
+          },
+        },
+        scales: {
+
+          x: {
+            // title: {
+            //   display: true,
+            //   text: 'Fecha',
+
+            // },
+            ticks: {
+
+              // For a category axis, the val is the index so the lookup via getLabelForValue is needed
+              maxTicksLimit: 15,
+              autoSkip: true,
+              includeBounds: true
+            }
+          },
+          y: {
+            title: {
+              display: true,
+              text: 'Desplazamiento acumulado [mm]'
+            },
+            // min: 0,
+            // max: 100,
+            // ticks: {
+            //   // forces step size to be 50 units
+            //   stepSize: 20,
+
+            // }
+          }
+        }
+      }
+    });
   }
 
   crearInforme() {

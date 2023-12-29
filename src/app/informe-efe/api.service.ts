@@ -12,7 +12,9 @@ export class ApiService {
   private urlEstadoGeocentinelas = "https://consultasefe.emt.cl/api/geocentinelas/corte/estado"
   private urlProfundidadGeocentinela = "https://consultasefe.emt.cl/api/geocentinelas/corte"
   private urlPDF = "http://10.10.10.18:6450/api/insertos/pdf/TESTING"
-  private urlGeocenDeformacion = "https://consultasefe.emt.cl/api/geocentinelas/registros/deformacion/semanas/6"
+  private urlGeocenDeformacion = "https://consultasefe.emt.cl/api/geocentinelas/registros/deformacion/semanas/10"
+  private urlDataPrismas = "https://consultasefe.emt.cl/api/prismas/registros/semanas/150"
+  private urlNombrePrismas = "https://consultasefe.emt.cl/api/prismas"
 
   getGeocentinelas() {
     return this.http.get<any>(this.urlGeocentinelas);
@@ -28,6 +30,13 @@ export class ApiService {
 
   getGeocentinalasDeformacion() {
     return this.http.get<any>(this.urlGeocenDeformacion);
+  }
+
+  getNombrePrismas(){
+    return this.http.get<any>(this.urlNombrePrismas);
+  }
+  getDataPrismas(){
+    return this.http.get<any>(this.urlDataPrismas);
   }
 
 

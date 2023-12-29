@@ -303,8 +303,8 @@ export class InformeService {
       // this.doc.addImage(arrGCC[index], 'PNG', this.margenIzq, this.usoPagina + 20, 229, 220, 'scren' + index, 'FAST');
       this.doc.addImage(arrGCC[index], 'PNG', this.margenIzq, this.usoPagina + 20, 170, 220, 'gccgraph' + index, 'FAST');
 
-      // this.doc.addImage("assets/EFE/Luis.jpg", 'JPG', this.margenDer - 320 + this.margenIzq, this.usoPagina + 20, 319, 220, 'LUIS 4' + this.contadorPagina, 'FAST');
-      this.doc.addImage(arrGCD[index], 'PNG', this.margenDer - 320 + this.margenIzq, this.usoPagina + 20, 319, 220, 'gcdgraph' + index, 'FAST');
+      // this.doc.addImage("assets/EFE/Luis.jpg", 'JPG', this.margenDer - 370 + this.margenIzq, this.usoPagina + 20, 368, 220, 'LUIS 4' + this.contadorPagina, 'FAST');
+      this.doc.addImage(arrGCD[index], 'PNG', this.margenDer - 370 + this.margenIzq, this.usoPagina + 20, 368, 220, 'gcdgraph' + index, 'FAST');
       this.usoPagina += 20 + 220
 
 
