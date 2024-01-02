@@ -463,10 +463,11 @@ export class InformeService {
 
   }
 
-  generarAnalisisPrismas() {
+  generarAnalisisPrismas(arrPrismas: any[]) {
 
-    data.seccionPrismas.analisisPrismas.forEach(elm => {
-
+    data.seccionPrismas.analisisPrismas.forEach((elm, index) => {
+      console.log(index);
+      
 
       //PRISMAS P04-12
       this.crearNuevaPagina(800)
@@ -728,28 +729,28 @@ export class InformeService {
     }
   }
 
-  crearInforme(inputs: FormGroup, arrGCC: any[], arrGCD: any[],gcdElements: QueryList<ElementRef>) {
+  crearInforme(inputs: FormGroup, arrGCC: any[], arrGCD: any[],gcdElements: QueryList<ElementRef>, arrPrismas: any[]) {
   
     this.implementarFuentes()
     this.implementarPortada()
     this.generarTablaResumen()
     this.generarSeccion1()
-    this.generarAnalisisDeDatos(arrGCC, arrGCD, gcdElements)
+    // this.generarAnalisisDeDatos(arrGCC, arrGCD, gcdElements)
     this.generarAnalisisGeneralPrismas()
-    this.generarAnalisisPrismas()
+    this.generarAnalisisPrismas(arrPrismas)
     this.conclusion(inputs.controls['textAreaTest'])
   }
 
-  generarInforme(inputs: FormGroup, arrGCC: any[], arrGCD: any[], gcdElements: QueryList<ElementRef>) {
-    this.crearInforme(inputs, arrGCC, arrGCD, gcdElements)
+  generarInforme(inputs: FormGroup, arrGCC: any[], arrGCD: any[], gcdElements: QueryList<ElementRef>, arrPrismas: any[]) {
+    this.crearInforme(inputs, arrGCC, arrGCD, gcdElements, arrPrismas)
     this.doc.setProperties({ title: 'INFORME_EFE' })
     // this.doc.output('pdfobjectnewwindow', { filename: 'REPORTE_MENSUAL_' + this.mes.toUpperCase() + '_' + data.ano })
     this.doc.save('TESTING_REPORTE_MENSUAL_' + data.numReporte + '_' + this.date)
   }
 
-  subirInforme(inputs: FormGroup, arrGCC: any[], arrGCD: any[], gcdElements: QueryList<ElementRef>) {
+  subirInforme(inputs: FormGroup, arrGCC: any[], arrGCD: any[], gcdElements: QueryList<ElementRef>,arrPrismas: any[]) {
     let dataForm = new FormData()
-    this.crearInforme(inputs, arrGCC, arrGCD, gcdElements)
+    this.crearInforme(inputs, arrGCC, arrGCD, gcdElements, arrPrismas)
     this.doc.setProperties({ title: 'REPORTE EFE' })
     var blob = this.doc.output('blob')
     dataForm.append('file', blob, 'REPORTE_MENSUAL_' + data.numReporte)

@@ -18,6 +18,9 @@ export class InformeEfeComponent implements OnInit, AfterViewInit, AfterContentC
 
   @ViewChildren("geocentinela") geoElements!: QueryList<ElementRef>;
   @ViewChildren("GCD") gcdElements!: QueryList<ElementRef>;
+  @ViewChildren("screenPrisma") prismasElements!: QueryList<ElementRef>;
+
+
 
   geocentinelas: any[] = []
   geocentinelasDeformacion: any[] = []
@@ -25,6 +28,7 @@ export class InformeEfeComponent implements OnInit, AfterViewInit, AfterContentC
   chart: any
   arrGCC: any[] = []
   arrGCD: any[] = []
+  arrPrismas: any[] = []
   loadCharts1 = false;
   loadCharts2 = false;
   service = this.servicio
@@ -70,6 +74,19 @@ export class InformeEfeComponent implements OnInit, AfterViewInit, AfterContentC
         const img = new Image()
         img.src = base64image
         this.arrGCD.push(img)
+      });
+    })
+
+
+  }
+  loadScreenshotPrismas() {
+    this.prismasElements.forEach(e => {
+      let element = e.nativeElement
+      html2canvas(element).then((canvas) => {
+        const base64image = canvas.toDataURL("image/png");
+        const img = new Image()
+        img.src = base64image
+        this.arrPrismas.push(img)
       });
     })
 
@@ -618,11 +635,11 @@ export class InformeEfeComponent implements OnInit, AfterViewInit, AfterContentC
   }
 
   crearInforme() {
-    this.service.generarInforme(this.dataInputs, this.arrGCC, this.arrGCD, this.gcdElements)
+    this.service.generarInforme(this.dataInputs, this.arrGCC, this.arrGCD, this.gcdElements, this.arrPrismas)
   }
 
   subirInforme() {
-    this.service.subirInforme(this.dataInputs, this.arrGCC, this.arrGCD, this.gcdElements)
+    this.service.subirInforme(this.dataInputs, this.arrGCC, this.arrGCD, this.gcdElements, this.arrPrismas)
   }
 
 
