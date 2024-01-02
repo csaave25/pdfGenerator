@@ -5,6 +5,7 @@ import { Chart } from 'chart.js';
 import { GraficosService } from '../graficos.service';
 import { ApiService } from '../api.service';
 import html2canvas from 'html2canvas';
+import 'chartjs-adapter-moment';
 
 @Component({
   selector: 'app-informe-efe',
@@ -20,6 +21,7 @@ export class InformeEfeComponent implements OnInit, AfterViewInit, AfterContentC
 
   geocentinelas: any[] = []
   geocentinelasDeformacion: any[] = []
+  dataTablaPrismas: any[] = []
   chart: any
   arrGCC: any[] = []
   arrGCD: any[] = []
@@ -239,37 +241,32 @@ export class InformeEfeComponent implements OnInit, AfterViewInit, AfterContentC
   }
 
   loadPrismas() {
-    let dateMin = new Date("2023/11/01")
+    let dateMin = new Date("2021/01/01")
     let dateMax = new Date("2023/12/24")
-    let dateLabels: any[] = []
+
 
     this.api.getNombrePrismas().subscribe(res => {
       let dataPrismas: any[] = []
-      let intento: any
       this.api.getDataPrismas().subscribe(data => {
         res.objects.forEach((prisma: any) => {
           if (prisma.gid != 27) {
             data.objects.forEach((obj: any) => {
               let date = new Date(obj.fecha)
-              if (obj.prisma_id == prisma.gid) {
+              if (obj.prisma_id == prisma.gid && date > dateMin) {
                 // let indexPrisma = dataPrismas.indexOf((data: any) => data.gid == prisma.gid)
-
                 let indexPrisma = dataPrismas.findIndex(data => data.gid == prisma.gid)
                 if (indexPrisma == -1) {
                   let newData = {
                     gid: prisma.gid,
                     nombre: prisma.prisma_codigo,
-                    date: [obj.fecha] as any[],
-                    desplazamiento: [obj.d_acumulado] as any
+                    date: [date] as any[],
+                    desplazamiento: [obj.d_acumulado * 1000] as any
                   }
                   dataPrismas.push(newData)
-                  dateLabels.push(obj.fecha.slice(0,10))
-                } else {
-                  // let indexPrisma = dataPrismas.findIndex(data =>  data.gid == prisma.gid)
-                  // console.log(indexPrisma);
 
-                  dataPrismas[indexPrisma].date.push(obj.fecha)
-                  dataPrismas[indexPrisma].desplazamiento.push(obj.d_acumulado)
+                } else {
+                  dataPrismas[indexPrisma].date.push(date)
+                  dataPrismas[indexPrisma].desplazamiento.push(obj.d_acumulado * 1000)
 
                 }
               }
@@ -278,13 +275,44 @@ export class InformeEfeComponent implements OnInit, AfterViewInit, AfterContentC
           }
         })
 
+        this.dataTablaPrismas.sort((data: any, data2: any) => (data.nombre > data2.nombre) ? 1 : (data2.nombre > data.nombre) ? -1 : 0)
         dataPrismas.sort((data: any, data2: any) => (data.nombre > data2.nombre) ? 1 : (data2.nombre > data.nombre) ? -1 : 0)
         let dataGraph1 = dataPrismas.slice(3, 12)
         let dataGraph2 = dataPrismas.slice(12, dataPrismas.length)
-        dateLabels = [...new Set(dateLabels)];
-        dateLabels.sort((data: any, data2: any) => (data > data2) ? 1 : (data2 > data) ? -1 : 0)
-        this.crearGraficosPrismas(dataGraph1, dataGraph2,dateLabels)
 
+
+        this.cargarDataTablaPrismas(dataPrismas)
+        this.crearGraficosPrismas(dataGraph1, dataGraph2)
+
+      })
+    })
+
+  }
+
+  cargarDataTablaPrismas(datos: any[]) {
+    const data = datos.slice(3, datos.length)
+    data.forEach(elm => {
+      let primeraDate = elm.date[0]
+      let primerDesp = elm.desplazamiento[0]
+      let date = elm.date[0]
+      let desp = elm.desplazamiento[0]
+      for (let i = 1; i < elm.date.length; i++) {
+
+        if (date.getTime() < elm.date[i].getTime()) {
+          date = elm.date[i]
+          desp = elm.desplazamiento[i]
+        }
+        if (primeraDate.getTime() > elm.date[i].getTime()) {
+          primeraDate = elm.date[i]
+          primerDesp = elm.desplazamiento[i]
+        }
+      }
+      this.dataTablaPrismas.push({
+        gid: elm.gid,
+        nombre: elm.nombre,
+        fecha: date.toLocaleDateString('en-GB'),
+        desplazamiento: desp.toFixed(2),
+        acumulado: (desp - primerDesp).toFixed(2)
       })
     })
 
@@ -432,24 +460,33 @@ export class InformeEfeComponent implements OnInit, AfterViewInit, AfterContentC
 
   }
 
-  crearGraficosPrismas(dataGraph1: any[], dataGraph2: any[], dateLabels: any[]) {
+  crearGraficosPrismas(dataGraph1: any[], dataGraph2: any[]) {
 
     function loadData(dataGraph: any[]) {
-      let data: any[] = []
-      dataGraph1.forEach(prisma => {
-        let newData = {
-          label: prisma.nombre,
-          data: prisma.desplazamiento,
-          borderWidth: 1
+      let dataset: any[] = []
+      dataGraph.forEach(elm => {
+        let elemento: any[] = []
+        for (let i = 0; i < elm.date.length; i++) {
+          let arr = {
+            x: elm.date[i],
+            y: elm.desplazamiento[i]
+          }
+          elemento.push(arr)
         }
-        data.push(newData)
+
+        dataset.push({
+          label: elm.nombre,
+          data: elemento
+        })
+
       })
-      return data
+
+      return dataset
+
     }
 
-    let loadData1 = loadData(dataGraph1)
-    let loadData2 = loadData(dataGraph2)
-
+    const data = loadData(dataGraph1)
+    const data2 = loadData(dataGraph2)
 
     new Chart("prismas1", {
       type: "line",
@@ -462,12 +499,10 @@ export class InformeEfeComponent implements OnInit, AfterViewInit, AfterContentC
       //   }
       // }],
       data: {
-        labels: dateLabels,
-        datasets: loadData1
+        datasets: data
       },
-
       options: {
-        // maintainAspectRatio: false,
+        animation: false,
         responsive: true,
         elements: {
           point: {
@@ -491,35 +526,95 @@ export class InformeEfeComponent implements OnInit, AfterViewInit, AfterContentC
         scales: {
 
           x: {
-            // title: {
-            //   display: true,
-            //   text: 'Fecha',
-
-            // },
+            type: 'time',
+            display: true,
             ticks: {
-
-              // For a category axis, the val is the index so the lookup via getLabelForValue is needed
-              maxTicksLimit: 15,
               autoSkip: true,
-              includeBounds: true
-            }
+              stepSize: 4
+
+            },
           },
           y: {
             title: {
               display: true,
               text: 'Desplazamiento acumulado [mm]'
             },
-            // min: 0,
-            // max: 100,
-            // ticks: {
-            //   // forces step size to be 50 units
-            //   stepSize: 20,
+            min: -20,
+            max: 100,
+            ticks: {
+              // forces step size to be 50 units
+              stepSize: 0,
 
-            // }
+            }
           }
         }
       }
     });
+
+    new Chart("prismas2", {
+      type: "line",
+      // plugins: [{
+      //   id: 'loadData', afterRender: (chart) => {
+      //     if (chart.id == "2") {
+      //       this.loadScreenshotGCD()
+      //       this.loadCharts2 = true
+      //     }
+      //   }
+      // }],
+      data: {
+        datasets: data2
+      },
+      options: {
+        animation: false,
+        responsive: true,
+        elements: {
+          point: {
+            radius: 0
+          }
+        },
+        plugins: {
+          legend: {
+            title: {
+              font: {
+                weight: 'normal'
+              }
+            },
+            labels: {
+              font: {
+                size: 8
+              }
+            }
+          },
+        },
+        scales: {
+
+          x: {
+            type: 'time',
+            display: true,
+            ticks: {
+              autoSkip: true,
+              stepSize: 4
+
+            },
+          },
+          y: {
+            title: {
+              display: true,
+              text: 'Desplazamiento acumulado [mm]'
+            },
+            min: -20,
+            max: 100,
+            ticks: {
+              // forces step size to be 50 units
+              stepSize: 0,
+
+            }
+          }
+        }
+      }
+    });
+
+
   }
 
   crearInforme() {
