@@ -5,34 +5,35 @@
         <h3>INFORME MENSUAL A2MG</h3>
     </div>
     <div class="mt-2 d-flex gap-2">
-        <button type="button" class="btn btn-primary" (click)="activarInforme()" mdbRipple>Exportar</button>
-        <button type="button" class="btn btn-primary" (click)="activarInforme()" mdbRipple>Descargar</button>
+        <button style="background-color: #00838F; color: #eeefef" type="button" class="btn" (click)="activarInforme()"
+            mdbRipple>Exportar</button>
+        <button style="background-color: #00838F; color: #eeefef" type="button" class="btn" (click)="activarInforme()"
+            mdbRipple>Descargar</button>
     </div>
-    <div class="mt-4 d-flex col-8 justify-content-between" >
-        <div >
+    <div class="mt-4 d-flex col-8 justify-content-between">
+        <div>
             <label mdbLabel class="form-label" for="mes">Mes y año</label>
-            <input mdbInput type="month" id="mes" class="form-control"  formControlName="fecha"/>
+            <input mdbInput type="month" id="mes" class="form-control" formControlName="fecha" />
         </div>
         <div [formGroup]="inputs.controls.usrs">
             <label mdbLabel class="form-label" for="elaborado">Elaborado</label>
-            <input mdbInput type="text" id="elaborado" class="form-control" formControlName="elavorado"/>
+            <input mdbInput type="text" id="elaborado" class="form-control" formControlName="elavorado" />
             <label mdbLabel class="form-label" for="cargos">Cargo</label>
-            <input mdbInput type="text" id="cargos" class="form-control" formControlName="cargo1"/>
+            <input mdbInput type="text" id="cargos" class="form-control" formControlName="cargo1" />
         </div>
         <div [formGroup]="inputs.controls.usrs">
             <label mdbLabel class="form-label" for="Revisado">Revisado</label>
-            <input mdbInput type="text" id="Revisado" class="form-control" formControlName="revisado"/>
+            <input mdbInput type="text" id="Revisado" class="form-control" formControlName="revisado" />
             <label mdbLabel class="form-label" for="cargos">Cargo</label>
-            <input mdbInput type="text" id="cargos" class="form-control" formControlName="cargo2"/>
+            <input mdbInput type="text" id="cargos" class="form-control" formControlName="cargo2" />
         </div>
         <div [formGroup]="inputs.controls.usrs">
             <label mdbLabel class="form-label" for="Aprobado">Aprobado</label>
-            <input mdbInput type="text" id="Aprobado" class="form-control" formControlName="aprobado"/>
+            <input mdbInput type="text" id="Aprobado" class="form-control" formControlName="aprobado" />
             <label mdbLabel class="form-label" for="cargos">Cargo</label>
-            <input mdbInput type="text" id="cargos" class="form-control" formControlName="cargo3"/>
+            <input mdbInput type="text" id="cargos" class="form-control" formControlName="cargo3" />
         </div>
     </div>
-    
     <div class="col-8 mt-4" *ngIf="dataCriticisadad && tablaDispo">
         <div [formGroup]="inputs.controls.disponibilidadComentario">
             <h4>Disponibilidad del Sistema</h4>
@@ -40,49 +41,56 @@
                 <li class="d-flex gap-4 ">
                     <p class="col-4">Servicio Web: {{tablaDispo.servicio_web}}</p>
                     <mdb-form-control class="col-6">
-                        <textarea mdbInput class="form-control" id="textAreaExample" rows="1" formControlName="web"></textarea>
+                        <textarea mdbInput class="form-control" id="textAreaExample" rows="1"
+                            formControlName="web"></textarea>
                         <label mdbLabel class="form-label" for="textAreaExample">Añadir comentario</label>
                     </mdb-form-control>
                 </li>
                 <li class="d-flex gap-4 ">
                     <p class="col-4">Servicio imágenes: {{tablaDispo.servicio_imagenes}}</p>
                     <mdb-form-control class="col-6">
-                        <textarea mdbInput class="form-control" id="textAreaExample" rows="1" formControlName="img"></textarea>
+                        <textarea mdbInput class="form-control" id="textAreaExample" rows="1"
+                            formControlName="img"></textarea>
                         <label mdbLabel class="form-label" for="textAreaExample">Añadir comentario</label>
                     </mdb-form-control>
                 </li>
                 <li class="d-flex gap-4 ">
                     <p class="col-4">Servicio base de datos:{{tablaDispo.servicio_db}}</p>
                     <mdb-form-control class="col-6">
-                        <textarea mdbInput class="form-control" id="textAreaExample" rows="1" formControlName="bd"></textarea>
+                        <textarea mdbInput class="form-control" id="textAreaExample" rows="1"
+                            formControlName="bd"></textarea>
                         <label mdbLabel class="form-label" for="textAreaExample">Añadir comentario</label>
                     </mdb-form-control>
                 </li>
                 <li class="d-flex gap-4 ">
                     <p class="col-4">Servicio API: {{tablaDispo.servicio_api}}</p>
                     <mdb-form-control class="col-6">
-                        <textarea mdbInput class="form-control" id="textAreaExample" rows="1" formControlName="api"></textarea>
+                        <textarea mdbInput class="form-control" id="textAreaExample" rows="1"
+                            formControlName="api"></textarea>
                         <label mdbLabel class="form-label" for="textAreaExample">Añadir comentario</label>
                     </mdb-form-control>
                 </li>
                 <li class="d-flex gap-4 ">
                     <p class="col-4">Servicio de computo: {{tablaDispo.servicio_computo}}</p>
                     <mdb-form-control class="col-6">
-                        <textarea mdbInput class="form-control" id="textAreaExample" rows="1" formControlName="computo"></textarea>
+                        <textarea mdbInput class="form-control" id="textAreaExample" rows="1"
+                            formControlName="computo"></textarea>
                         <label mdbLabel class="form-label" for="textAreaExample">Añadir comentario</label>
                     </mdb-form-control>
                 </li>
                 <li class="d-flex gap-4 ">
                     <p class="col-4">Sistema de adquisición de imágenes: {{tablaDispo.sistema_adquisicion_imagenes}}</p>
                     <mdb-form-control class="col-6">
-                        <textarea mdbInput class="form-control" id="textAreaExample" rows="1" formControlName="sistema"></textarea>
+                        <textarea mdbInput class="form-control" id="textAreaExample" rows="1"
+                            formControlName="sistema"></textarea>
                         <label mdbLabel class="form-label" for="textAreaExample">Añadir comentario</label>
                     </mdb-form-control>
                 </li>
                 <li class="d-flex gap-4 ">
                     <p class="col-4">Enlace dedicado AMSA: {{tablaDispo.enlace_dedicado}}</p>
                     <mdb-form-control class="col-6">
-                        <textarea mdbInput class="form-control" id="textAreaExample" rows="1" formControlName="enlace"></textarea>
+                        <textarea mdbInput class="form-control" id="textAreaExample" rows="1"
+                            formControlName="enlace"></textarea>
                         <label mdbLabel class="form-label" for="textAreaExample">Añadir comentario</label>
                     </mdb-form-control>
                 </li>
@@ -94,21 +102,22 @@
                 <li class="d-flex ">
                     <p class="col-2">Identificación:</p>
                     <mdb-form-control class="col-2">
-                        <input type="number" id="Identificación" class="form-control" formControlName="identificacion" />
+                        <input type="number" id="Identificación" class="form-control"
+                            formControlName="identificacion" />
                         <label mdbLabel class="form-label" for="Identificación">Porcentaje</label>
                     </mdb-form-control>
                 </li>
                 <li class="d-flex  ">
                     <p class="col-2">Clasificación:</p>
                     <mdb-form-control class="col-2">
-                        <input type="number" id="Clasificación" class="form-control"formControlName="clasificacion" />
+                        <input type="number" id="Clasificación" class="form-control" formControlName="clasificacion" />
                         <label mdbLabel class="form-label" for="Clasificación">Porcentaje</label>
                     </mdb-form-control>
                 </li>
                 <li class="d-flex  ">
                     <p class="col-2">Comunicación:</p>
                     <mdb-form-control class="col-2">
-                        <input type="number" id="Porcentaje" class="form-control" formControlName="comunicacion"/>
+                        <input type="number" id="Porcentaje" class="form-control" formControlName="comunicacion" />
                         <label mdbLabel class="form-label" for="Comunicación">Porcentaje</label>
                     </mdb-form-control>
                 </li>

@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { ApplicationConfig, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { AppComponent } from './app.component';
@@ -24,6 +24,20 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { PdfTemplateComponent } from './pdf-template/pdf-template.component';
 import { InformeMensualComponent } from './informe-mensual/informe-mensual.component';
 import { InformeEfeComponent } from './informe-efe/informe-efe/informe-efe.component';
+import { MenuComponent } from './menu/menu.component';
+import { RouterModule, RouterOutlet, Routes, provideRouter } from '@angular/router';
+
+
+
+const routes: Routes = [
+  { path: '', component: MenuComponent },
+  { path: 'efe', component: InformeEfeComponent },
+];
+
+export const appConfig: ApplicationConfig = {
+  providers: [provideRouter(routes)]
+};
+
 
 @NgModule({
   declarations: [
@@ -32,10 +46,13 @@ import { InformeEfeComponent } from './informe-efe/informe-efe/informe-efe.compo
     NewPDFComponent,
     PdfTemplateComponent,
     InformeMensualComponent,
-    InformeEfeComponent
+    InformeEfeComponent,
+    MenuComponent
   ],
   imports: [
     HttpClientModule,
+    RouterModule.forRoot(routes),
+    RouterOutlet,
     ReactiveFormsModule,
     BrowserModule,
     MdbAccordionModule,
@@ -54,7 +71,7 @@ import { InformeEfeComponent } from './informe-efe/informe-efe/informe-efe.compo
     MdbTooltipModule,
     MdbValidationModule,
     NoopAnimationsModule,
-    
+
   ],
   providers: [],
   bootstrap: [AppComponent]
