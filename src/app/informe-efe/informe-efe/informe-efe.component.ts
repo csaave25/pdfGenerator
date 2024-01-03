@@ -6,6 +6,7 @@ import { GraficosService } from '../graficos.service';
 import { ApiService } from '../api.service';
 import html2canvas from 'html2canvas';
 import 'chartjs-adapter-moment';
+import moment from 'moment';
 
 @Component({
   selector: 'app-informe-efe',
@@ -19,6 +20,7 @@ export class InformeEfeComponent implements OnInit, AfterViewInit, AfterContentC
   @ViewChildren("geocentinela") geoElements!: QueryList<ElementRef>;
   @ViewChildren("GCD") gcdElements!: QueryList<ElementRef>;
   @ViewChildren("screenPrisma") prismasElements!: QueryList<ElementRef>;
+  @ViewChildren("piezometro") piezometroElement!: QueryList<ElementRef>;
 
 
 
@@ -29,8 +31,10 @@ export class InformeEfeComponent implements OnInit, AfterViewInit, AfterContentC
   arrGCC: any[] = []
   arrGCD: any[] = []
   arrPrismas: any[] = []
-  loadCharts1 = false;
-  loadCharts2 = false;
+  arrPiezometro: any = []
+  loadGeoC = false;
+  loadGeoDeformacion = false;
+  loadChartPrismas = false;
   service = this.servicio
   dataInputs = new FormGroup({
     textAreaTest: new FormControl()
@@ -40,28 +44,26 @@ export class InformeEfeComponent implements OnInit, AfterViewInit, AfterContentC
   ngOnInit() {
     this.loadGCC()
     this.loadPrismas()
-    // this.loadGCCDeformacion()
+    this.loadGCCDeformacion()
+    this.LoadPiezometro()
   }
   ngAfterViewInit(): void {
   }
   ngAfterContentChecked(): void {
-    this.loadScreenshotGCC()
+
   }
 
   loadScreenshotGCC() {
-    if (this.geoElements && !this.loadCharts1) {
-      if (this.geoElements.length) {
-        this.geoElements.forEach(e => {
-          let element = e.nativeElement
-          html2canvas(element).then((canvas) => {
-            const base64image = canvas.toDataURL("image/png");
-            const img = new Image()
-            img.src = base64image
-            this.arrGCC.push(img)
-          });
-        })
-        this.loadCharts1 = true
-      }
+    if (this.geoElements.length) {
+      this.geoElements.forEach(e => {
+        let element = e.nativeElement
+        html2canvas(element).then((canvas) => {
+          const base64image = canvas.toDataURL("image/png");
+          const img = new Image()
+          img.src = base64image
+          this.arrGCC.push(img)
+        });
+      })
 
     }
   }
@@ -80,18 +82,32 @@ export class InformeEfeComponent implements OnInit, AfterViewInit, AfterContentC
 
   }
   loadScreenshotPrismas() {
-    this.prismasElements.forEach(e => {
+    this.piezometroElement.forEach(e => {
       let element = e.nativeElement
       html2canvas(element).then((canvas) => {
         const base64image = canvas.toDataURL("image/png");
         const img = new Image()
         img.src = base64image
-        this.arrPrismas.push(img)
+        this.arrPiezometro.push(img)
       });
     })
 
-
   }
+
+  loadScreenshotPiezometro() {
+    if (this.piezometroElement && this.dataTablaPrismas.length > 1) {
+      this.prismasElements.forEach(e => {
+        let element = e.nativeElement
+        html2canvas(element).then((canvas) => {
+          const base64image = canvas.toDataURL("image/png");
+          const img = new Image()
+          img.src = base64image
+          this.arrPrismas.push(img)
+        });
+      })
+    }
+  }
+
 
   loadGCC() {
     this.api.getGeocentinelas().subscribe(data => {
@@ -270,7 +286,6 @@ export class InformeEfeComponent implements OnInit, AfterViewInit, AfterContentC
             data.objects.forEach((obj: any) => {
               let date = new Date(obj.fecha)
               if (obj.prisma_id == prisma.gid && date > dateMin) {
-                // let indexPrisma = dataPrismas.indexOf((data: any) => data.gid == prisma.gid)
                 let indexPrisma = dataPrismas.findIndex(data => data.gid == prisma.gid)
                 if (indexPrisma == -1) {
                   let newData = {
@@ -300,10 +315,49 @@ export class InformeEfeComponent implements OnInit, AfterViewInit, AfterContentC
 
         this.cargarDataTablaPrismas(dataPrismas)
         this.crearGraficosPrismas(dataGraph1, dataGraph2)
-
       })
     })
 
+  }
+
+  LoadPiezometro() {
+
+    let dataPiezometros: any[] = []
+    this.api.getNombrePiezometros().subscribe(data => {
+      let piezometros: any[] = []
+      data.objects.forEach((piez: any) => {
+        if (piez.gid == 3 || piez.gid == 4 || piez.gid == 6) {
+          piezometros.push(piez)
+        }
+      })
+
+
+      this.api.getMilimetrosPiezometros().subscribe(data => {
+        piezometros.forEach(piezometro => {
+          data.objects.forEach((elm: any) => {
+            if (piezometro.gid == elm.piezometro_id) {
+              let index = dataPiezometros.findIndex(data => data.gid == elm.piezometro_id)
+              if (index == -1) {
+                dataPiezometros.push({
+                  gid: elm.piezometro_id,
+                  nombre: piezometro.nombre,
+                  data: [elm] as any
+                })
+              } else {
+                dataPiezometros[index].data.push(elm)
+              }
+            }
+
+          })
+        })
+
+        this.crearGradicoPiezometro(dataPiezometros);
+
+      })
+
+
+
+    })
   }
 
   cargarDataTablaPrismas(datos: any[]) {
@@ -373,8 +427,7 @@ export class InformeEfeComponent implements OnInit, AfterViewInit, AfterContentC
           plugins: [{
             id: 'loadData', afterRender: (chart) => {
               if (chart.id == "2") {
-                this.loadScreenshotGCD()
-                this.loadCharts2 = true
+
               }
             }
           }],
@@ -470,7 +523,7 @@ export class InformeEfeComponent implements OnInit, AfterViewInit, AfterContentC
         i++
       }
 
-      this.loadCharts2 = true
+      this.loadGeoDeformacion = true
     });
 
     // let labels = [...new Set(dataGCD10.dates)];
@@ -484,6 +537,7 @@ export class InformeEfeComponent implements OnInit, AfterViewInit, AfterContentC
       dataGraph.forEach(elm => {
         let elemento: any[] = []
         for (let i = 0; i < elm.date.length; i++) {
+
           let arr = {
             x: elm.date[i],
             y: elm.desplazamiento[i]
@@ -507,14 +561,6 @@ export class InformeEfeComponent implements OnInit, AfterViewInit, AfterContentC
 
     new Chart("prismas1", {
       type: "line",
-      // plugins: [{
-      //   id: 'loadData', afterRender: (chart) => {
-      //     if (chart.id == "2") {
-      //       this.loadScreenshotGCD()
-      //       this.loadCharts2 = true
-      //     }
-      //   }
-      // }],
       data: {
         datasets: data
       },
@@ -559,7 +605,7 @@ export class InformeEfeComponent implements OnInit, AfterViewInit, AfterContentC
             min: -20,
             max: 100,
             ticks: {
-              // forces step size to be 50 units
+
               stepSize: 0,
 
             }
@@ -570,14 +616,11 @@ export class InformeEfeComponent implements OnInit, AfterViewInit, AfterContentC
 
     new Chart("prismas2", {
       type: "line",
-      // plugins: [{
-      //   id: 'loadData', afterRender: (chart) => {
-      //     if (chart.id == "2") {
-      //       this.loadScreenshotGCD()
-      //       this.loadCharts2 = true
-      //     }
-      //   }
-      // }],
+      plugins: [{
+        id: 'loadData', afterRender: (chart) => {
+          this.loadChartPrismas = true
+        }
+      }],
       data: {
         datasets: data2
       },
@@ -634,12 +677,106 @@ export class InformeEfeComponent implements OnInit, AfterViewInit, AfterContentC
 
   }
 
+  crearGradicoPiezometro(dataPiezometro: any[]) {
+
+    moment.locale('es')
+
+    function loadData(data: any[], nombre: string) {
+      let datas: any[] = []
+      let arr: any[] = []
+      data.forEach(dato => {
+        let fecha = new Date(dato.fecha)
+        // console.log(fecha);
+
+        arr.push({
+          x: fecha,
+          y: dato.milimetros
+        })
+      })
+      datas.push({
+        label: nombre,
+        data: arr
+      })
+
+      return datas
+    }
+
+    dataPiezometro.forEach(piezometro => {
+
+      let datos = loadData(piezometro.data, piezometro.nombre)
+      new Chart("piezometro" + piezometro.gid, {
+        type: "line",
+        data: {
+          datasets: datos
+        },
+        options: {
+          animation: false,
+          responsive: true,
+          elements: {
+            point: {
+              radius: 0
+            }
+          },
+          plugins: {
+            legend: {
+              title: {
+                font: {
+                  weight: 'normal'
+                }
+              },
+              labels: {
+                font: {
+                  size: 8
+                }
+              }
+            },
+          },
+          scales: {
+
+            x: {
+              type: 'time',
+              display: true,
+              ticks: {
+                autoSkip: true,
+                stepSize: 6
+
+              },
+            },
+            y: {
+              title: {
+                display: true,
+                text: 'Columna de agua [cm]'
+              },
+              min: -25,
+              max: 60,
+              ticks: {
+
+                stepSize: 0,
+
+              }
+            }
+          }
+        }
+      });
+
+
+
+    })
+  }
+
   crearInforme() {
-    this.service.generarInforme(this.dataInputs, this.arrGCC, this.arrGCD, this.gcdElements, this.arrPrismas)
+    this.loadScreenshotGCC()
+    this.loadScreenshotGCD()
+    this.loadScreenshotPrismas()
+    this.loadScreenshotPiezometro()
+
+    setTimeout(() => {
+      this.service.generarInforme(this.dataInputs, this.arrGCC, this.arrGCD, this.gcdElements, this.arrPrismas, this.arrPiezometro)
+    }, 2000);
   }
 
   subirInforme() {
-    this.service.subirInforme(this.dataInputs, this.arrGCC, this.arrGCD, this.gcdElements, this.arrPrismas)
+    this.service.subirInforme(this.dataInputs, this.arrGCC, this.arrGCD, this.gcdElements, this.arrPrismas, this.arrPiezometro)
   }
 
 

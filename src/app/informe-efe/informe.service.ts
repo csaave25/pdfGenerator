@@ -35,8 +35,6 @@ export class InformeService {
   generarSeccion1() {
 
 
-
-
     this.doc.setFontSize(10)
     this.doc.setFont("Lato", "bold");
     this.doc.text('Análisis de datos estaciones', this.margenIzq, this.usoPagina, { align: 'left', maxWidth: this.maxMargen });
@@ -233,7 +231,7 @@ export class InformeService {
     this.usoPagina += 89
   }
 
-  generarAnalisisDeDatos(arrGCC: any[], arrGCD: any[], gcdElements: QueryList<ElementRef>) {
+  generarAnalisisDeDatos(arrGCC: any[], arrGCD: any[], arrPiezometro: any[]) {
     let nEstacion = 6
 
     data.seccionAnalisis.forEach((seccion, index) => {
@@ -304,7 +302,8 @@ export class InformeService {
       this.doc.addImage(arrGCC[index], 'PNG', this.margenIzq, this.usoPagina + 20, 170, 220, 'gccgraph' + index, 'FAST');
 
       // this.doc.addImage("assets/EFE/Luis.jpg", 'JPG', this.margenDer - 370 + this.margenIzq, this.usoPagina + 20, 368, 220, 'LUIS 4' + this.contadorPagina, 'FAST');
-      this.doc.addImage(arrGCD[index], 'PNG', this.margenDer - 370 + this.margenIzq, this.usoPagina + 20, 368, 220, 'gcdgraph' + index, 'FAST');
+      if (arrGCD.length != 0)
+        this.doc.addImage(arrGCD[index], 'PNG', this.margenDer - 370 + this.margenIzq, this.usoPagina + 20, 368, 220, 'gcdgraph' + index, 'FAST');
       this.usoPagina += 20 + 220
 
 
@@ -336,7 +335,6 @@ export class InformeService {
       this.usoPagina += texto1 + 30
 
 
-      // this.crearNuevaPagina(this.usoPagina + obtenerAncho(this.doc, seccion.obsEspecificas.obsGrafico2, this.maxMargen))
       this.doc.setFontSize(10)
       this.doc.setFont("Lato", "normal");
       this.usoPagina = formateadoraDeTexto(this.doc, seccion.obsEspecificas.obsGrafico2, this.usoPagina, this.margenIzq, this.margenDer) + 10
@@ -347,7 +345,9 @@ export class InformeService {
       this.doc.setFont("Lato", "bold");
       this.doc.text('Estado mensual piezómetros', this.margenIzq, this.usoPagina, { align: 'left', maxWidth: this.maxMargen });
 
-      // this.doc.addImage("assets/EFE/Luis.jpg", 'JPG', this.puntoMedio - (450 / 2), this.usoPagina + 10, 450, 350, 'LUIS 5' + this.contadorPagina, 'FAST');
+      this.doc.addImage("assets/EFE/Luis.jpg", 'JPG', this.puntoMedio - (450 / 2), this.usoPagina + 10, 450, 100, 'LUIS 5' + this.contadorPagina, 'FAST');
+
+      this.doc.addImage(arrPiezometro[index], 'PNG', this.puntoMedio - (450 / 2), this.usoPagina + 120, 450, 250, 'piezometro' + this.contadorPagina, 'FAST');
       this.usoPagina += 360
 
       if (nEstacion == 8) {
@@ -466,8 +466,6 @@ export class InformeService {
   generarAnalisisPrismas(arrPrismas: any[]) {
 
     data.seccionPrismas.analisisPrismas.forEach((elm, index) => {
-      console.log(index);
-      
 
       //PRISMAS P04-12
       this.crearNuevaPagina(800)
@@ -547,7 +545,7 @@ export class InformeService {
       this.usoPagina += 50
 
       //segunda img
-      // this.doc.addImage("assets/EFE/Luis.jpg", 'JPG', this.margenIzq, this.usoPagina, this.margenDer, 240, 'LUIS 8' + this.contadorPagina, 'FAST');
+      this.doc.addImage(arrPrismas[index], 'JPG', this.margenIzq, this.usoPagina, this.margenDer, 240, 'LUIS 8' + this.contadorPagina, 'FAST');
       this.usoPagina += 254
 
 
@@ -729,28 +727,28 @@ export class InformeService {
     }
   }
 
-  crearInforme(inputs: FormGroup, arrGCC: any[], arrGCD: any[],gcdElements: QueryList<ElementRef>, arrPrismas: any[]) {
-  
+  crearInforme(inputs: FormGroup, arrGCC: any[], arrGCD: any[], gcdElements: QueryList<ElementRef>, arrPrismas: any[], arrPiezometro: any[]) {
+
     this.implementarFuentes()
     this.implementarPortada()
     this.generarTablaResumen()
     this.generarSeccion1()
-    // this.generarAnalisisDeDatos(arrGCC, arrGCD, gcdElements)
+    this.generarAnalisisDeDatos(arrGCC, arrGCD, arrPiezometro)
     this.generarAnalisisGeneralPrismas()
     this.generarAnalisisPrismas(arrPrismas)
     this.conclusion(inputs.controls['textAreaTest'])
   }
 
-  generarInforme(inputs: FormGroup, arrGCC: any[], arrGCD: any[], gcdElements: QueryList<ElementRef>, arrPrismas: any[]) {
-    this.crearInforme(inputs, arrGCC, arrGCD, gcdElements, arrPrismas)
+  generarInforme(inputs: FormGroup, arrGCC: any[], arrGCD: any[], gcdElements: QueryList<ElementRef>, arrPrismas: any[], arrPiezometro: any[]) {
+    this.crearInforme(inputs, arrGCC, arrGCD, gcdElements, arrPrismas, arrPiezometro)
     this.doc.setProperties({ title: 'INFORME_EFE' })
     // this.doc.output('pdfobjectnewwindow', { filename: 'REPORTE_MENSUAL_' + this.mes.toUpperCase() + '_' + data.ano })
     this.doc.save('TESTING_REPORTE_MENSUAL_' + data.numReporte + '_' + this.date)
   }
 
-  subirInforme(inputs: FormGroup, arrGCC: any[], arrGCD: any[], gcdElements: QueryList<ElementRef>,arrPrismas: any[]) {
+  subirInforme(inputs: FormGroup, arrGCC: any[], arrGCD: any[], gcdElements: QueryList<ElementRef>, arrPrismas: any[], arrPiezometro: any[]) {
     let dataForm = new FormData()
-    this.crearInforme(inputs, arrGCC, arrGCD, gcdElements, arrPrismas)
+    this.crearInforme(inputs, arrGCC, arrGCD, gcdElements, arrPrismas, arrPiezometro)
     this.doc.setProperties({ title: 'REPORTE EFE' })
     var blob = this.doc.output('blob')
     dataForm.append('file', blob, 'REPORTE_MENSUAL_' + data.numReporte)
