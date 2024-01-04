@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnInit, QueryList, ViewChildren, AfterViewInit, AfterContentChecked, afterRender } from '@angular/core';
 import { InformeService } from '../informe.service';
-import { FormControl, FormGroup } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup } from '@angular/forms';
 import { Chart } from 'chart.js';
 import { GraficosService } from '../graficos.service';
 import { ApiService } from '../api.service';
@@ -13,7 +13,7 @@ import moment from 'moment';
   templateUrl: './informe-efe.component.html',
   styleUrls: ['./informe-efe.component.scss']
 })
-export class InformeEfeComponent implements OnInit, AfterViewInit, AfterContentChecked {
+export class InformeEfeComponent implements OnInit {
 
   constructor(private servicio: InformeService, private graficos: GraficosService, private api: ApiService) { }
 
@@ -39,6 +39,89 @@ export class InformeEfeComponent implements OnInit, AfterViewInit, AfterContentC
   dataInputs = new FormGroup({
     textAreaTest: new FormControl()
   })
+  imagenAgua1: any
+  imagenAgua2: any
+  imagenAgua3: any
+
+  inputs: FormGroup = new FormGroup({
+    fechas: new FormGroup({
+      fechaInicio: new FormControl(''),
+      fechaFinal: new FormControl('')
+    }),
+    gestores: new FormGroup({
+      elaborado: new FormControl(''),
+      revisado: new FormControl(''),
+      aprobado: new FormControl(''),
+      cargo1: new FormControl(''),
+      cargo2: new FormControl(''),
+      cargo3: new FormControl('')
+    }),
+    estaciones: new FormGroup({
+      estados: new FormGroup({
+        piezometro: new FormControl(false),
+        gcd: new FormControl(false),
+        gcc: new FormControl(false),
+        prismas: new FormControl(false),
+      }),
+      estadoGeneral: new FormControl(''),
+      observaciones: new FormGroup({
+        piezometro: new FormControl(''),
+        gcd: new FormControl(''),
+        gcc: new FormControl(''),
+        prismas: new FormControl(''),
+      }),
+      monitoreo: new FormGroup({
+        alarmas: new FormControl(0),
+        alertas: new FormControl(0),
+        vigilancia: new FormControl(0),
+        sismo: new FormControl(0),
+
+      }),
+      estacion6: new FormGroup({
+        obsGenerales: new FormControl(''),
+        obsGCC: new FormControl(''),
+        obsGCD: new FormControl(''),
+        obsEspecificas: new FormControl(''),
+        piezometro: new FormGroup({
+          imgAguaAcumulada: new FormControl(null),
+          observaciones: new FormControl('')
+        })
+      }),
+      estacion7: new FormGroup({
+        obsGenerales: new FormControl(''),
+        obsGCC: new FormControl(''),
+        obsGCD: new FormControl(''),
+        obsEspecificas: new FormControl(''),
+        piezometro: new FormGroup({
+          imgAguaAcumulada: new FormControl(null),
+          observaciones: new FormControl('')
+        })
+      }),
+      estacion8: new FormGroup({
+        obsGenerales: new FormControl(''),
+        obsGCC: new FormControl(''),
+        obsGCD: new FormControl(''),
+        obsEspecificas: new FormControl(''),
+        piezometro: new FormGroup({
+          imgAguaAcumulada: new FormControl(null),
+          observaciones: new FormControl('')
+        })
+      })
+    }),
+    prismas: new FormGroup({
+      imagenGeneral: new FormControl(null),
+      obsGeneral: new FormControl(''),
+      prismas1: new FormGroup({
+        imagen: new FormControl(null),
+        obsGeneral: new FormControl('')
+      }),
+      prismas2: new FormGroup({
+        imagen: new FormControl(null),
+        obsGeneral: new FormControl('')
+      })
+    }),
+    conclusion: new FormControl('')
+  })
 
 
   ngOnInit() {
@@ -47,10 +130,38 @@ export class InformeEfeComponent implements OnInit, AfterViewInit, AfterContentC
     this.loadGCCDeformacion()
     this.LoadPiezometro()
   }
-  ngAfterViewInit(): void {
-  }
-  ngAfterContentChecked(): void {
 
+
+  LoadUploadImage(id: number, event: any) {
+
+    let img1 = this.inputs.get('estaciones.estacion6.piezometro.imgAguaAcumulada')
+    let img2 = this.inputs.get('estaciones.estacion7.piezometro.imgAguaAcumulada')
+    let img3 = this.inputs.get('estaciones.estacion8.piezometro.imgAguaAcumulada')
+    let img4 = this.inputs.get('prismas.imagenGeneral')
+    let img5 = this.inputs.get('prismas.prismas1.imagen')
+    let img6 = this.inputs.get('prismas.prismas2.imagen')
+
+    if (event.target.files && event.target.files[0]) {
+      var reader = new FileReader();
+
+
+      reader.readAsDataURL(event.target.files[0]);
+
+      reader.onload = (event) => {
+        if (id == 1)
+          img1!.setValue(event.target!.result);
+        if (id == 2)
+          img2!.setValue(event.target!.result);
+        if (id == 3)
+          img3!.setValue(event.target!.result);
+        if (id == 4)
+          img4!.setValue(event.target!.result);
+        if (id == 5)
+          img5!.setValue(event.target!.result);
+        if (id == 6)
+          img6!.setValue(event.target!.result);
+      }
+    }
   }
 
   loadScreenshotGCC() {
@@ -81,6 +192,7 @@ export class InformeEfeComponent implements OnInit, AfterViewInit, AfterContentC
 
 
   }
+
   loadScreenshotPrismas() {
     this.piezometroElement.forEach(e => {
       let element = e.nativeElement
@@ -107,7 +219,6 @@ export class InformeEfeComponent implements OnInit, AfterViewInit, AfterContentC
       })
     }
   }
-
 
   loadGCC() {
     this.api.getGeocentinelas().subscribe(data => {
@@ -748,10 +859,10 @@ export class InformeEfeComponent implements OnInit, AfterViewInit, AfterContentC
                 text: 'Columna de agua [cm]'
               },
               min: -25,
-              max: 60,
+              max: 75,
               ticks: {
 
-                stepSize: 0,
+                stepSize: 25,
 
               }
             }
@@ -771,12 +882,12 @@ export class InformeEfeComponent implements OnInit, AfterViewInit, AfterContentC
     this.loadScreenshotPiezometro()
 
     setTimeout(() => {
-      this.service.generarInforme(this.dataInputs, this.arrGCC, this.arrGCD, this.gcdElements, this.arrPrismas, this.arrPiezometro)
+      this.service.generarInforme(this.inputs, this.arrGCC, this.arrGCD, this.gcdElements, this.arrPrismas, this.arrPiezometro)
     }, 2000);
   }
 
   subirInforme() {
-    this.service.subirInforme(this.dataInputs, this.arrGCC, this.arrGCD, this.gcdElements, this.arrPrismas, this.arrPiezometro)
+    this.service.subirInforme(this.inputs, this.arrGCC, this.arrGCD, this.gcdElements, this.arrPrismas, this.arrPiezometro)
   }
 
 

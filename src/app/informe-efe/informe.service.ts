@@ -3,7 +3,7 @@ import { jsPDF } from 'jspdf'
 import autoTable from 'jspdf-autotable'
 import { font, latoRegular, montBold, montMedium, montSemi } from 'src/assets/fonts/fonts';
 import { colores, data, formateadoraDeTexto, justify, obtenerAncho } from './data';
-import { FormGroup } from '@angular/forms';
+import { AbstractControl, FormGroup } from '@angular/forms';
 import { ApiService } from './api.service';
 import html2canvas from 'html2canvas';
 
@@ -32,7 +32,27 @@ export class InformeService {
   date = data.ano + '-' + data.mes + '-' + data.dia + ' 12:01:32'
 
 
-  generarSeccion1() {
+  generarSeccion1(estaciones: AbstractControl<any, any>) {
+
+    const estados = {
+      piezometro: estaciones.get('estados.piezometro')?.value,
+      gcd: estaciones.get('estados.gcd')?.value,
+      gcc: estaciones.get('estados.gcc')?.value,
+      prismas: estaciones.get('estados.prismas')?.value,
+    }
+    const estadoGeneral = estaciones.get('estadoGeneral')?.value
+    const observaciones = {
+      piezometro: estaciones.get('observaciones.piezometro')?.value,
+      gcd: estaciones.get('observaciones.gcd')?.value,
+      gcc: estaciones.get('observaciones.gcc')?.value,
+      prismas: estaciones.get('observaciones.prismas')?.value,
+    }
+    const monitoreo = {
+      alarmas: estaciones.get('monitoreo.alarmas')?.value,
+      alertas: estaciones.get('monitoreo.alertas')?.value,
+      vigilancia: estaciones.get('monitoreo.vigilancia')?.value,
+      sismo: estaciones.get('monitoreo.sismo')?.value,
+    }
 
 
     this.doc.setFontSize(10)
@@ -49,7 +69,7 @@ export class InformeService {
 
     this.doc.setFont("Lato", "normal");
 
-    if (data.seccion1.estadoIntrumentos.piezometro) {
+    if (estados.piezometro) {
       this.doc.setTextColor(colores.verde)
       this.doc.addImage("assets/EFE/checkmark.png", 'PNG', this.margenDer - 165, this.usoPagina + 20, 12, 12, 'check-1' + this.contadorPagina, 'FAST');
     } else {
@@ -59,7 +79,7 @@ export class InformeService {
     this.doc.text('Piezómetros', this.margenDer - 150, this.usoPagina + 30, { align: 'left', maxWidth: this.maxMargen });
 
 
-    if (data.seccion1.estadoIntrumentos.gcd) {
+    if (estados.gcd) {
       this.doc.setTextColor(colores.verde)
       this.doc.addImage("assets/EFE/checkmark.png", 'PNG', this.margenDer - 165, this.usoPagina + 40, 12, 12, 'check-2' + this.contadorPagina, 'FAST');
     } else {
@@ -70,7 +90,7 @@ export class InformeService {
 
 
 
-    if (data.seccion1.estadoIntrumentos.gcc) {
+    if (estados.gcc) {
       this.doc.setTextColor(colores.verde)
       this.doc.addImage("assets/EFE/checkmark.png", 'PNG', this.margenDer - 165, this.usoPagina + 60, 12, 12, undefined, 'FAST');
     } else {
@@ -81,7 +101,7 @@ export class InformeService {
     this.doc.text('GCC: Geo Centinela Corte', this.margenDer - 150, this.usoPagina + 70, { align: 'left', maxWidth: this.maxMargen });
 
 
-    if (data.seccion1.estadoIntrumentos.prisma) {
+    if (estados.prismas) {
       this.doc.setTextColor(colores.verde)
       this.doc.addImage("assets/EFE/checkmark.png", 'PNG', this.margenDer - 165, this.usoPagina + 80, 12, 12, 'check-4' + this.contadorPagina, 'FAST');
 
@@ -151,7 +171,7 @@ export class InformeService {
 
     this.usoPagina = this.usoPagina + 310
 
-    this.usoPagina = formateadoraDeTexto(this.doc, data.seccion1.estadogeneral, this.usoPagina, this.margenIzq, this.margenDer)
+    this.usoPagina = formateadoraDeTexto(this.doc, estadoGeneral, this.usoPagina, this.margenIzq, this.margenDer)
 
     this.crearNuevaPagina(this.usoPagina + 50)
     //Observaciones
@@ -164,7 +184,7 @@ export class InformeService {
       // theme: 'grid',
       styles: { halign: 'left', font: 'Lato', fontStyle: 'normal', fontSize: 10, fillColor: undefined, lineColor: [1, 48, 51], textColor: [1, 48, 51], cellPadding: { bottom: 6 } },
       headStyles: { font: 'Lato', fontStyle: 'bold', fillColor: undefined, lineWidth: .1 },
-      body: [['Piezómetros:', data.seccion1.observaciones.piezometro], ['GCD:', data.seccion1.observaciones.gcd], ['GCC:', data.seccion1.observaciones.gcc], ['Prismas:', data.seccion1.observaciones.prisma]],
+      body: [['Piezómetros:', observaciones.piezometro], ['GCD:', observaciones.gcd], ['GCC:', observaciones.gcc], ['Prismas:', observaciones.prismas]],
       margin: { left: this.margenIzq, top: this.cominezoContenidoY, bottom: 50 },
       startY: this.usoPagina,
       columnStyles: { 0: { cellWidth: 80 }, 1: { halign: 'justify' } },
@@ -206,7 +226,7 @@ export class InformeService {
       theme: 'grid',
       styles: { halign: 'left', font: 'Lato', fontStyle: 'normal', fontSize: 8, fillColor: undefined, lineColor: [1, 48, 51], textColor: [1, 48, 51] },
       headStyles: { font: 'Lato', fontStyle: 'bold', fillColor: undefined, lineWidth: .1 },
-      body: [['Alarmas mes', data.seccion1.tablaMonitoreo.alarmas], ['Alerta mes', data.seccion1.tablaMonitoreo.alertas], ['Modo Vigilancia', data.seccion1.tablaMonitoreo.vigilacia], ['Reporte post sismo ', data.seccion1.tablaMonitoreo.sismo]],
+      body: [['Alarmas mes', monitoreo.alarmas], ['Alerta mes', monitoreo.alertas], ['Modo Vigilancia', monitoreo.vigilancia], ['Reporte post sismo ', monitoreo.sismo]],
       margin: { left: this.puntoMedio - (70 + 90) / 2 },
       startY: this.usoPagina + 10,
       columnStyles: { 0: { halign: 'left', cellWidth: 90 }, 1: { halign: 'center', cellWidth: 70 } },
@@ -231,10 +251,23 @@ export class InformeService {
     this.usoPagina += 89
   }
 
-  generarAnalisisDeDatos(arrGCC: any[], arrGCD: any[], arrPiezometro: any[]) {
+  generarAnalisisDeDatos(arrGCC: any[], arrGCD: any[], arrPiezometro: any[], estaciones: AbstractControl<any, any>) {
     let nEstacion = 6
 
+
+
     data.seccionAnalisis.forEach((seccion, index) => {
+      const estacion = estaciones.get('estacion' + nEstacion)
+      const obsGenerales = estacion?.get('obsGenerales')?.value
+      const obsGCD = estacion?.get('obsGCD')?.value
+      const obsGCC = estacion?.get('obsGCC')?.value
+      const obsEspecificas = estacion?.get('obsEspecificas')?.value
+      const imgAguaAcumulada = estacion?.get('piezometro.imgAguaAcumulada')?.value
+      const obsPiezometro = estacion?.get('piezometro.observaciones')?.value
+
+
+
+
       this.crearNuevaPagina(this.usoPagina + 800)
 
       this.doc.setFontSize(10)
@@ -288,7 +321,7 @@ export class InformeService {
 
       this.doc.setFontSize(10)
       this.doc.setFont("Lato", "normal");
-      this.usoPagina += 20 + formateadoraDeTexto(this.doc, seccion.obsGenerales, this.usoPagina + 20, this.margenDer - 215, 215 + this.margenIzq)
+      this.usoPagina += 20 + formateadoraDeTexto(this.doc, obsGenerales, this.usoPagina + 20, this.margenDer - 215, 215 + this.margenIzq)
 
       //Estado mensual sensores
       this.usoPagina = this.cominezoContenidoY + 230
@@ -308,8 +341,8 @@ export class InformeService {
 
 
 
-      let texto1 = obtenerAncho(this.doc, seccion.obsEspecificas.gcd, 188)
-      let texto2 = obtenerAncho(this.doc, seccion.obsEspecificas.gcc, 188)
+      let texto1 = obtenerAncho(this.doc, obsGCD, 188)
+      let texto2 = obtenerAncho(this.doc, obsGCC, 188)
       if (texto1 > texto2) {
         this.crearNuevaPagina(this.usoPagina + texto1 + 50)
         texto2 = texto1
@@ -330,14 +363,14 @@ export class InformeService {
       this.doc.text('GCD Pozo ' + seccion.pozo + ': ', this.margenIzq + 310, this.usoPagina + 20, { align: 'left', maxWidth: this.maxMargen });
 
       this.doc.setFont("Lato", "normal");
-      formateadoraDeTexto(this.doc, seccion.obsEspecificas.gcc, this.usoPagina + 20, this.margenIzq + 95, 187)
-      formateadoraDeTexto(this.doc, seccion.obsEspecificas.gcd, this.usoPagina + 20, this.margenIzq + 375, 187)
+      formateadoraDeTexto(this.doc, obsGCC, this.usoPagina + 20, this.margenIzq + 95, 187)
+      formateadoraDeTexto(this.doc, obsGCD, this.usoPagina + 20, this.margenIzq + 375, 187)
       this.usoPagina += texto1 + 30
 
 
       this.doc.setFontSize(10)
       this.doc.setFont("Lato", "normal");
-      this.usoPagina = formateadoraDeTexto(this.doc, seccion.obsEspecificas.obsGrafico2, this.usoPagina, this.margenIzq, this.margenDer) + 10
+      this.usoPagina = formateadoraDeTexto(this.doc, obsEspecificas, this.usoPagina, this.margenIzq, this.margenDer) + 10
 
       this.crearNuevaPagina(this.usoPagina + 400)
 
@@ -345,7 +378,8 @@ export class InformeService {
       this.doc.setFont("Lato", "bold");
       this.doc.text('Estado mensual piezómetros', this.margenIzq, this.usoPagina, { align: 'left', maxWidth: this.maxMargen });
 
-      this.doc.addImage("assets/EFE/Luis.jpg", 'JPG', this.puntoMedio - (450 / 2), this.usoPagina + 10, 450, 100, 'LUIS 5' + this.contadorPagina, 'FAST');
+      if (imgAguaAcumulada)
+        this.doc.addImage(imgAguaAcumulada, 'JPG', this.puntoMedio - (450 / 2), this.usoPagina + 10, 450, 100, 'LUIS 5' + this.contadorPagina, 'FAST');
 
       this.doc.addImage(arrPiezometro[index], 'PNG', this.puntoMedio - (450 / 2), this.usoPagina + 120, 450, 250, 'piezometro' + this.contadorPagina, 'FAST');
       this.usoPagina += 360
@@ -365,7 +399,7 @@ export class InformeService {
 
       this.doc.setFontSize(10)
       this.doc.setFont("Lato", "normal");
-      this.usoPagina = formateadoraDeTexto(this.doc, seccion.obsPiezometro, this.usoPagina + 20, this.margenIzq, this.margenDer)
+      this.usoPagina = formateadoraDeTexto(this.doc, obsPiezometro, this.usoPagina + 20, this.margenIzq, this.margenDer)
       nEstacion++
 
     })
@@ -373,7 +407,11 @@ export class InformeService {
 
   }
 
-  generarAnalisisGeneralPrismas() {
+  generarAnalisisGeneralPrismas(prismas: AbstractControl<any, any>) {
+    const imagenGeneral = prismas.get('imagenGeneral')?.value
+    const obsGeneral = prismas.get('obsGeneral')?.value
+
+
     this.crearNuevaPagina(800)
     this.doc.setFontSize(12)
     this.doc.setFont("Lato", "bold");
@@ -388,7 +426,8 @@ export class InformeService {
 
     this.usoPagina += 10
 
-    // this.doc.addImage("assets/EFE/Luis.jpg", 'JPG', this.margenIzq, this.usoPagina, 420, 320, 'LUIS 6' + this.contadorPagina, 'FAST');
+    if (imagenGeneral)
+      this.doc.addImage(imagenGeneral, 'JPG', this.margenIzq, this.usoPagina, 420, 320, 'LUIS 6' + this.contadorPagina, 'FAST');
 
     //tabla
     this.doc.setFontSize(10)
@@ -459,13 +498,19 @@ export class InformeService {
     this.doc.setFont("Lato", "bold");
     this.doc.text('Observaciones generales', this.margenIzq, this.usoPagina + 8, { align: 'left', maxWidth: this.maxMargen });
 
-    this.usoPagina = formateadoraDeTexto(this.doc, data.seccionPrismas.obsGenerales, this.usoPagina + 28, this.margenIzq, this.margenDer)
+    this.usoPagina = formateadoraDeTexto(this.doc, obsGeneral, this.usoPagina + 28, this.margenIzq, this.margenDer)
 
   }
 
-  generarAnalisisPrismas(arrPrismas: any[]) {
+  generarAnalisisPrismas(arrPrismas: any[], prismas: AbstractControl<any, any>) {
+
+
 
     data.seccionPrismas.analisisPrismas.forEach((elm, index) => {
+      const prisma = prismas.get('prismas'+(index+1))
+      const imagenPrismas = prisma?.get('imagen')?.value
+      const obsGeneral = prisma?.get('obsGeneral')?.value
+
 
       //PRISMAS P04-12
       this.crearNuevaPagina(800)
@@ -482,7 +527,8 @@ export class InformeService {
 
       this.usoPagina += 10
 
-      // this.doc.addImage("assets/EFE/Luis.jpg", 'JPG', this.margenIzq, this.usoPagina, 320, 240, 'LUIS 7' + this.contadorPagina, 'FAST');
+      if(imagenPrismas)
+      this.doc.addImage(imagenPrismas, 'JPG', this.margenIzq, this.usoPagina, 320, 240, 'LUIS 7' + this.contadorPagina, 'FAST');
 
       //tabla
       this.doc.setFontSize(10)
@@ -555,11 +601,11 @@ export class InformeService {
       this.doc.text('Observaciones generales', this.margenIzq, this.usoPagina + 10, { align: 'left', maxWidth: this.maxMargen });
       this.usoPagina += 10
 
-      this.usoPagina = formateadoraDeTexto(this.doc, elm.obs, this.usoPagina + 20, this.margenIzq, this.margenDer)
+      this.usoPagina = formateadoraDeTexto(this.doc, obsGeneral, this.usoPagina + 20, this.margenIzq, this.margenDer)
     });
   }
 
-  conclusion(input: any) {
+  conclusion(conclusion: any) {
     this.crearNuevaPagina(800)
 
     this.doc.setFontSize(12)
@@ -569,13 +615,12 @@ export class InformeService {
 
     this.doc.setFontSize(10)
     this.doc.setFont("Lato", "normal");
-    // this.doc.text(data.conclusion, this.margenIzq, this.usoPagina, { align: 'left', maxWidth: this.maxMargen });
-    formateadoraDeTexto(this.doc, input.value, this.usoPagina, this.margenIzq, this.margenDer)
+    formateadoraDeTexto(this.doc, conclusion.value, this.usoPagina, this.margenIzq, this.margenDer)
 
 
   }
 
-  generarTablaResumen() {
+  generarTablaResumen(gestores: AbstractControl<any, any>) {
     let mes = this.mes
     mes = mes.charAt(0).toUpperCase() + mes.slice(1);
     this.doc.addPage()
@@ -601,12 +646,12 @@ export class InformeService {
 
 
 
-    let nombre1 = data.tablaResumen.elaborado
-    let cargo1 = data.tablaResumen.cargo
-    let nombre2 = data.tablaResumen.revisado
-    let cargo2 = data.tablaResumen.cargo2
-    let nombre3 = data.tablaResumen.aprobado
-    let cargo3 = data.tablaResumen.cargo3
+    let nombre1 = gestores.get('elaborado')?.value
+    let cargo1 = gestores.get('cargo1')?.value
+    let nombre2 = gestores.get('revisado')?.value
+    let cargo2 = gestores.get('cargo2')?.value
+    let nombre3 = gestores.get('aprobado')?.value
+    let cargo3 = gestores.get('cargo3')?.value
 
 
 
@@ -731,12 +776,12 @@ export class InformeService {
 
     this.implementarFuentes()
     this.implementarPortada()
-    this.generarTablaResumen()
-    this.generarSeccion1()
-    this.generarAnalisisDeDatos(arrGCC, arrGCD, arrPiezometro)
-    this.generarAnalisisGeneralPrismas()
-    this.generarAnalisisPrismas(arrPrismas)
-    this.conclusion(inputs.controls['textAreaTest'])
+    this.generarTablaResumen(inputs.controls['gestores'])
+    this.generarSeccion1(inputs.controls['estaciones'])
+    this.generarAnalisisDeDatos(arrGCC, arrGCD, arrPiezometro, inputs.controls['estaciones'])
+    this.generarAnalisisGeneralPrismas(inputs.controls['prismas'])
+    this.generarAnalisisPrismas(arrPrismas, inputs.controls['prismas'])
+    this.conclusion(inputs.controls['conclusion'])
   }
 
   generarInforme(inputs: FormGroup, arrGCC: any[], arrGCD: any[], gcdElements: QueryList<ElementRef>, arrPrismas: any[], arrPiezometro: any[]) {

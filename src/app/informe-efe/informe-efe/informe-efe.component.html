@@ -1,4 +1,4 @@
-<div class="d-flex justify-content-center align-items-center flex-column mb-5" [formGroup]="dataInputs">
+<div class="d-flex justify-content-center align-items-center flex-column mb-5" [formGroup]="inputs">
     <div class="col-8 mt-2">
         <button type="button" style="background-color: #00838F; color: #fbfbfb" class="btn btn-sm" [routerLink]="['/']"
             routerLinkActive="router-link-active" mdbRipple>Atras</button>
@@ -12,195 +12,537 @@
         <button type="button" style="background-color: #00838F; color: #fbfbfb" class="btn " (click)="subirInforme()"
             mdbRipple>Subir</button>
     </div>
-    <div class="mt-5 d-flex gap-5">
+    <div class="mt-5 d-flex gap-5" formGroupName="fechas">
         <mdb-form-control>
-            <input mdbInput type="date" id="fecha-inicio" class="form-control" />
+            <input mdbInput type="date" id="fecha-inicio" class="form-control" formControlName="fechaInicio" />
             <label mdbLabel class="form-label" for="fecha-inicio">Fecha Inicio</label>
         </mdb-form-control>
         <mdb-form-control>
-            <input mdbInput type="date" id="fecha-final" class="form-control" />
+            <input mdbInput type="date" id="fecha-final" class="form-control" formControlName="fechaFinal" />
             <label mdbLabel class="form-label" for="fecha-final">Fecha Final</label>
         </mdb-form-control>
     </div>
-    <div class="d-flex flex-column gap-2 mt-4">
+    <div class="d-flex flex-column gap-2 mt-4" formGroupName="gestores">
         <div class="d-flex gap-2">
             <mdb-form-control>
-                <input mdbInput type="text" id="Elaborado" class="form-control" />
+                <input mdbInput type="text" id="Elaborado" class="form-control" formControlName="elaborado" />
                 <label mdbLabel class="form-label" for="Elaborado">Elaborado</label>
             </mdb-form-control>
             <mdb-form-control>
-                <input mdbInput type="text" id="REVISADO" class="form-control" />
+                <input mdbInput type="text" id="REVISADO" class="form-control" formControlName="revisado" />
                 <label mdbLabel class="form-label" for="REVISADO">Revisado</label>
             </mdb-form-control>
             <mdb-form-control>
-                <input mdbInput type="text" id="APROBADO" class="form-control" />
+                <input mdbInput type="text" id="APROBADO" class="form-control" formControlName="aprobado" />
                 <label mdbLabel class="form-label" for="APROBADO">Aprobado</label>
             </mdb-form-control>
         </div>
         <div class="d-flex gap-2">
             <mdb-form-control>
-                <input mdbInput type="text" id="cargo-1" class="form-control" />
+                <input mdbInput type="text" id="cargo-1" class="form-control" formControlName="cargo1" />
                 <label mdbLabel class="form-label" for="cargo-1">Cargo</label>
             </mdb-form-control><mdb-form-control>
-                <input mdbInput type="text" id="cargo-2" class="form-control" />
+                <input mdbInput type="text" id="cargo-2" class="form-control" formControlName="cargo2" />
                 <label mdbLabel class="form-label" for="cargo-2">Cargo</label>
             </mdb-form-control>
             <mdb-form-control>
-                <input mdbInput type="text" id="cargo-3" class="form-control" />
+                <input mdbInput type="text" id="cargo-3" class="form-control" formControlName="cargo3" />
                 <label mdbLabel class="form-label" for="cargo-3">Cargo</label>
             </mdb-form-control>
         </div>
     </div>
-    <div class="mt-5">
-        <div class="">
-            <h5>Estado General Estaciones</h5>
-        </div>
-        <div class="mt-4">
+    <!-- --------------------------->
+    <!-- ------Estaciones-------->
+    <div formGroupName="estaciones">
+        <!-- ------Estaciones general-------->
+        <div class="mt-5">
+            <div class="">
+                <h4>Estado General Estaciones</h4>
+            </div>
+            <div class="mt-4" formGroupName="estados">
+                <div>
+                    <p class="mb-0">Estado de la Instrumentación</p>
+                    <p style="font-size: 11px; color: #FF6900" class="ps-1">Marque la casilla si el instrumento se
+                        encuentra operativo</p>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input mdbCheckbox class="form-check-input" type="checkbox" id="piezometro"
+                        formControlName="piezometro" />
+                    <label class="form-check-label" for="piezometro">Piezómetros</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input mdbCheckbox class="form-check-input" type="checkbox" id="checkGCD" value="option2"
+                        formControlName="gcd" />
+                    <label class="form-check-label" for="checkGCD">GCD: Geo Centinela Deformación </label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input mdbCheckbox class="form-check-input" type="checkbox" id="checkGCC" value="option2"
+                        formControlName="gcc" />
+                    <label class="form-check-label" for="checkGCC">GCC: Geo Centinela Corte</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input mdbCheckbox class="form-check-input" type="checkbox" id="checkPrismas" value="option2"
+                        formControlName="prismas" />
+                    <label class="form-check-label" for="checkPrismas">Prismas</label>
+                </div>
+            </div>
             <div>
-                <p class="mb-0">Estado de la Instrumentación</p>
-                <p style="font-size: 11px; color: #FF6900" class="ps-1">Marque la casilla si el instrumento se encuentra
-                    operativo</p>
-            </div>
-            <div class="form-check form-check-inline">
-                <input mdbCheckbox class="form-check-input" type="checkbox" id="piezometro" />
-                <label class="form-check-label" for="piezometro">Piezómetros</label>
-            </div>
-            <div class="form-check form-check-inline">
-                <input mdbCheckbox class="form-check-input" type="checkbox" id="checkGCD" value="option2" />
-                <label class="form-check-label" for="checkGCD">GCD: Geo Centinela Deformación </label>
-            </div>
-            <div class="form-check form-check-inline">
-                <input mdbCheckbox class="form-check-input" type="checkbox" id="checkGCC" value="option2" />
-                <label class="form-check-label" for="checkGCC">GCC: Geo Centinela Corte</label>
-            </div>
-            <div class="form-check form-check-inline">
-                <input mdbCheckbox class="form-check-input" type="checkbox" id="checkPrismas" value="option2" />
-                <label class="form-check-label" for="checkPrismas">Prismas</label>
-            </div>
-        </div>
-        <div>
-            <mdb-form-control class="mt-3">
-                <textarea mdbInput class="form-control" id="Estado-general-estaciones" rows="4"
-                    formControlName=""></textarea>
-                <label mdbLabel class="form-label" for="Estado-general-estaciones">Estado general</label>
-            </mdb-form-control>
-        </div>
-        <div class="mt-4">
-            <p class="mb-0">Observaciones</p>
-        </div>
-        <div class="mt-3 d-flex flex-column gap-3">
-            <div class="d-flex gap-4">
-                <div class="col-1">
-                    <p style="font-size: 13px;">Piezómetros</p>
-                </div>
-                <mdb-form-control>
-                    <textarea style=" font-size: 13px; width: 660px " mdbInput class="form-control m-0 p-0 "
-                        id="obs-piezometros" rows="2" formControlName=""></textarea>
-                    <label mdbLabel class="form-label" for="obs-piezometros">obs.</label>
+                <mdb-form-control class="mt-3 ">
+                    <textarea mdbInput class="form-control" id="Estado-general-estaciones" rows="4"
+                        formControlName="estadoGeneral"></textarea>
+                    <label mdbLabel class="form-label" for="Estado-general-estaciones">Estado general</label>
                 </mdb-form-control>
             </div>
-            <div class="d-flex gap-4">
-                <div class="col-1">
-                    <p style="font-size: 13px;">GCD</p>
-                </div>
-                <mdb-form-control>
-                    <textarea style=" font-size: 13px; width: 660px" mdbInput class="form-control m-0 p-0" id="obs-gcd"
-                        rows="2" formControlName=""></textarea>
-                    <label mdbLabel class="form-label" for="obs-gcd">obs.</label>
-                </mdb-form-control>
+            <div class="mt-4">
+                <p class="mb-0">Observaciones</p>
             </div>
-            <div class="d-flex gap-4">
-                <div class="col-1">
-                    <p style="font-size: 13px;">GCC</p>
+            <div class="mt-3 d-flex flex-column gap-3" formGroupName="observaciones">
+                <div class="d-flex gap-4">
+                    <div class="col-1">
+                        <p style="font-size: 13px;">Piezómetros</p>
+                    </div>
+                    <mdb-form-control>
+                        <textarea style=" font-size: 13px; width: 660px " mdbInput class="form-control m-0 p-0 "
+                            id="obs-piezometros" rows="2" formControlName="piezometro"></textarea>
+                        <label mdbLabel class="form-label" for="obs-piezometros">obs.</label>
+                    </mdb-form-control>
                 </div>
-                <mdb-form-control>
-                    <textarea style=" font-size: 13px; width: 660px" mdbInput class="form-control m-0 p-0" id="obs-gcc"
-                        rows="2" formControlName=""></textarea>
-                    <label mdbLabel class="form-label" for="obs-gcc">obs.</label>
-                </mdb-form-control>
+                <div class="d-flex gap-4">
+                    <div class="col-1">
+                        <p style="font-size: 13px;">GCD</p>
+                    </div>
+                    <mdb-form-control>
+                        <textarea style=" font-size: 13px; width: 660px" mdbInput class="form-control m-0 p-0"
+                            id="obs-gcd" rows="2" formControlName="gcd"></textarea>
+                        <label mdbLabel class="form-label" for="obs-gcd">obs.</label>
+                    </mdb-form-control>
+                </div>
+                <div class="d-flex gap-4">
+                    <div class="col-1">
+                        <p style="font-size: 13px;">GCC</p>
+                    </div>
+                    <mdb-form-control>
+                        <textarea style=" font-size: 13px; width: 660px" mdbInput class="form-control m-0 p-0"
+                            id="obs-gcc" rows="2" formControlName="gcc"></textarea>
+                        <label mdbLabel class="form-label" for="obs-gcc">obs.</label>
+                    </mdb-form-control>
+                </div>
+                <div class="d-flex gap-4">
+                    <div class="col-1">
+                        <p style="font-size: 13px;">Prismas</p>
+                    </div>
+                    <mdb-form-control>
+                        <textarea style=" font-size: 13px; width: 660px" mdbInput class="form-control m-0 p-0"
+                            id="obs-Prismas" rows="2" formControlName="prismas"></textarea>
+                        <label mdbLabel class="form-label" for="obs-Prismas">obs.</label>
+                    </mdb-form-control>
+                </div>
             </div>
-            <div class="d-flex gap-4">
-                <div class="col-1">
-                    <p style="font-size: 13px;">Prismas</p>
-                </div>
-                <mdb-form-control>
-                    <textarea style=" font-size: 13px; width: 660px" mdbInput class="form-control m-0 p-0"
-                        id="obs-Prismas" rows="2" formControlName=""></textarea>
-                    <label mdbLabel class="form-label" for="obs-Prismas">obs.</label>
+            <div class="mt-4">
+                <p class="mb-0">Monitoreo Geotécnico</p>
+            </div>
+            <div class=" mt-3 d-flex gap-2" style="width: 800px;" formGroupName="monitoreo">
+                <mdb-form-control class="col-2 ">
+                    <input mdbLabel type="number" id="alarmas-mes" class="form-control" formControlName="alarmas" />
+                    <label mdbInput class="form-label" for="alarmas-mes">Alarmas mes</label>
+                </mdb-form-control>
+                <mdb-form-control class="col-2">
+                    <input mdbLabel type="number" id="alertas-mes" class="form-control" formControlName="alertas" />
+                    <label mdbInput class="form-label" for="alertas-mes">alertas mes</label>
+                </mdb-form-control>
+                <mdb-form-control class="col-2">
+                    <input mdbLabel type="number" id="vigilancia" class="form-control" formControlName="vigilancia" />
+                    <label mdbInput class="form-label" for="vigilancia">Modo Vigilancia </label>
+                </mdb-form-control>
+                <mdb-form-control class="col-3">
+                    <input mdbLabel type="number" id="reporte-sismo" class="form-control" formControlName="sismo" />
+                    <label mdbInput class="form-label" for="reporte-sismo">Reporte post sismo</label>
                 </mdb-form-control>
             </div>
         </div>
-        <div class="mt-4">
-            <p class="mb-0">Monitoreo Geotécnico</p>
+        <!-- --------------------------->
+        <!-- ---------------estaciones -->
+        <div class="mt-5" formGroupName="estacion6">
+            <div style="width: 800px;">
+                <h4>Estacion 6</h4>
+            </div>
+            <div class="d-flex mt-4">
+                <div>
+                    <div *ngIf="geocentinelas.length > 0" [id]="geocentinelas[2].nombre" #geocentinela
+                        class="d-flex flex-column align-items-center border rounded" style="width: 200px;">
+                        <div>
+                            <p style="font-size: 12px;">{{geocentinelas[2].nombre}}</p>
+                        </div>
+                        <div class="d-flex flex-column ml-4 gap-3">
+                            <div class="d-flex gap-2 align-items-center ">
+                                <p class="mb-0 ms-3" style="font-size: 12px;">
+                                    {{geocentinelas[2].profundidades[3].profundidad}} [m] </p>
+                                <div [style]="!geocentinelas[2].profundidades[3].estado ? 'background-color: #B3B3B3; width: 50px; height: 30px;' : 'background-color: #D64550; width: 50px; height: 30px;'"
+                                    class="rounded"></div>
+                            </div>
+                            <div class="d-flex gap-2 align-items-center">
+                                <p class="mb-0 ms-3" style="font-size: 12px;">
+                                    {{geocentinelas[2].profundidades[2].profundidad}} [m] </p>
+                                <div [style]="!geocentinelas[2].profundidades[2].estado ? 'background-color: #B3B3B3; width: 50px; height: 30px;' : 'background-color: #D64550; width: 50px; height: 30px;'"
+                                    class="rounded"></div>
+                            </div>
+                            <div class="d-flex gap-2 align-items-center">
+                                <p class="mb-0 ms-3" style="font-size: 12px;">
+                                    {{geocentinelas[2].profundidades[1].profundidad}} [m] </p>
+                                <div [style]="!geocentinelas[2].profundidades[1].estado ? 'background-color: #B3B3B3; width: 50px; height: 30px;' : 'background-color: #D64550; width: 50px; height: 30px;'"
+                                    class="rounded"></div>
+                            </div>
+                            <div class="d-flex gap-2 align-items-center">
+                                <p class="mb-0 ms-3" style="font-size: 12px;">
+                                    {{geocentinelas[2].profundidades[0].profundidad}} [m] </p>
+                                <div [style]="!geocentinelas[2].profundidades[0].estado ? 'background-color: #B3B3B3; width: 50px; height: 30px;' : 'background-color: #D64550; width: 50px; height: 30px;'"
+                                    class="rounded"></div>
+                            </div>
+                            <div class="d-flex justify-items-evenly-center col-12 gap-3 mb-1">
+                                <div class="d-flex gap-1 align-items-center h-20 ">
+                                    <div style="background-color: #D64550; height: 10px; width:20px;"></div>
+                                    <p style="font-size: 8px; margin-top:1px" class="mb-0">CORTE</p>
+                                </div>
+                                <div class="d-flex gap-1 align-items-center h-20 ">
+                                    <div style="background-color: #B3B3B3; height: 10px; width:20px;"></div>
+                                    <p style="font-size: 8px; margin-top:1px" class="mb-0">CONTINUO</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div style="width: 600px; "><canvas [classList]="loadGeoDeformacion ? 'border' : ''" #GCD
+                        id="chart0"></canvas>
+                </div>
+            </div>
+            <div>
+                <div class="mt-4">
+                    <p class="mb-0">Observaciones generales</p>
+                </div>
+                <div>
+                    <mdb-form-control class="mt-3">
+                        <textarea mdbInput class="form-control" id="obs-estacion-6" rows="4"
+                            formControlName="obsGenerales"></textarea>
+                        <label mdbLabel class="form-label" for="obs-estacion-6">Observaciones generales</label>
+                    </mdb-form-control>
+                </div>
+            </div>
+            <div>
+                <div class="mt-4">
+                    <p class="mb-0">Observaciones GCC y GCD</p>
+                </div>
+                <div class="d-flex gap-3">
+                    <mdb-form-control class="mt-3" style="width: 400px;">
+                        <textarea mdbInput class="form-control" id="obs-gcc-6" rows="4"
+                            formControlName="obsGCC"></textarea>
+                        <label mdbLabel class="form-label" for="obs-gcc-6">Observaciones GCC</label>
+                    </mdb-form-control>
+                    <mdb-form-control class="mt-3" style="width: 400px;">
+                        <textarea mdbInput class="form-control" id="obs-gcd-6" rows="4"
+                            formControlName="obsGCD"></textarea>
+                        <label mdbLabel class="form-label" for="obs-gcd-6">Observaciones GCD</label>
+                    </mdb-form-control>
+                </div>
+            </div>
+            <div>
+                <div>
+                    <mdb-form-control class="mt-3">
+                        <textarea mdbInput class="form-control" id="obs-específicas-6" rows="4"
+                            formControlName="obsEspecificas"></textarea>
+                        <label mdbLabel class="form-label" for="obs-específicas-6">Observaciones específicas</label>
+                    </mdb-form-control>
+                </div>
+            </div>
+            <div formGroupName="piezometro">
+                <div class="mt-4" style="width: 800px;">
+                    <p class="mb-0">Piezómetro</p>
+                </div>
+                <div class="d-flex flex-column align-items-center">
+                    <div>
+                        <label class="form-label" for="customFile">Imágen agua acumulada</label>
+                        <input accept="image/*" type="file" class="form-control" id="customFile" style="width: 400px;"
+                            (change)="LoadUploadImage(1,$event)" />
+                    </div>
+                    <div class="border mt-2" style="width: 600px; height: 150px">
+                        <img *ngIf="inputs.get('estaciones.estacion6.piezometro.imgAguaAcumulada')?.value " id="img1"
+                            [src]="inputs.get('estaciones.estacion6.piezometro.imgAguaAcumulada')?.value"
+                            style="width: 600px; height: 150px">
+                    </div>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <div style="width: 600px;" class="mt-3 "><canvas class="border" #piezometro
+                            id="piezometro4"></canvas>
+                    </div>
+                </div>
+                <div>
+                    <mdb-form-control class="mt-3">
+                        <textarea mdbInput class="form-control" id="obs-piezometro-1" rows="4"
+                            formControlName="observaciones"></textarea>
+                        <label mdbLabel class="form-label" for="obs-piezometro-1">Observaciones piezómetro</label>
+                    </mdb-form-control>
+                </div>
+            </div>
         </div>
-        <div class=" mt-3 d-flex gap-2" style="width: 800px;">
-            <mdb-form-control class="col-2">
-                <input mdbLabel type="number" id="alarmas-mes" class="form-control" />
-                <label mdbInput class="form-label" for="alarmas-mes">Alarmas mes</label>
-            </mdb-form-control>
-            <mdb-form-control class="col-2">
-                <input mdbLabel type="number" id="alertas-mes" class="form-control" />
-                <label mdbInput class="form-label" for="alertas-mes">alertas mes</label>
-            </mdb-form-control>
-            <mdb-form-control class="col-2">
-                <input mdbLabel type="number" id="vigilancia" class="form-control" />
-                <label mdbInput class="form-label" for="vigilancia">Modo Vigilancia </label>
-            </mdb-form-control>
-            <mdb-form-control class="col-3">
-                <input mdbLabel type="number" id="reporte-sismo" class="form-control" />
-                <label mdbInput class="form-label" for="reporte-sismo">Reporte post sismo</label>
-            </mdb-form-control>
+        <!-- --------------------------->
+        <!-- --------------------------->
+        <div class="mt-5" formGroupName="estacion7">
+            <div style="width: 800px;">
+                <h4>Estacion 7</h4>
+            </div>
+            <div *ngIf="geocentinelas.length > 0" class="d-flex mt-4">
+                <div [id]="geocentinelas[1].nombre" #geocentinela
+                    class="d-flex flex-column align-items-center border rounded" style="width: 200px;">
+                    <div>
+                        <p style="font-size: 12px;">{{geocentinelas[1].nombre}}</p>
+                    </div>
+                    <div class="d-flex flex-column ml-4 gap-3">
+                        <div class="d-flex gap-2 align-items-center ">
+                            <p class="mb-0 ms-3" style="font-size: 12px;">
+                                {{geocentinelas[1].profundidades[3].profundidad}} [m] </p>
+                            <div [style]="!geocentinelas[1].profundidades[3].estado ? 'background-color: #B3B3B3; width: 50px; height: 30px;' : 'background-color: #D64550; width: 50px; height: 30px;'"
+                                class="rounded"></div>
+                        </div>
+                        <div class="d-flex gap-2 align-items-center">
+                            <p class="mb-0 ms-3" style="font-size: 12px;">
+                                {{geocentinelas[1].profundidades[2].profundidad}} [m] </p>
+                            <div [style]="!geocentinelas[1].profundidades[2].estado ? 'background-color: #B3B3B3; width: 50px; height: 30px;' : 'background-color: #D64550; width: 50px; height: 30px;'"
+                                class="rounded"></div>
+                        </div>
+                        <div class="d-flex gap-2 align-items-center">
+                            <p class="mb-0 ms-3" style="font-size: 12px;">
+                                {{geocentinelas[1].profundidades[1].profundidad}} [m] </p>
+                            <div [style]="!geocentinelas[1].profundidades[1].estado ? 'background-color: #B3B3B3; width: 50px; height: 30px;' : 'background-color: #D64550; width: 50px; height: 30px;'"
+                                class="rounded"></div>
+                        </div>
+                        <div class="d-flex gap-2 align-items-center">
+                            <p class="mb-0 ms-3" style="font-size: 12px;">
+                                {{geocentinelas[1].profundidades[0].profundidad}} [m] </p>
+                            <div [style]="!geocentinelas[1].profundidades[0].estado ? 'background-color: #B3B3B3; width: 50px; height: 30px;' : 'background-color: #D64550; width: 50px; height: 30px;'"
+                                class="rounded"></div>
+                        </div>
+                        <div class="d-flex justify-items-evenly-center col-12 gap-3 mb-1">
+                            <div class="d-flex gap-1 align-items-center h-20 ">
+                                <div style="background-color: #D64550; height: 10px; width:20px;"></div>
+                                <p style="font-size: 8px; margin-top:1px" class="mb-0">CORTE</p>
+                            </div>
+                            <div class="d-flex gap-1 align-items-center h-20 ">
+                                <div style="background-color: #B3B3B3; height: 10px; width:20px;"></div>
+                                <p style="font-size: 8px; margin-top:1px" class="mb-0">CONTINUO</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div style="width: 600px;"><canvas [classList]="loadGeoDeformacion ? 'border' : ''" #GCD
+                        id="chart1"></canvas></div>
+            </div>
+            <div>
+                <div class="mt-4">
+                    <p class="mb-0">Observaciones generales</p>
+                </div>
+                <div>
+                    <mdb-form-control class="mt-3">
+                        <textarea mdbInput class="form-control" id="obs-estacion-7" rows="4"
+                            formControlName="obsGenerales"></textarea>
+                        <label mdbLabel class="form-label" for="obs-estacion-7">Observaciones generales</label>
+                    </mdb-form-control>
+                </div>
+            </div>
+            <div>
+                <div class="mt-4">
+                    <p class="mb-0">Observaciones GCC y GCD</p>
+                </div>
+                <div class="d-flex gap-3">
+                    <mdb-form-control class="mt-3" style="width: 400px;">
+                        <textarea mdbInput class="form-control" id="obs-gcc-7" rows="4"
+                            formControlName="obsGCC"></textarea>
+                        <label mdbLabel class="form-label" for="obs-gcc-7">Observaciones GCC</label>
+                    </mdb-form-control>
+                    <mdb-form-control class="mt-3" style="width: 400px;">
+                        <textarea mdbInput class="form-control" id="obs-gcd-7" rows="4"
+                            formControlName="obsGCD"></textarea>
+                        <label mdbLabel class="form-label" for="obs-gcd-7">Observaciones GCD</label>
+                    </mdb-form-control>
+                </div>
+            </div>
+            <div>
+                <div>
+                    <mdb-form-control class="mt-3">
+                        <textarea mdbInput class="form-control" id="obs-específicas-7" rows="4"
+                            formControlName="obsEspecificas"></textarea>
+                        <label mdbLabel class="form-label" for="obs-específicas-7">Observaciones específicas</label>
+                    </mdb-form-control>
+                </div>
+            </div>
+            <div formGroupName="piezometro">
+                <div class="mt-4" style="width: 800px;">
+                    <p class="mb-0">Piezómetro</p>
+                </div>
+                <div class="d-flex flex-column align-items-center">
+                    <div>
+                        <label class="form-label" for="customFile">Imágen agua acumulada</label>
+                        <input accept="image/*" type="file" class="form-control" id="customFile" style="width: 400px;"
+                            (change)="LoadUploadImage(2,$event)" />
+                    </div>
+                    <div class="border mt-2" style="width: 600px; height: 150px">
+                        <img *ngIf="inputs.get('estaciones.estacion7.piezometro.imgAguaAcumulada')?.value" id="img1"
+                            [src]="this.inputs.get('estaciones.estacion7.piezometro.imgAguaAcumulada')?.value"
+                            style="width: 600px; height: 150px">
+                    </div>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <div style="width: 600px; " class="mt-3 "><canvas class="border" #piezometro
+                            id="piezometro3"></canvas>
+                    </div>
+                </div>
+                <div>
+                    <mdb-form-control class="mt-3">
+                        <textarea mdbInput class="form-control" id="obs-piezometro-7" rows="4"
+                            formControlName="observaciones"></textarea>
+                        <label mdbLabel class="form-label" for="obs-piezometro-7">Observaciones piezómetro</label>
+                    </mdb-form-control>
+                </div>
+            </div>
+        </div>
+        <!-- --------------------------->
+        <!-- --------------------------->
+        <div class="mt-5" formGroupName="estacion8">
+            <div style="width: 800px;">
+                <h4>Estacion 8</h4>
+            </div>
+            <div *ngIf="geocentinelas.length > 0" class="d-flex mt-4">
+                <div [id]="geocentinelas[0].nombre" #geocentinela
+                    class="d-flex flex-column align-items-center border rounded" style="width: 200px;">
+                    <div>
+                        <p style="font-size: 12px;">{{geocentinelas[0].nombre}}</p>
+                    </div>
+                    <div class="d-flex flex-column ml-4 gap-3">
+                        <div class="d-flex gap-2 align-items-center ">
+                            <p class="mb-0 ms-3" style="font-size: 12px;">
+                                {{geocentinelas[0].profundidades[3].profundidad}} [m] </p>
+                            <div [style]="!geocentinelas[0].profundidades[3].estado ? 'background-color: #B3B3B3; width: 50px; height: 30px;' : 'background-color: #D64550; width: 50px; height: 30px;'"
+                                class="rounded"></div>
+                        </div>
+                        <div class="d-flex gap-2 align-items-center">
+                            <p class="mb-0 ms-3" style="font-size: 12px;">
+                                {{geocentinelas[0].profundidades[2].profundidad}} [m] </p>
+                            <div [style]="!geocentinelas[0].profundidades[2].estado ? 'background-color: #B3B3B3; width: 50px; height: 30px;' : 'background-color: #D64550; width: 50px; height: 30px;'"
+                                class="rounded"></div>
+                        </div>
+                        <div class="d-flex gap-2 align-items-center">
+                            <p class="mb-0 ms-3" style="font-size: 12px;">
+                                {{geocentinelas[0].profundidades[1].profundidad}} [m] </p>
+                            <div [style]="!geocentinelas[0].profundidades[1].estado ? 'background-color: #B3B3B3; width: 50px; height: 30px;' : 'background-color: #D64550; width: 50px; height: 30px;'"
+                                class="rounded"></div>
+                        </div>
+                        <div class="d-flex gap-2 align-items-center">
+                            <p class="mb-0 ms-3" style="font-size: 12px;">
+                                {{geocentinelas[0].profundidades[0].profundidad}} [m] </p>
+                            <div [style]="!geocentinelas[0].profundidades[0].estado ? 'background-color: #B3B3B3; width: 50px; height: 30px;' : 'background-color: #D64550; width: 50px; height: 30px;'"
+                                class="rounded"></div>
+                        </div>
+                        <div class="d-flex justify-items-evenly-center col-12 gap-3 mb-1">
+                            <div class="d-flex gap-1 align-items-center h-20 ">
+                                <div style="background-color: #D64550; height: 10px; width:20px;"></div>
+                                <p style="font-size: 8px; margin-top:1px" class="mb-0">CORTE</p>
+                            </div>
+                            <div class="d-flex gap-1 align-items-center h-20 ">
+                                <div style="background-color: #B3B3B3; height: 10px; width:20px;"></div>
+                                <p style="font-size: 8px; margin-top:1px" class="mb-0">CONTINUO</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div style="width: 600px;"><canvas [classList]="loadGeoDeformacion ? 'border' : ''" #GCD
+                        id="chart2"></canvas></div>
+            </div>
+            <div>
+                <div class="mt-4">
+                    <p class="mb-0">Observaciones generales</p>
+                </div>
+                <div>
+                    <mdb-form-control class="mt-3">
+                        <textarea mdbInput class="form-control" id="obs-estacion-8" rows="4"
+                            formControlName="obsGenerales"></textarea>
+                        <label mdbLabel class="form-label" for="obs-estacion-8">Observaciones generales</label>
+                    </mdb-form-control>
+                </div>
+            </div>
+            <div>
+                <div class="mt-4">
+                    <p class="mb-0">Observaciones GCC y GCD</p>
+                </div>
+                <div class="d-flex gap-3">
+                    <mdb-form-control class="mt-3" style="width: 400px;">
+                        <textarea mdbInput class="form-control" id="obs-gcc-8" rows="4"
+                            formControlName="obsGCC"></textarea>
+                        <label mdbLabel class="form-label" for="obs-gcc-8">Observaciones GCC</label>
+                    </mdb-form-control>
+                    <mdb-form-control class="mt-3" style="width: 400px;">
+                        <textarea mdbInput class="form-control" id="obs-gcd-8" rows="4"
+                            formControlName="obsGCD"></textarea>
+                        <label mdbLabel class="form-label" for="obs-gcd-8">Observaciones GCD</label>
+                    </mdb-form-control>
+                </div>
+            </div>
+            <div>
+                <div>
+                    <mdb-form-control class="mt-3">
+                        <textarea mdbInput class="form-control" id="obs-específicas-8" rows="4"
+                            formControlName="obsEspecificas"></textarea>
+                        <label mdbLabel class="form-label" for="obs-específicas-8">Observaciones específicas</label>
+                    </mdb-form-control>
+                </div>
+            </div>
+            <div formGroupName="piezometro">
+                <div class="mt-4" style="width: 800px;">
+                    <p class="mb-0">Piezómetro</p>
+                </div>
+                <div class="d-flex flex-column align-items-center">
+                    <div>
+                        <label class="form-label" for="customFile">Imágen agua acumulada</label>
+                        <input accept="image/*" type="file" class="form-control" id="customFile" style="width: 400px;"
+                            (change)="LoadUploadImage(3,$event)" />
+                    </div>
+                    <div class="border mt-2" style="width: 600px; height: 150px">
+                        <img *ngIf="inputs.get('estaciones.estacion8.piezometro.imgAguaAcumulada')?.value" id="img1"
+                            [src]="this.inputs.get('estaciones.estacion8.piezometro.imgAguaAcumulada')?.value"
+                            style="width: 600px; height: 150px">
+                    </div>
+                </div>
+                <div class="d-flex flex-column justify-content-center">
+                    <div class="d-flex justify-content-center">
+                        <div style="width: 600px; " class="mt-3 "><canvas class="border" #piezometro
+                                id="piezometro6"></canvas>
+                        </div>
+                    </div>
+                    <div>
+                        <mdb-form-control class="mt-3">
+                            <textarea mdbInput class="form-control" id="obs-piezometro-8" rows="4"
+                                formControlName="observaciones"></textarea>
+                            <label mdbLabel class="form-label" for="obs-piezometro-8">Observaciones piezómetro</label>
+                        </mdb-form-control>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-    <div class="mt-5">
+    <!-- --------------------->
+    <!-- ---------PRISMAS------------>
+    <!-- --------------------->
+    <!-- ---------Conclucíon------------>
+    <div class="mt-5" formGroupName="prismas">
         <div style="width: 800px;">
-            <h5>Estaciones 6</h5>
+            <h4>Prismas</h4>
         </div>
-        <div class="d-flex mt-4">
-            <div [id]="geocentinelas[2].nombre" #geocentinela
-                class="d-flex flex-column align-items-center border rounded" style="width: 200px;">
-                <div>
-                    <p style="font-size: 12px;">{{geocentinelas[2].nombre}}</p>
-                </div>
-                <div class="d-flex flex-column ml-4 gap-3">
-                    <div class="d-flex gap-2 align-items-center ">
-                        <p class="mb-0 ms-3" style="font-size: 12px;">{{geocentinelas[2].profundidades[3].profundidad}}
-                            [m] </p>
-                        <div [style]="!geocentinelas[2].profundidades[3].estado ? 'background-color: #B3B3B3; width: 50px; height: 30px;' : 'background-color: #D64550; width: 50px; height: 30px;'"
-                            class="rounded"></div>
-                    </div>
-                    <div class="d-flex gap-2 align-items-center">
-                        <p class="mb-0 ms-3" style="font-size: 12px;">{{geocentinelas[2].profundidades[2].profundidad}}
-                            [m] </p>
-                        <div [style]="!geocentinelas[2].profundidades[2].estado ? 'background-color: #B3B3B3; width: 50px; height: 30px;' : 'background-color: #D64550; width: 50px; height: 30px;'"
-                            class="rounded"></div>
-                    </div>
-                    <div class="d-flex gap-2 align-items-center">
-                        <p class="mb-0 ms-3" style="font-size: 12px;">{{geocentinelas[2].profundidades[1].profundidad}}
-                            [m] </p>
-                        <div [style]="!geocentinelas[2].profundidades[1].estado ? 'background-color: #B3B3B3; width: 50px; height: 30px;' : 'background-color: #D64550; width: 50px; height: 30px;'"
-                            class="rounded"></div>
-                    </div>
-                    <div class="d-flex gap-2 align-items-center">
-                        <p class="mb-0 ms-3" style="font-size: 12px;">{{geocentinelas[2].profundidades[0].profundidad}}
-                            [m] </p>
-                        <div [style]="!geocentinelas[2].profundidades[0].estado ? 'background-color: #B3B3B3; width: 50px; height: 30px;' : 'background-color: #D64550; width: 50px; height: 30px;'"
-                            class="rounded"></div>
-                    </div>
-                    <div class="d-flex justify-items-evenly-center col-12 gap-3 mb-1">
-                        <div class="d-flex gap-1 align-items-center h-20 ">
-                            <div style="background-color: #D64550; height: 10px; width:20px;"></div>
-                            <p style="font-size: 8px; margin-top:1px" class="mb-0">CORTE</p>
-                        </div>
-                        <div class="d-flex gap-1 align-items-center h-20 ">
-                            <div style="background-color: #B3B3B3; height: 10px; width:20px;"></div>
-                            <p style="font-size: 8px; margin-top:1px" class="mb-0">CONTINUO</p>
-                        </div>
-                    </div>
-                </div>
+        <div class="d-flex flex-column align-items-center">
+            <div>
+                <label class="form-label" for="customFile">Imágen Todos los Prismas</label>
+                <input accept="image/*" type="file" class="form-control" id="customFile" style="width: 400px;"
+                    (change)="LoadUploadImage(4,$event)" />
             </div>
-            <div style="width: 600px; "><canvas [classList]="loadGeoDeformacion ? 'border' : ''" #GCD
-                    id="chart0"></canvas>
+            <div class="border mt-2" style="width: 500px; height: 300px">
+                <img *ngIf="inputs.get('prismas.imagenGeneral')?.value" id="img1"
+                    [src]="inputs.get('prismas.imagenGeneral')?.value" style="width: 500px; height: 300px">
             </div>
         </div>
         <div>
@@ -209,42 +551,120 @@
             </div>
             <div>
                 <mdb-form-control class="mt-3">
-                    <textarea mdbInput class="form-control" id="obs-estacion-6" rows="4"
-                        formControlName=""></textarea>
-                    <label mdbLabel class="form-label" for="obs-estacion-6">Observaciones generales</label>
+                    <textarea mdbInput class="form-control" id="obs-prismas" rows="4"
+                        formControlName="obsGeneral"></textarea>
+                    <label mdbLabel class="form-label" for="obs-prismas">Observaciones generales</label>
                 </mdb-form-control>
             </div>
         </div>
-
-        <div>
+        <div formGroupName="prismas1">
             <div class="mt-4">
-                <p class="mb-0">Observaciones GCC y GCD</p>
+                <p class="mb-0">Análisis de prismas P04-P12</p>
             </div>
-            <div class="d-flex gap-3">
-                <mdb-form-control class="mt-3" style="width: 400px;">
-                    <textarea mdbInput class="form-control" id="obs-gcc-6" rows="4"
-                        formControlName=""></textarea>
-                    <label mdbLabel class="form-label" for="obs-gcc-6">Observaciones GCC</label>
-                </mdb-form-control>
-                <mdb-form-control class="mt-3" style="width: 400px;">
-                    <textarea mdbInput class="form-control" id="obs-gcd-6" rows="4"
-                        formControlName=""></textarea>
-                    <label mdbLabel class="form-label" for="obs-gcd-6">Observaciones GCD</label>
-                </mdb-form-control>
+            <div class="d-flex flex-column align-items-center">
+                <div>
+                    <label class="form-label" for="customFile">Imágen Todos los Prismas</label>
+                    <input accept="image/*" type="file" class="form-control" id="customFile" style="width: 400px;"
+                        (change)="LoadUploadImage(5,$event)" />
+                </div>
+                <div class="border mt-2" style="width: 500px; height: 300px">
+                    <img *ngIf="inputs.get('prismas.prismas1.imagen')?.value" id="img1"
+                        [src]="inputs.get('prismas.prismas1.imagen')?.value" style="width: 500px; height: 300px">
+                </div>
             </div>
+            <div class="d-flex mt-3 " #screenPrisma>
+                <div style="width: 600px; " class="border"><canvas [classList]="loadGeoDeformacion ? 'border' : ''"
+                        #prismas id="prismas1"></canvas>
+                </div>
+                <div>
+                    <table class="table border" style="width: 250px; font-size:10px">
+                        <thead>
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Fecha Último Registro</th>
+                                <th scope="col">Último Registro [mm]</th>
+                                <th scope="col">Acumulado [mm]</th>
+                            </tr>
+                        </thead>
+                        <tbody *ngFor="let prisma of dataTablaPrismas.slice(0,9)">
+                            <tr>
+                                <th scope="row">{{prisma.nombre}}</th>
+                                <td>{{prisma.fecha}}</td>
+                                <td>{{prisma.desplazamiento}}</td>
+                                <td>{{prisma.acumulado}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <mdb-form-control class="mt-3">
+                <textarea mdbInput class="form-control" id="obs-prismas-p04" rows="4"
+                    formControlName="obsGeneral"></textarea>
+                <label mdbLabel class="form-label" for="obs-prismas-p04">Observaciones generales</label>
+            </mdb-form-control>
         </div>
-
-        <div>
-            <div>
-                <mdb-form-control class="mt-3">
-                    <textarea mdbInput class="form-control" id="obs-específicas-6" rows="4"
-                        formControlName=""></textarea>
-                    <label mdbLabel class="form-label" for="obs-específicas-6">Observaciones específicas</label>
-                </mdb-form-control>
+        <div formGroupName="prismas2">
+            <div class="mt-4">
+                <p class="mb-0">Análisis de prismas P13-P21</p>
             </div>
+            <div class="d-flex flex-column align-items-center">
+                <div>
+                    <label class="form-label" for="customFile">Imágen Todos los Prismas</label>
+                    <input accept="image/*" type="file" class="form-control" id="customFile" style="width: 400px;"
+                        (change)="LoadUploadImage(6,$event)" />
+                </div>
+                <div class="border mt-2" style="width: 500px; height: 300px">
+                    <img *ngIf="inputs.get('prismas.prismas2.imagen')?.value" id="img1"
+                        [src]="inputs.get('prismas.prismas2.imagen')?.value" style="width: 500px; height: 300px">
+                </div>
+            </div>
+            <div class="d-flex mt-4 " #screenPrisma>
+                <div style="width: 600px;" class="border"><canvas [classList]="loadGeoDeformacion ? 'border' : ''"
+                        #prismas2 id="prismas2"></canvas>
+                </div>
+                <div>
+                    <table class="table border" style="width: 250px; font-size:10px">
+                        <thead>
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Fecha Último Registro</th>
+                                <th scope="col">Último Registro [mm]</th>
+                                <th scope="col">Acumulado [mm]</th>
+                            </tr>
+                        </thead>
+                        <tbody *ngFor="let prisma of dataTablaPrismas.slice(9,dataTablaPrismas.length)">
+                            <tr>
+                                <th scope="row">{{prisma.nombre}}</th>
+                                <td>{{prisma.fecha}}</td>
+                                <td>{{prisma.desplazamiento}}</td>
+                                <td>{{prisma.acumulado}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <mdb-form-control class="mt-3">
+                <textarea mdbInput class="form-control" id="obs-prismas-p13" rows="4" formControlName="obsGeneral"></textarea>
+                <label mdbLabel class="form-label" for="obs-prismas-p13">Observaciones generales</label>
+            </mdb-form-control>
         </div>
     </div>
-    <!-- <div *ngIf="geocentinelas.length >= 1" n class="d-flex  mt-3 gap-3">
+    <div class="mt-5">
+        <div style="width: 850px;">
+            <h4>Conclusión</h4>
+        </div>
+        <div>
+            <mdb-form-control class="mt-5">
+                <textarea mdbInput class="form-control" id="conclusión" rows="6"
+                    formControlName="conclusion"></textarea>
+                <label mdbLabel class="form-label" for="conclusión">conclusión</label>
+            </mdb-form-control>
+        </div>
+    </div>
+</div>
+<!-- ---------------------- -->
+<!-- ------------------------ -->
+<!-- <div *ngIf="geocentinelas.length >= 1" n class="d-flex  mt-3 gap-3">
         <div *ngFor="let estaciones of geocentinelas.reverse()">
             <div [id]="estaciones.nombre" #geocentinela class="d-flex flex-column align-items-center border rounded"
                 style="width: 200px;">
@@ -290,69 +710,3 @@
             </div>
         </div>
     </div> -->
-    <div style="width: 600px;"><canvas [classList]="loadGeoDeformacion ? 'border' : ''" #GCD id="chart1"></canvas></div>
-    <div style="width: 600px;"><canvas [classList]="loadGeoDeformacion ? 'border' : ''" #GCD id="chart2"></canvas></div>
-    <div class="mt-5">
-        <h4>Piezometros</h4>
-        <div style="width: 600px;" class="mt-5 "><canvas class="border" #piezometro id="piezometro4"></canvas></div>
-        <div style="width: 600px; " class="mt-5 "><canvas class="border" #piezometro id="piezometro3"></canvas></div>
-        <div style="width: 600px; " class="mt-5 "><canvas class="border" #piezometro id="piezometro6"></canvas></div>
-    </div>
-    <div class="mt-5">
-        <h4>PRISMAS</h4>
-        <div class="d-flex mt-3 " #screenPrisma>
-            <div style="width: 600px; " class="border"><canvas [classList]="loadGeoDeformacion ? 'border' : ''" #prismas
-                    id="prismas1"></canvas>
-            </div>
-            <div>
-                <table class="table border" style="width: 250px; font-size:10px">
-                    <thead>
-                        <tr>
-                            <th scope="col">ID</th>
-                            <th scope="col">Fecha Último Registro</th>
-                            <th scope="col">Último Registro [mm]</th>
-                            <th scope="col">Acumulado [mm]</th>
-                        </tr>
-                    </thead>
-                    <tbody *ngFor="let prisma of dataTablaPrismas.slice(0,9)">
-                        <tr>
-                            <th scope="row">{{prisma.nombre}}</th>
-                            <td>{{prisma.fecha}}</td>
-                            <td>{{prisma.desplazamiento}}</td>
-                            <td>{{prisma.acumulado}}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <div class="d-flex mt-5 " #screenPrisma>
-            <div style="width: 600px;" class="border"><canvas [classList]="loadGeoDeformacion ? 'border' : ''" #prismas2
-                    id="prismas2"></canvas>
-            </div>
-            <div>
-                <table class="table border" style="width: 250px; font-size:10px">
-                    <thead>
-                        <tr>
-                            <th scope="col">ID</th>
-                            <th scope="col">Fecha Último Registro</th>
-                            <th scope="col">Último Registro [mm]</th>
-                            <th scope="col">Acumulado [mm]</th>
-                        </tr>
-                    </thead>
-                    <tbody *ngFor="let prisma of dataTablaPrismas.slice(9,dataTablaPrismas.length)">
-                        <tr>
-                            <th scope="row">{{prisma.nombre}}</th>
-                            <td>{{prisma.fecha}}</td>
-                            <td>{{prisma.desplazamiento}}</td>
-                            <td>{{prisma.acumulado}}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-    <mdb-form-control class="mt-5 col-4">
-        <textarea mdbInput class="form-control" id="textAreaExample" rows="4" formControlName="textAreaTest"></textarea>
-        <label mdbLabel class="form-label" for="textAreaExample">conclusión</label>
-    </mdb-form-control>
-</div>
