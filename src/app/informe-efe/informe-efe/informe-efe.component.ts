@@ -1,7 +1,7 @@
 import { Component, ElementRef, OnInit, QueryList, ViewChildren, AfterViewInit, AfterContentChecked, afterRender } from '@angular/core';
 import { InformeService } from '../informe.service';
 import { AbstractControl, FormControl, FormGroup } from '@angular/forms';
-import { Chart, registerables } from 'chart.js';
+import Chart from 'chart.js/auto';
 import { GraficosService } from '../graficos.service';
 import { ApiService } from '../api.service';
 import html2canvas from 'html2canvas';
@@ -131,7 +131,7 @@ export class InformeEfeComponent implements OnInit {
     this.loadPrismas()
     this.loadGCCDeformacion()
     this.LoadPiezometro()
-    Chart.register(...registerables);
+    // Chart.register(...registerables);
  
   }
 
