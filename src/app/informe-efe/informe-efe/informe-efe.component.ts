@@ -1,14 +1,14 @@
 import { Component, ElementRef, OnInit, QueryList, ViewChildren, AfterViewInit, AfterContentChecked, afterRender } from '@angular/core';
 import { InformeService } from '../informe.service';
 import { AbstractControl, FormControl, FormGroup } from '@angular/forms';
-import {Chart, LinearScale, PointElement, Tooltip, Legend, TimeScale} from "chart.js"; 
+import {Chart, LinearScale, PointElement, Tooltip, Legend, TimeScale, CategoryScale} from "chart.js"; 
 import { GraficosService } from '../graficos.service';
 import { ApiService } from '../api.service';
 import html2canvas from 'html2canvas';
 import 'chartjs-adapter-moment';
 import moment from 'moment';
 
-Chart.register(LinearScale, PointElement, Tooltip, Legend, TimeScale); 
+// ng build --output-path docs --base-href /pdfGenerator/
 
 @Component({
   selector: 'app-informe-efe',
@@ -131,6 +131,7 @@ export class InformeEfeComponent implements OnInit {
     this.loadPrismas()
     this.loadGCCDeformacion()
     this.LoadPiezometro()
+    Chart.register(LinearScale, PointElement, Tooltip, Legend, TimeScale,CategoryScale); 
   }
 
 
