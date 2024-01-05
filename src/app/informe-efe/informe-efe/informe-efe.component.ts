@@ -2,7 +2,6 @@ import { Component, ElementRef, OnInit, QueryList, ViewChildren, AfterViewInit, 
 import { InformeService } from '../informe.service';
 import { AbstractControl, FormControl, FormGroup } from '@angular/forms';
 import Chart from 'chart.js/auto';
-import { GraficosService } from '../graficos.service';
 import { ApiService } from '../api.service';
 import html2canvas from 'html2canvas';
 import 'chartjs-adapter-moment';
@@ -17,7 +16,7 @@ import moment from 'moment';
 })
 export class InformeEfeComponent implements OnInit {
 
-  constructor(private servicio: InformeService, private graficos: GraficosService, private api: ApiService) { }
+  constructor(private servicio: InformeService, private api: ApiService) { }
 
   @ViewChildren("geocentinela") geoElements!: QueryList<ElementRef>;
   @ViewChildren("GCD") gcdElements!: QueryList<ElementRef>;
@@ -131,8 +130,7 @@ export class InformeEfeComponent implements OnInit {
     this.loadPrismas()
     this.loadGCCDeformacion()
     this.LoadPiezometro()
-    // Chart.register(...registerables);
- 
+
   }
 
 
@@ -172,7 +170,7 @@ export class InformeEfeComponent implements OnInit {
     if (this.geoElements.length) {
       this.geoElements.forEach(e => {
         let element = e.nativeElement
-        html2canvas(element).then((canvas) => {
+        html2canvas(element, {scale: 3}).then((canvas) => {
           const base64image = canvas.toDataURL("image/png");
           const img = new Image()
           img.src = base64image
@@ -186,7 +184,7 @@ export class InformeEfeComponent implements OnInit {
   loadScreenshotGCD() {
     this.gcdElements.forEach(e => {
       let element = e.nativeElement
-      html2canvas(element).then((canvas) => {
+      html2canvas(element, {scale: 3}).then((canvas) => {
         const base64image = canvas.toDataURL("image/png");
         const img = new Image()
         img.src = base64image
@@ -200,7 +198,7 @@ export class InformeEfeComponent implements OnInit {
   loadScreenshotPrismas() {
     this.piezometroElement.forEach(e => {
       let element = e.nativeElement
-      html2canvas(element).then((canvas) => {
+      html2canvas(element, {scale: 4}).then((canvas) => {
         const base64image = canvas.toDataURL("image/png");
         const img = new Image()
         img.src = base64image
@@ -214,7 +212,7 @@ export class InformeEfeComponent implements OnInit {
     if (this.piezometroElement && this.dataTablaPrismas.length > 1) {
       this.prismasElements.forEach(e => {
         let element = e.nativeElement
-        html2canvas(element).then((canvas) => {
+        html2canvas(element, {scale: 3}).then((canvas) => {
           const base64image = canvas.toDataURL("image/png");
           const img = new Image()
           img.src = base64image
@@ -550,22 +548,22 @@ export class InformeEfeComponent implements OnInit {
             labels: data[0].dates,
             datasets: [
               {
-                label: data[0].canal + '/ ' + Math.abs(data[0].profundidad) + '[m]',
+                label: data[0].canal + '/ ' + Math.abs(data[0].profundidad) + ' [m]',
                 data: data[0].numbers,
                 borderWidth: 1
               },
               {
-                label: data[1].canal + '/ ' + Math.abs(data[1].profundidad) + '[m]',
+                label: data[1].canal + '/ ' + Math.abs(data[1].profundidad) + ' [m]',
                 data: data[1].numbers,
                 borderWidth: 1
               },
               {
-                label: data[2].canal + '/ ' + Math.abs(data[2].profundidad) + '[m]',
+                label: data[2].canal + '/ ' + Math.abs(data[2].profundidad) + ' [m]',
                 data: data[2].numbers,
                 borderWidth: 1
               },
-              {
-                label: data[3].canal + '/ ' + Math.abs(data[3].profundidad) + '[m]',
+              { 
+                label: data[3].canal + '/ ' + Math.abs(data[3].profundidad) + ' [m]',
                 data: data[3].numbers,
                 borderWidth: 1
               },

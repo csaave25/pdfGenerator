@@ -798,8 +798,8 @@ export class InformeService {
     var blob = this.doc.output('blob')
     dataForm.append('file', blob, 'REPORTE_MENSUAL_' + data.numReporte)
     dataForm.append('fecha', this.date)
-    this.api.sendPDF(dataForm)
-
+    // this.api.sendPDF(dataForm)
+    //descomentar cuando este todo claro
   }
 
 

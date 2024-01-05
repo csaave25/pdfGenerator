@@ -290,44 +290,46 @@
                 <h4>Estacion 7</h4>
             </div>
             <div *ngIf="geocentinelas.length > 0" class="d-flex mt-4">
-                <div [id]="geocentinelas[1].nombre" #geocentinela
-                    class="d-flex flex-column align-items-center border rounded" style="width: 200px;">
-                    <div>
-                        <p style="font-size: 12px;">{{geocentinelas[1].nombre}}</p>
-                    </div>
-                    <div class="d-flex flex-column ml-4 gap-3">
-                        <div class="d-flex gap-2 align-items-center ">
-                            <p class="mb-0 ms-3" style="font-size: 12px;">
-                                {{geocentinelas[1].profundidades[3].profundidad}} [m] </p>
-                            <div [style]="!geocentinelas[1].profundidades[3].estado ? 'background-color: #B3B3B3; width: 50px; height: 30px;' : 'background-color: #D64550; width: 50px; height: 30px;'"
-                                class="rounded"></div>
+                <div>
+                    <div [id]="geocentinelas[1].nombre" #geocentinela
+                        class="d-flex flex-column align-items-center border rounded" style="width: 200px;">
+                        <div>
+                            <p style="font-size: 12px;">{{geocentinelas[1].nombre}}</p>
                         </div>
-                        <div class="d-flex gap-2 align-items-center">
-                            <p class="mb-0 ms-3" style="font-size: 12px;">
-                                {{geocentinelas[1].profundidades[2].profundidad}} [m] </p>
-                            <div [style]="!geocentinelas[1].profundidades[2].estado ? 'background-color: #B3B3B3; width: 50px; height: 30px;' : 'background-color: #D64550; width: 50px; height: 30px;'"
-                                class="rounded"></div>
-                        </div>
-                        <div class="d-flex gap-2 align-items-center">
-                            <p class="mb-0 ms-3" style="font-size: 12px;">
-                                {{geocentinelas[1].profundidades[1].profundidad}} [m] </p>
-                            <div [style]="!geocentinelas[1].profundidades[1].estado ? 'background-color: #B3B3B3; width: 50px; height: 30px;' : 'background-color: #D64550; width: 50px; height: 30px;'"
-                                class="rounded"></div>
-                        </div>
-                        <div class="d-flex gap-2 align-items-center">
-                            <p class="mb-0 ms-3" style="font-size: 12px;">
-                                {{geocentinelas[1].profundidades[0].profundidad}} [m] </p>
-                            <div [style]="!geocentinelas[1].profundidades[0].estado ? 'background-color: #B3B3B3; width: 50px; height: 30px;' : 'background-color: #D64550; width: 50px; height: 30px;'"
-                                class="rounded"></div>
-                        </div>
-                        <div class="d-flex justify-items-evenly-center col-12 gap-3 mb-1">
-                            <div class="d-flex gap-1 align-items-center h-20 ">
-                                <div style="background-color: #D64550; height: 10px; width:20px;"></div>
-                                <p style="font-size: 8px; margin-top:1px" class="mb-0">CORTE</p>
+                        <div class="d-flex flex-column ml-4 gap-3">
+                            <div class="d-flex gap-2 align-items-center ">
+                                <p class="mb-0 ms-3" style="font-size: 12px;">
+                                    {{geocentinelas[1].profundidades[3].profundidad}} [m] </p>
+                                <div [style]="!geocentinelas[1].profundidades[3].estado ? 'background-color: #B3B3B3; width: 50px; height: 30px;' : 'background-color: #D64550; width: 50px; height: 30px;'"
+                                    class="rounded"></div>
                             </div>
-                            <div class="d-flex gap-1 align-items-center h-20 ">
-                                <div style="background-color: #B3B3B3; height: 10px; width:20px;"></div>
-                                <p style="font-size: 8px; margin-top:1px" class="mb-0">CONTINUO</p>
+                            <div class="d-flex gap-2 align-items-center">
+                                <p class="mb-0 ms-3" style="font-size: 12px;">
+                                    {{geocentinelas[1].profundidades[2].profundidad}} [m] </p>
+                                <div [style]="!geocentinelas[1].profundidades[2].estado ? 'background-color: #B3B3B3; width: 50px; height: 30px;' : 'background-color: #D64550; width: 50px; height: 30px;'"
+                                    class="rounded"></div>
+                            </div>
+                            <div class="d-flex gap-2 align-items-center">
+                                <p class="mb-0 ms-3" style="font-size: 12px;">
+                                    {{geocentinelas[1].profundidades[1].profundidad}} [m] </p>
+                                <div [style]="!geocentinelas[1].profundidades[1].estado ? 'background-color: #B3B3B3; width: 50px; height: 30px;' : 'background-color: #D64550; width: 50px; height: 30px;'"
+                                    class="rounded"></div>
+                            </div>
+                            <div class="d-flex gap-2 align-items-center">
+                                <p class="mb-0 ms-3" style="font-size: 12px;">
+                                    {{geocentinelas[1].profundidades[0].profundidad}} [m] </p>
+                                <div [style]="!geocentinelas[1].profundidades[0].estado ? 'background-color: #B3B3B3; width: 50px; height: 30px;' : 'background-color: #D64550; width: 50px; height: 30px;'"
+                                    class="rounded"></div>
+                            </div>
+                            <div class="d-flex justify-items-evenly-center col-12 gap-3 mb-1">
+                                <div class="d-flex gap-1 align-items-center h-20 ">
+                                    <div style="background-color: #D64550; height: 10px; width:20px;"></div>
+                                    <p style="font-size: 8px; margin-top:1px" class="mb-0">CORTE</p>
+                                </div>
+                                <div class="d-flex gap-1 align-items-center h-20 ">
+                                    <div style="background-color: #B3B3B3; height: 10px; width:20px;"></div>
+                                    <p style="font-size: 8px; margin-top:1px" class="mb-0">CONTINUO</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -410,44 +412,46 @@
                 <h4>Estacion 8</h4>
             </div>
             <div *ngIf="geocentinelas.length > 0" class="d-flex mt-4">
-                <div [id]="geocentinelas[0].nombre" #geocentinela
-                    class="d-flex flex-column align-items-center border rounded" style="width: 200px;">
-                    <div>
-                        <p style="font-size: 12px;">{{geocentinelas[0].nombre}}</p>
-                    </div>
-                    <div class="d-flex flex-column ml-4 gap-3">
-                        <div class="d-flex gap-2 align-items-center ">
-                            <p class="mb-0 ms-3" style="font-size: 12px;">
-                                {{geocentinelas[0].profundidades[3].profundidad}} [m] </p>
-                            <div [style]="!geocentinelas[0].profundidades[3].estado ? 'background-color: #B3B3B3; width: 50px; height: 30px;' : 'background-color: #D64550; width: 50px; height: 30px;'"
-                                class="rounded"></div>
+                <div>
+                    <div [id]="geocentinelas[0].nombre" #geocentinela
+                        class="d-flex flex-column align-items-center border rounded" style="width: 200px;">
+                        <div>
+                            <p style="font-size: 12px;">{{geocentinelas[0].nombre}}</p>
                         </div>
-                        <div class="d-flex gap-2 align-items-center">
-                            <p class="mb-0 ms-3" style="font-size: 12px;">
-                                {{geocentinelas[0].profundidades[2].profundidad}} [m] </p>
-                            <div [style]="!geocentinelas[0].profundidades[2].estado ? 'background-color: #B3B3B3; width: 50px; height: 30px;' : 'background-color: #D64550; width: 50px; height: 30px;'"
-                                class="rounded"></div>
-                        </div>
-                        <div class="d-flex gap-2 align-items-center">
-                            <p class="mb-0 ms-3" style="font-size: 12px;">
-                                {{geocentinelas[0].profundidades[1].profundidad}} [m] </p>
-                            <div [style]="!geocentinelas[0].profundidades[1].estado ? 'background-color: #B3B3B3; width: 50px; height: 30px;' : 'background-color: #D64550; width: 50px; height: 30px;'"
-                                class="rounded"></div>
-                        </div>
-                        <div class="d-flex gap-2 align-items-center">
-                            <p class="mb-0 ms-3" style="font-size: 12px;">
-                                {{geocentinelas[0].profundidades[0].profundidad}} [m] </p>
-                            <div [style]="!geocentinelas[0].profundidades[0].estado ? 'background-color: #B3B3B3; width: 50px; height: 30px;' : 'background-color: #D64550; width: 50px; height: 30px;'"
-                                class="rounded"></div>
-                        </div>
-                        <div class="d-flex justify-items-evenly-center col-12 gap-3 mb-1">
-                            <div class="d-flex gap-1 align-items-center h-20 ">
-                                <div style="background-color: #D64550; height: 10px; width:20px;"></div>
-                                <p style="font-size: 8px; margin-top:1px" class="mb-0">CORTE</p>
+                        <div class="d-flex flex-column ml-4 gap-3">
+                            <div class="d-flex gap-2 align-items-center ">
+                                <p class="mb-0 ms-3" style="font-size: 12px;">
+                                    {{geocentinelas[0].profundidades[3].profundidad}} [m] </p>
+                                <div [style]="!geocentinelas[0].profundidades[3].estado ? 'background-color: #B3B3B3; width: 50px; height: 30px;' : 'background-color: #D64550; width: 50px; height: 30px;'"
+                                    class="rounded"></div>
                             </div>
-                            <div class="d-flex gap-1 align-items-center h-20 ">
-                                <div style="background-color: #B3B3B3; height: 10px; width:20px;"></div>
-                                <p style="font-size: 8px; margin-top:1px" class="mb-0">CONTINUO</p>
+                            <div class="d-flex gap-2 align-items-center">
+                                <p class="mb-0 ms-3" style="font-size: 12px;">
+                                    {{geocentinelas[0].profundidades[2].profundidad}} [m] </p>
+                                <div [style]="!geocentinelas[0].profundidades[2].estado ? 'background-color: #B3B3B3; width: 50px; height: 30px;' : 'background-color: #D64550; width: 50px; height: 30px;'"
+                                    class="rounded"></div>
+                            </div>
+                            <div class="d-flex gap-2 align-items-center">
+                                <p class="mb-0 ms-3" style="font-size: 12px;">
+                                    {{geocentinelas[0].profundidades[1].profundidad}} [m] </p>
+                                <div [style]="!geocentinelas[0].profundidades[1].estado ? 'background-color: #B3B3B3; width: 50px; height: 30px;' : 'background-color: #D64550; width: 50px; height: 30px;'"
+                                    class="rounded"></div>
+                            </div>
+                            <div class="d-flex gap-2 align-items-center">
+                                <p class="mb-0 ms-3" style="font-size: 12px;">
+                                    {{geocentinelas[0].profundidades[0].profundidad}} [m] </p>
+                                <div [style]="!geocentinelas[0].profundidades[0].estado ? 'background-color: #B3B3B3; width: 50px; height: 30px;' : 'background-color: #D64550; width: 50px; height: 30px;'"
+                                    class="rounded"></div>
+                            </div>
+                            <div class="d-flex justify-items-evenly-center col-12 gap-3 mb-1">
+                                <div class="d-flex gap-1 align-items-center h-20 ">
+                                    <div style="background-color: #D64550; height: 10px; width:20px;"></div>
+                                    <p style="font-size: 8px; margin-top:1px" class="mb-0">CORTE</p>
+                                </div>
+                                <div class="d-flex gap-1 align-items-center h-20 ">
+                                    <div style="background-color: #B3B3B3; height: 10px; width:20px;"></div>
+                                    <p style="font-size: 8px; margin-top:1px" class="mb-0">CONTINUO</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -644,7 +648,8 @@
                 </div>
             </div>
             <mdb-form-control class="mt-3">
-                <textarea mdbInput class="form-control" id="obs-prismas-p13" rows="4" formControlName="obsGeneral"></textarea>
+                <textarea mdbInput class="form-control" id="obs-prismas-p13" rows="4"
+                    formControlName="obsGeneral"></textarea>
                 <label mdbLabel class="form-label" for="obs-prismas-p13">Observaciones generales</label>
             </mdb-form-control>
         </div>
@@ -660,6 +665,12 @@
                 <label mdbLabel class="form-label" for="conclusión">conclusión</label>
             </mdb-form-control>
         </div>
+    </div>
+    <div class="gap-3 d-flex mt-5">
+        <button type="button" style="background-color: #00838F; color: #fbfbfb" class="btn " (click)="crearInforme()"
+            mdbRipple>mostrar</button>
+        <button type="button" style="background-color: #00838F; color: #fbfbfb" class="btn " (click)="subirInforme()"
+            mdbRipple>Subir</button>
     </div>
 </div>
 <!-- ---------------------- -->
