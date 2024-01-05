@@ -4,4 +4,5 @@ var callAddFont = function () {
 this.addFileToVFS('Lato-Bold-bold.ttf', font);
 this.addFont('Lato-Bold-bold.ttf', 'Lato-Bold', 'bold');
 };
+import jsPDF from "jspdf";
 jsPDF.API.events.push(['addFonts', callAddFont])
