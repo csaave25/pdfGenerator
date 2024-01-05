@@ -45,9 +45,10 @@ export class InformeEfeComponent implements OnInit {
   imagenAgua3: any
 
   inputs: FormGroup = new FormGroup({
-    fechas: new FormGroup({
-      fechaInicio: new FormControl(''),
-      fechaFinal: new FormControl('')
+    datos: new FormGroup({
+      fechaInicio: new FormControl({ value: null, disabled: true }),
+      fechaFinal: new FormControl({ value: null, disabled: true }),
+      numeroInforme: new FormControl(0)
     }),
     gestores: new FormGroup({
       elaborado: new FormControl(''),
@@ -126,11 +127,33 @@ export class InformeEfeComponent implements OnInit {
 
 
   ngOnInit() {
+
+    this.setFechas()
     this.loadGCC()
     this.loadPrismas()
     this.loadGCCDeformacion()
     this.LoadPiezometro()
 
+  }
+
+  setFechas() {
+
+    let fechaHoy = new Date()
+    fechaHoy = new Date(fechaHoy.getFullYear() + '/' + (fechaHoy.getMonth() + 1) + '/21')
+    let fechaMesPasado = new Date()
+    fechaMesPasado.setDate(fechaMesPasado.getMonth() - 1)
+    fechaMesPasado = new Date(fechaMesPasado.getFullYear() + '/' + (fechaMesPasado.getMonth() + 1) + '/21')
+    this.inputs.get('datos.fechaInicio')?.setValue(fechaMesPasado)
+    this.inputs.get('datos.fechaFinal')?.setValue(fechaHoy)  
+
+  }
+
+
+  reloadData() {
+    if (this.inputs.get('datos.fechaInicio')?.value != '' && this.inputs.get('datos.fechaFinal')?.value != '') {
+      this.loadGCCDeformacion()
+      this.loadPrismas()
+    }
   }
 
 
@@ -170,7 +193,7 @@ export class InformeEfeComponent implements OnInit {
     if (this.geoElements.length) {
       this.geoElements.forEach(e => {
         let element = e.nativeElement
-        html2canvas(element, {scale: 3}).then((canvas) => {
+        html2canvas(element, { scale: 3 }).then((canvas) => {
           const base64image = canvas.toDataURL("image/png");
           const img = new Image()
           img.src = base64image
@@ -184,7 +207,7 @@ export class InformeEfeComponent implements OnInit {
   loadScreenshotGCD() {
     this.gcdElements.forEach(e => {
       let element = e.nativeElement
-      html2canvas(element, {scale: 3}).then((canvas) => {
+      html2canvas(element, { scale: 3 }).then((canvas) => {
         const base64image = canvas.toDataURL("image/png");
         const img = new Image()
         img.src = base64image
@@ -198,7 +221,7 @@ export class InformeEfeComponent implements OnInit {
   loadScreenshotPrismas() {
     this.piezometroElement.forEach(e => {
       let element = e.nativeElement
-      html2canvas(element, {scale: 4}).then((canvas) => {
+      html2canvas(element, { scale: 4 }).then((canvas) => {
         const base64image = canvas.toDataURL("image/png");
         const img = new Image()
         img.src = base64image
@@ -212,7 +235,7 @@ export class InformeEfeComponent implements OnInit {
     if (this.piezometroElement && this.dataTablaPrismas.length > 1) {
       this.prismasElements.forEach(e => {
         let element = e.nativeElement
-        html2canvas(element, {scale: 3}).then((canvas) => {
+        html2canvas(element, { scale: 3 }).then((canvas) => {
           const base64image = canvas.toDataURL("image/png");
           const img = new Image()
           img.src = base64image
@@ -255,8 +278,15 @@ export class InformeEfeComponent implements OnInit {
   }
 
   loadGCCDeformacion() {
-    let dateMin = new Date("2023/10/21")
-    let dateMax = new Date("2023/11/21")
+    let dateMin = new Date(this.inputs.get('datos.fechaInicio')?.value).getTime()
+    let dateMax = new Date(this.inputs.get('datos.fechaFinal')?.value).getTime()
+    // if (this.inputs.get('datos.fechaInicio')?.value != '' && this.inputs.get('datos.fechaFinal')?.value != '') {
+    //   dateMin = new Date(this.inputs.get('datos.fechaInicio')?.value)
+    //   dateMax = new Date(this.inputs.get('datos.fechaFinal')?.value)
+    // } else {
+    //   dateMin = new Date('2021/01/01')
+    //   dateMax = new Date()
+    // }
 
     this.api.getGeocentinalasDeformacion().subscribe(data => {
       let gcc10: any[] = [[], [], [], []]
@@ -264,7 +294,7 @@ export class InformeEfeComponent implements OnInit {
       let gcc7: any[] = [[], [], [], []]
 
       data.objects.forEach((elemento: any) => {
-        let dateElemento = new Date(elemento.fecha)
+        let dateElemento = new Date(elemento.fecha).getTime()
 
         if (dateElemento > dateMin && dateElemento < dateMax) {
           if (elemento.nombre == "GCC10") {
@@ -387,8 +417,16 @@ export class InformeEfeComponent implements OnInit {
   }
 
   loadPrismas() {
-    let dateMin = new Date("2021/01/01")
-    let dateMax = new Date("2023/12/24")
+    let dateMin = new Date(this.inputs.get('datos.fechaInicio')?.value)
+    let dateMax = new Date(this.inputs.get('datos.fechaFinal')?.value)
+    // if (this.inputs.get('datos.fechaInicio')?.value != '' && this.inputs.get('datos.fechaFinal')?.value != '') {
+    //   dateMin = new Date(this.inputs.get('datos.fechaInicio')?.value)
+    //   dateMax = new Date(this.inputs.get('datos.fechaFinal')?.value)
+    // } else {
+    //   dateMin = new Date('2021/01/01')
+    //   dateMax = new Date()
+    // }
+
 
 
     this.api.getNombrePrismas().subscribe(res => {
@@ -398,7 +436,7 @@ export class InformeEfeComponent implements OnInit {
           if (prisma.gid != 27) {
             data.objects.forEach((obj: any) => {
               let date = new Date(obj.fecha)
-              if (obj.prisma_id == prisma.gid && date > dateMin) {
+              if (obj.prisma_id == prisma.gid) {
                 let indexPrisma = dataPrismas.findIndex(data => data.gid == prisma.gid)
                 if (indexPrisma == -1) {
                   let newData = {
@@ -434,6 +472,12 @@ export class InformeEfeComponent implements OnInit {
   }
 
   LoadPiezometro() {
+    let dateMin = new Date(this.inputs.get('datos.fechaInicio')?.value).getTime()
+    let dateMax = new Date(this.inputs.get('datos.fechaFinal')?.value).getTime()  
+    
+    
+    
+    
 
     let dataPiezometros: any[] = []
     this.api.getNombrePiezometros().subscribe(data => {
@@ -448,16 +492,19 @@ export class InformeEfeComponent implements OnInit {
       this.api.getMilimetrosPiezometros().subscribe(data => {
         piezometros.forEach(piezometro => {
           data.objects.forEach((elm: any) => {
-            if (piezometro.gid == elm.piezometro_id) {
-              let index = dataPiezometros.findIndex(data => data.gid == elm.piezometro_id)
-              if (index == -1) {
-                dataPiezometros.push({
-                  gid: elm.piezometro_id,
-                  nombre: piezometro.nombre,
-                  data: [elm] as any
-                })
-              } else {
-                dataPiezometros[index].data.push(elm)
+            let fechaElm = new Date(elm.fecha).getTime()
+            if (fechaElm > dateMin && fechaElm < dateMax) {
+              if (piezometro.gid == elm.piezometro_id) {
+                let index = dataPiezometros.findIndex(data => data.gid == elm.piezometro_id)
+                if (index == -1) {
+                  dataPiezometros.push({
+                    gid: elm.piezometro_id,
+                    nombre: piezometro.nombre,
+                    data: [elm] as any
+                  })
+                } else {
+                  dataPiezometros[index].data.push(elm)
+                }
               }
             }
 
@@ -562,7 +609,7 @@ export class InformeEfeComponent implements OnInit {
                 data: data[2].numbers,
                 borderWidth: 1
               },
-              { 
+              {
                 label: data[3].canal + '/ ' + Math.abs(data[3].profundidad) + ' [m]',
                 data: data[3].numbers,
                 borderWidth: 1
