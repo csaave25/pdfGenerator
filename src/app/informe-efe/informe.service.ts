@@ -31,6 +31,7 @@ export class InformeService {
   date: string = ''
   numeroInforme: number = 0
   anoMes: string = ''
+  entreFechas: string = ''
 
 
   generarSeccion1(estaciones: AbstractControl<any, any>) {
@@ -423,7 +424,7 @@ export class InformeService {
 
     this.doc.setFontSize(10)
     this.doc.setFont("Lato", "normal");
-    this.doc.text('Período: ' + data.dia + ' de ' + mes1 + ' a ' + data.dia + ' de ' + mes2 + ' de ' + data.ano, this.margenIzq, this.usoPagina, { align: 'left', maxWidth: this.maxMargen });
+    this.doc.text('Período: ' + this.entreFechas, this.margenIzq, this.usoPagina, { align: 'left', maxWidth: this.maxMargen });
 
     this.usoPagina += 10
 
@@ -522,7 +523,7 @@ export class InformeService {
 
       this.doc.setFontSize(10)
       this.doc.setFont("Lato", "normal");
-      this.doc.text('Período: ' + data.dia + ' de ' + mes1 + ' a ' + data.dia + ' de ' + mes2 + ' de ' + data.ano, this.margenIzq, this.usoPagina, { align: 'left', maxWidth: this.maxMargen });
+      this.doc.text('Período: ' + this.entreFechas, this.margenIzq, this.usoPagina, { align: 'left', maxWidth: this.maxMargen });
 
       this.usoPagina += 10
 
@@ -770,12 +771,17 @@ export class InformeService {
 
   completarDatos(inputs: FormGroup) {
     let fecha = inputs.get('datos.fechaFinal')
+    let fechaInicio = inputs.get('datos.fechaInicio')
     let mesNum = fecha?.value.getMonth() + 1
     let mes = fecha?.value.toLocaleString('default', { month: 'long' });
+    let mesInicio = fechaInicio?.value.toLocaleString('default', { month: 'long' });
     let ano = fecha?.value.getFullYear()
+    let anoInicio = fechaInicio?.value.getFullYear()
     this.date = mes.charAt(0).toUpperCase() + mes.slice(1) + ' ' + ano;
     this.numeroInforme = inputs.get('datos.numeroInforme')?.value
     this.anoMes = ano + '.' + ('0' + this.numeroInforme).slice(-2)
+    this.entreFechas = '21 de ' + mesInicio + ' de ' + anoInicio + ' a 21 de ' + mes + ' de ' + ano
+
   }
 
   crearInforme(inputs: FormGroup, arrGCC: any[], arrGCD: any[], gcdElements: QueryList<ElementRef>, arrPrismas: any[], arrPiezometro: any[]) {
