@@ -1,5 +1,8 @@
-
 <div class="col-12 d-flex flex-column align-items-center " [formGroup]="inputs">
+    <div class="col-8 mt-2">
+        <button type="button" style="background-color: #00838F; color: #fbfbfb" class="btn btn-sm" [routerLink]="['/']"
+            routerLinkActive="router-link-active" mdbRipple>Atras</button>
+    </div>
     <div class="mt-4">
         <h3>INFORME MENSUAL A2MG</h3>
     </div>
@@ -9,11 +12,14 @@
         <button style="background-color: #00838F; color: #eeefef" type="button" class="btn" (click)="activarInforme()"
             mdbRipple>Descargar</button>
     </div>
-    <div class="mt-4 d-flex col-8 justify-content-between">
+    <div class="mt-4">
         <div>
             <label mdbLabel class="form-label" for="mes">Mes y año</label>
-            <input mdbInput type="month" id="mes" class="form-control" formControlName="fecha" />
+            <input mdbInput type="month" id="mes" class="form-control" formControlName="fecha"
+                (change)="loadDisponibilidad()" />
         </div>
+    </div>
+    <div class="mt-4 d-flex col-8 justify-content-between">
         <div [formGroup]="inputs.controls.usrs">
             <label mdbLabel class="form-label" for="elaborado">Elaborado</label>
             <input mdbInput type="text" id="elaborado" class="form-control" formControlName="elavorado" />
@@ -33,7 +39,8 @@
             <input mdbInput type="text" id="cargos" class="form-control" formControlName="cargo3" />
         </div>
     </div>
-    <div class="col-8 mt-4" *ngIf="dataCriticisadad && tablaDispo">
+    <!-- <div class="col-8 mt-4" *ngIf="dataCriticisadad && tablaDispo"> -->
+    <div class="col-8 mt-4" *ngIf="tablaDispo">
         <div [formGroup]="inputs.controls.disponibilidadComentario">
             <h4>Disponibilidad del Sistema</h4>
             <ul class="mt-3 d-flex flex-column gap-3">
@@ -54,7 +61,7 @@
                     </mdb-form-control>
                 </li>
                 <li class="d-flex gap-4 ">
-                    <p class="col-4">Servicio base de datos:{{tablaDispo.servicio_db}}</p>
+                    <p class="col-4">Servicio base de datos: {{tablaDispo.servicio_db}}</p>
                     <mdb-form-control class="col-6">
                         <textarea mdbInput class="form-control" id="textAreaExample" rows="1"
                             formControlName="bd"></textarea>
@@ -78,6 +85,9 @@
                     </mdb-form-control>
                 </li>
                 <li class="d-flex gap-4 ">
+                    <p class="col-4">Promedio: {{tablaDispo.infraestructura}}</p>
+                </li>
+                <li class="d-flex gap-4 ">
                     <p class="col-4">Sistema de adquisición de imágenes: {{tablaDispo.sistema_adquisicion_imagenes}}</p>
                     <mdb-form-control class="col-6">
                         <textarea mdbInput class="form-control" id="textAreaExample" rows="1"
@@ -95,6 +105,8 @@
                 </li>
             </ul>
         </div>
+    </div>
+    <div class="col-8 mt-4" *ngIf="dataCriticisadad ">
         <div [formGroup]="inputs.controls.confiabilidad">
             <h4>Confiabilidad</h4>
             <ul class="mt-3 d-flex flex-column gap-3">

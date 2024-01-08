@@ -1,19 +1,19 @@
-import { Component, ViewChild, ElementRef, Renderer2, AfterViewInit, OnInit } from '@angular/core';
-import { InformeMensualService } from '../informe-mensual.service';
-import { ConsultasService } from '../consultas.service';
+import { Component, ViewChild, ElementRef, Renderer2, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { InformeService } from '../informe.service';
+import { ApiService } from '../api.service';
 
 @Component({
-  selector: 'app-informe-mensual',
-  templateUrl: './informe-mensual.component.html',
-  styleUrls: ['./informe-mensual.component.scss']
+  selector: 'app-informe-a2mg',
+  templateUrl: './informe-a2mg.component.html',
+  styleUrls: ['./informe-a2mg.component.scss']
 })
-export class InformeMensualComponent implements AfterViewInit, OnInit {
+export class InformeA2mgComponent implements OnInit {
 
 
   @ViewChild('preview') element!: ElementRef;
 
-  constructor(private informeService: InformeMensualService, private render: Renderer2, private rq: ConsultasService) {
+  constructor(private informeService: InformeService, private render: Renderer2, private rq: ApiService) {
 
   }
 
@@ -47,10 +47,10 @@ export class InformeMensualComponent implements AfterViewInit, OnInit {
 
   dataCriticisadad: any
   dataMatrix: any
-  dataUltimosCambiosMatrix: any
   tablaDispo: any
   imgCriticidad: any = []
   comentariosCriticidad: any = []
+  promedioTablaDispo: number = 0
 
 
   ngOnInit(): void {
@@ -63,7 +63,16 @@ export class InformeMensualComponent implements AfterViewInit, OnInit {
     this.dataCriticisadad = this.rq.getTablaAlertas(10)//cambiar mes
     this.imgCriticidad = new Array(this.dataCriticisadad.length)
 
-    this.rq.getDisponibilidad('noviembre').subscribe(dato => {
+    // this.rq.getMatrix().subscribe(dato => this.dataMatrix = dato)
+
+  }
+
+  loadDisponibilidad() {
+    let fecha = this.inputs.get('fecha')?.value
+    let mes = new Date(fecha ).toLocaleString('default', { month: 'long' }) 
+    let ano = new Date(fecha ).getFullYear()
+    let buscar = ano + '/' +mes
+    this.rq.getDisponibilidad(buscar).subscribe(dato => {
       let prom = (dato.servicio_web + dato.servicio_imagenes + dato.servicio_db + dato.servicio_api + dato.servicio_computo) / 5
       let promRound = prom
       this.tablaDispo = {
@@ -76,11 +85,9 @@ export class InformeMensualComponent implements AfterViewInit, OnInit {
         sistema_adquisicion_imagenes: dato.sistema_adquisicion_imagenes?.toFixed(2),
         enlace_dedicado: dato.enlace_dedicado?.toFixed(2)
       }
+      
 
-    });//cambiar mes
-
-    this.rq.getMatrix().subscribe(dato => this.dataMatrix = dato)
-    this.rq.getUltimosCambiosMatrix().subscribe(dato => this.dataUltimosCambiosMatrix = dato)
+    });
   }
 
 
@@ -109,8 +116,8 @@ export class InformeMensualComponent implements AfterViewInit, OnInit {
   }
 
   activarInforme() {
-    this.informeService.onPrevizualizar(this.dataCriticisadad, this.dataMatrix, this.dataUltimosCambiosMatrix, this.tablaDispo, this.imgCriticidad, this.comentariosCriticidad, this.inputs)
-    
+    this.informeService.onPrevizualizar(this.dataCriticisadad, this.dataMatrix, this.tablaDispo, this.imgCriticidad, this.comentariosCriticidad, this.inputs)
+
     // console.log(this.data);
     // let string = this.informeService.doc.output('datauristring');
     // let elemento = this.element.nativeElement
@@ -123,3 +130,5 @@ export class InformeMensualComponent implements AfterViewInit, OnInit {
   }
 
 }
+
+

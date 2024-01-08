@@ -26,12 +26,14 @@ import { InformeMensualComponent } from './informe-mensual/informe-mensual.compo
 import { InformeEfeComponent } from './informe-efe/informe-efe/informe-efe.component';
 import { MenuComponent } from './menu/menu.component';
 import { RouterModule, RouterOutlet, Routes, provideRouter } from '@angular/router';
+import { InformeA2mgComponent } from './informe-a2mg/informe-a2mg/informe-a2mg.component';
 
 
 
 const routes: Routes = [
   { path: '', component: MenuComponent },
   { path: 'efe', component: InformeEfeComponent },
+  { path: 'a2mg', component: InformeA2mgComponent }
 ];
 
 export const appConfig: ApplicationConfig = {
@@ -47,7 +49,8 @@ export const appConfig: ApplicationConfig = {
     PdfTemplateComponent,
     InformeMensualComponent,
     InformeEfeComponent,
-    MenuComponent
+    MenuComponent,
+    InformeA2mgComponent
   ],
   imports: [
     HttpClientModule,
