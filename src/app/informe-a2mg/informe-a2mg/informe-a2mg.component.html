@@ -133,8 +133,17 @@
                     </mdb-form-control>
                 </li>
             </ul>
+            <div>
+                <h5>Agregar Comentarios e Imagenes</h5>
+                <div>
+                </div>
+                <div class="mt-3">
+                    <button type="button" style="background-color: #00838F; color: #fbfbfb" class="btn btn-sm"
+                        [routerLink]="['/']" routerLinkActive="router-link-active" mdbRipple>+</button>
+                </div>
+            </div>
         </div>
-        <div>
+        <div class="mt-4">
             <h4>Análisis de Criticidades</h4>
             <div class="d-flex flex-wrap gap-5">
                 <div class="col-5" *ngFor="let criticidad of dataCriticisadad.reverse(); index as i">
