@@ -775,7 +775,7 @@ export class InformeService {
     let ano = fecha?.value.getFullYear()
     this.date = mes.charAt(0).toUpperCase() + mes.slice(1) + ' ' + ano;
     this.numeroInforme = inputs.get('datos.numeroInforme')?.value
-    this.anoMes = ano + '.' + ('0' + mesNum).slice(-2)
+    this.anoMes = ano + '.' + ('0' + this.numeroInforme).slice(-2)
   }
 
   crearInforme(inputs: FormGroup, arrGCC: any[], arrGCD: any[], gcdElements: QueryList<ElementRef>, arrPrismas: any[], arrPiezometro: any[]) {
