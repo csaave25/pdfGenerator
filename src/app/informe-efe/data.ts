@@ -74,13 +74,13 @@ interface IWordInfo {
     wordLength: number;
 }
 
-export const espaciarTextosLargos = (doc: jsPDF, texto: string, margenTop: number, inicio: number, anchoMax: number) => {
+export const espaciarTextosLargos = (doc: jsPDF, texto: string, margenTop: number, inicio: number, anchoMax: number, date: string, anoMes: string) => {
     const arrText = dividirTexto(texto)
     if (arrText) {
         arrText.forEach(str => {
             if (margenTop + obtenerAncho(doc, str, anchoMax) > 745) {
                 doc.addPage()
-                genradorDeHeaderYFooter(doc)
+                genradorDeHeaderYFooter(doc, date, anoMes)
                 margenTop = 100
                 justify(doc, str, inicio, margenTop, anchoMax)
                 margenTop = margenTop + obtenerAncho(doc, str, anchoMax)
@@ -106,16 +106,16 @@ const dividirTexto = (text: string) => {
     return text.split('\n')
 }
 
-const saltoDePagina = (str: string, doc: jsPDF, ancho: number, usopag: number) => {
+const saltoDePagina = (str: string, doc: jsPDF, ancho: number, usopag: number, date: string, anoMes: string ) => {
     if (usopag + obtenerAncho(doc, str, ancho) > 745) {
         doc.addPage()
-        genradorDeHeaderYFooter(doc)
+        genradorDeHeaderYFooter(doc, date, anoMes)
         return 100
     }
     return usopag
 }
 
-export const formateadoraDeTexto = (doc: jsPDF, textos: string, margenTop: number, inicio: number, anchoMax: number) => {
+export const formateadoraDeTexto = (doc: jsPDF, textos: string, margenTop: number, inicio: number, anchoMax: number, date: string, anoMes: string) => {
     if (textos) {
         let text = dividirTexto(textos)
         let init = inicio + 18
@@ -123,7 +123,7 @@ export const formateadoraDeTexto = (doc: jsPDF, textos: string, margenTop: numbe
         text.forEach(texto => {
             if (texto[0] == '-') {
                 let txt = texto.slice(1, texto.length)
-                margenTop = saltoDePagina(txt, doc, ancho, margenTop)
+                margenTop = saltoDePagina(txt, doc, ancho, margenTop, date, anoMes)
                 doc.setFont("Lato", 'bold')
                 doc.text('    •', inicio, margenTop, { align: 'left' })
                 doc.setFont("Lato", 'normal')
@@ -133,7 +133,7 @@ export const formateadoraDeTexto = (doc: jsPDF, textos: string, margenTop: numbe
                 if (texto.length == 0) {
                     margenTop += 17
                 } else {
-                    margenTop = saltoDePagina(texto, doc, ancho, margenTop)
+                    margenTop = saltoDePagina(texto, doc, ancho, margenTop, date, anoMes)
                     justify(doc, texto, inicio, margenTop, anchoMax)
                     margenTop = margenTop + obtenerAncho(doc, texto, anchoMax)
                 }
@@ -143,17 +143,13 @@ export const formateadoraDeTexto = (doc: jsPDF, textos: string, margenTop: numbe
     return margenTop
 }
 
-export const genradorDeHeaderYFooter = (doc: jsPDF) => {
+export const genradorDeHeaderYFooter = (doc: jsPDF , date: string, anoMes: string) => {
     let margenIzq = 20
     let margenDer = 562
     let finalPagina = 760
     let comienzoPaginaY = 20
-    let cominezoContenidoY = comienzoPaginaY + 80
     let margenContenidoIzq = margenIzq + 50
     let contadorPagina = 1
-    let usoPagina = cominezoContenidoY
-    let totalUso = finalPagina - cominezoContenidoY
-    let contadorItem = 1
     let maxMargen = margenDer - margenIzq
     let puntoMedio = (doc.internal.pageSize.width || doc.internal.pageSize.getWidth()) / 2
     let mes2 = new Date(data.ano, data.mes - 1, 1).toLocaleString('default', { month: 'long' });
@@ -179,7 +175,7 @@ export const genradorDeHeaderYFooter = (doc: jsPDF) => {
         doc.setFont('Lato', 'normal')
         doc.text('IYV-INF-VIG-EFE-02', margenDer + 28, comienzoPaginaY + 35, { align: 'right' })
         doc.addImage("assets/EFE/logoefe.png", 'PNG', margenIzq, comienzoPaginaY - 18, 90, 50, 'logoEfe' + contadorPagina, 'FAST')
-        doc.text(data.ano + '.' + ('0' + data.mes).slice(-2), margenIzq + 25, comienzoPaginaY + 35, { align: 'left' })
+        doc.text(anoMes, margenIzq + 25, comienzoPaginaY + 35, { align: 'left' })
 
         doc.setFontSize(13)
         doc.setFont('Lato', 'normal')
@@ -188,7 +184,7 @@ export const genradorDeHeaderYFooter = (doc: jsPDF) => {
         doc.setFontSize(11)
         let mes = mes2
         mes = mes.charAt(0).toUpperCase() + mes.slice(1);
-        doc.text(mes + ' ' + data.ano, puntoMedio, altura + 20, { align: 'center' })
+        doc.text(date, puntoMedio, altura + 20, { align: 'center' })
     }
 
     implementarFooter()

@@ -28,8 +28,9 @@ export class InformeService {
   contadorItem = 1
   maxMargen = this.margenDer - this.margenIzq
   puntoMedio = (this.doc.internal.pageSize.width || this.doc.internal.pageSize.getWidth()) / 2
-  mes = new Date(data.ano, data.mes - 1, 1).toLocaleString('default', { month: 'long' });
-  date = data.ano + '-' + data.mes + '-' + data.dia + ' 12:01:32'
+  date: string = ''
+  numeroInforme: number = 0
+  anoMes: string = ''
 
 
   generarSeccion1(estaciones: AbstractControl<any, any>) {
@@ -171,7 +172,7 @@ export class InformeService {
 
     this.usoPagina = this.usoPagina + 310
 
-    this.usoPagina = formateadoraDeTexto(this.doc, estadoGeneral, this.usoPagina, this.margenIzq, this.margenDer)
+    this.usoPagina = formateadoraDeTexto(this.doc, estadoGeneral, this.usoPagina, this.margenIzq, this.margenDer, this.date, this.anoMes)
 
     this.crearNuevaPagina(this.usoPagina + 50)
     //Observaciones
@@ -321,7 +322,7 @@ export class InformeService {
 
       this.doc.setFontSize(10)
       this.doc.setFont("Lato", "normal");
-      this.usoPagina += 20 + formateadoraDeTexto(this.doc, obsGenerales, this.usoPagina + 20, this.margenDer - 215, 215 + this.margenIzq)
+      this.usoPagina += 20 + formateadoraDeTexto(this.doc, obsGenerales, this.usoPagina + 20, this.margenDer - 215, 215 + this.margenIzq, this.date, this.anoMes)
 
       //Estado mensual sensores
       this.usoPagina = this.cominezoContenidoY + 230
@@ -363,14 +364,14 @@ export class InformeService {
       this.doc.text('GCD Pozo ' + seccion.pozo + ': ', this.margenIzq + 310, this.usoPagina + 20, { align: 'left', maxWidth: this.maxMargen });
 
       this.doc.setFont("Lato", "normal");
-      formateadoraDeTexto(this.doc, obsGCC, this.usoPagina + 20, this.margenIzq + 95, 187)
-      formateadoraDeTexto(this.doc, obsGCD, this.usoPagina + 20, this.margenIzq + 375, 187)
+      formateadoraDeTexto(this.doc, obsGCC, this.usoPagina + 20, this.margenIzq + 95, 187, this.date, this.anoMes)
+      formateadoraDeTexto(this.doc, obsGCD, this.usoPagina + 20, this.margenIzq + 375, 187, this.date, this.anoMes)
       this.usoPagina += texto1 + 30
 
 
       this.doc.setFontSize(10)
       this.doc.setFont("Lato", "normal");
-      this.usoPagina = formateadoraDeTexto(this.doc, obsEspecificas, this.usoPagina, this.margenIzq, this.margenDer) + 10
+      this.usoPagina = formateadoraDeTexto(this.doc, obsEspecificas, this.usoPagina, this.margenIzq, this.margenDer, this.date, this.anoMes) + 10
 
       this.crearNuevaPagina(this.usoPagina + 400)
 
@@ -399,7 +400,7 @@ export class InformeService {
 
       this.doc.setFontSize(10)
       this.doc.setFont("Lato", "normal");
-      this.usoPagina = formateadoraDeTexto(this.doc, obsPiezometro, this.usoPagina + 20, this.margenIzq, this.margenDer)
+      this.usoPagina = formateadoraDeTexto(this.doc, obsPiezometro, this.usoPagina + 20, this.margenIzq, this.margenDer, this.date, this.anoMes)
       nEstacion++
 
     })
@@ -498,16 +499,14 @@ export class InformeService {
     this.doc.setFont("Lato", "bold");
     this.doc.text('Observaciones generales', this.margenIzq, this.usoPagina + 8, { align: 'left', maxWidth: this.maxMargen });
 
-    this.usoPagina = formateadoraDeTexto(this.doc, obsGeneral, this.usoPagina + 28, this.margenIzq, this.margenDer)
+    this.usoPagina = formateadoraDeTexto(this.doc, obsGeneral, this.usoPagina + 28, this.margenIzq, this.margenDer, this.date, this.anoMes)
 
   }
 
   generarAnalisisPrismas(arrPrismas: any[], prismas: AbstractControl<any, any>) {
 
-
-
     data.seccionPrismas.analisisPrismas.forEach((elm, index) => {
-      const prisma = prismas.get('prismas'+(index+1))
+      const prisma = prismas.get('prismas' + (index + 1))
       const imagenPrismas = prisma?.get('imagen')?.value
       const obsGeneral = prisma?.get('obsGeneral')?.value
 
@@ -527,8 +526,8 @@ export class InformeService {
 
       this.usoPagina += 10
 
-      if(imagenPrismas)
-      this.doc.addImage(imagenPrismas, 'JPG', this.margenIzq, this.usoPagina, 320, 240, 'LUIS 7' + this.contadorPagina, 'FAST');
+      if (imagenPrismas)
+        this.doc.addImage(imagenPrismas, 'JPG', this.margenIzq, this.usoPagina, 320, 240, 'LUIS 7' + this.contadorPagina, 'FAST');
 
       //tabla
       this.doc.setFontSize(10)
@@ -601,7 +600,7 @@ export class InformeService {
       this.doc.text('Observaciones generales', this.margenIzq, this.usoPagina + 10, { align: 'left', maxWidth: this.maxMargen });
       this.usoPagina += 10
 
-      this.usoPagina = formateadoraDeTexto(this.doc, obsGeneral, this.usoPagina + 20, this.margenIzq, this.margenDer)
+      this.usoPagina = formateadoraDeTexto(this.doc, obsGeneral, this.usoPagina + 20, this.margenIzq, this.margenDer, this.date, this.anoMes)
     });
   }
 
@@ -615,14 +614,13 @@ export class InformeService {
 
     this.doc.setFontSize(10)
     this.doc.setFont("Lato", "normal");
-    formateadoraDeTexto(this.doc, conclusion.value, this.usoPagina, this.margenIzq, this.margenDer)
+    formateadoraDeTexto(this.doc, conclusion.value, this.usoPagina, this.margenIzq, this.margenDer, this.date, this.anoMes)
 
 
   }
 
-  generarTablaResumen(gestores: AbstractControl<any, any>) {
-    let mes = this.mes
-    mes = mes.charAt(0).toUpperCase() + mes.slice(1);
+  generarTablaResumen(inputs: AbstractControl<any, any>) {
+    let gestores = inputs.get('gestores')
     this.doc.addPage()
     this.doc.addImage("assets/images/marca.jpg", 'JPG', 0, 0, 612, 792, 'marca-x2', 'FAST');
     this.doc.addImage("assets/images/logo.png", 'PNG', this.margenIzq, this.comienzoPaginaY, 160, 50, 'logo-x2', 'FAST');
@@ -632,7 +630,7 @@ export class InformeService {
     this.doc.setTextColor(colores.azul)
     this.doc.setFont("Montserrat", "bold");
     this.doc.setFontSize(22)
-    this.doc.text(data.titulo + data.numInfo, this.puntoMedio, altura, { align: 'center' });
+    this.doc.text(data.titulo + this.numeroInforme, this.puntoMedio, altura, { align: 'center' });
 
     this.doc.setTextColor(colores.negro)
     this.doc.setFontSize(16)
@@ -642,16 +640,16 @@ export class InformeService {
     altura += obtenerAncho(this.doc, data.subTiutlo, this.maxMargen);
     this.doc.setTextColor(colores.azul)
     this.doc.setFontSize(12)
-    this.doc.text(mes + ' ' + data.ano, margenIzq + 320, altura + 154, { align: 'left' });
+    this.doc.text(this.date, margenIzq + 320, altura + 154, { align: 'left' });
 
 
 
-    let nombre1 = gestores.get('elaborado')?.value
-    let cargo1 = gestores.get('cargo1')?.value
-    let nombre2 = gestores.get('revisado')?.value
-    let cargo2 = gestores.get('cargo2')?.value
-    let nombre3 = gestores.get('aprobado')?.value
-    let cargo3 = gestores.get('cargo3')?.value
+    let nombre1 = gestores?.get('elaborado')?.value
+    let cargo1 = gestores?.get('cargo1')?.value
+    let nombre2 = gestores?.get('revisado')?.value
+    let cargo2 = gestores?.get('cargo2')?.value
+    let nombre3 = gestores?.get('aprobado')?.value
+    let cargo3 = gestores?.get('cargo3')?.value
 
 
 
@@ -688,16 +686,15 @@ export class InformeService {
 
   }
 
-  implementarPortada() {
-    let mes = this.mes
-    mes = mes.charAt(0).toUpperCase() + mes.slice(1);
+  implementarPortada(datos: AbstractControl<any, any>) {
+
     let altura = 246
     let margenIzq = this.margenIzq + 72
     this.doc.addImage("assets/images/image2.jpg", 'JPG', 0, 0, 612, 792, 'marca-1', 'FAST');
     this.doc.setTextColor(colores.blanco)
     this.doc.setFont("Montserrat", "bold");
     this.doc.setFontSize(22)
-    this.doc.text(data.titulo + data.numInfo, this.puntoMedio, altura, { align: 'center' });
+    this.doc.text(data.titulo + datos.get('numeroInforme')?.value, this.puntoMedio, altura, { align: 'center' });
 
     this.doc.setTextColor(colores.blanco)
     this.doc.setFontSize(16)
@@ -709,7 +706,7 @@ export class InformeService {
     this.doc.text(data.subTitulo2, this.puntoMedio, altura + 70, { align: 'center', maxWidth: this.maxMargen });
     this.doc.setTextColor(colores.blanco)
     this.doc.setFontSize(12)
-    this.doc.text(mes + ' ' + data.ano, margenIzq + 320, altura + 154, { align: 'left' });
+    this.doc.text(this.date, margenIzq + 320, altura + 154, { align: 'left' });
   }
 
   implementarFooter() {
@@ -733,16 +730,14 @@ export class InformeService {
     this.doc.setFont('Lato', 'normal')
     this.doc.text('IYV-INF-VIG-EFE-02', this.margenDer + 28, this.comienzoPaginaY + 35, { align: 'right' })
     this.doc.addImage("assets/EFE/logoefe.png", 'PNG', this.margenIzq, this.comienzoPaginaY - 18, 90, 50, 'logoEfe' + this.contadorPagina, 'FAST')
-    this.doc.text(data.ano + '.' + ('0' + data.mes).slice(-2), this.margenIzq + 25, this.comienzoPaginaY + 35, { align: 'left' })
+    this.doc.text(this.anoMes, this.margenIzq + 25, this.comienzoPaginaY + 35, { align: 'left' })
 
     this.doc.setFontSize(13)
     this.doc.setFont('Lato', 'normal')
     this.doc.text('INFORME MENSUAL DE ANÁLISIS DE TENDENCIAS DE COMPORTAMIENTO DE LA INFRAESTRUCTURA', this.puntoMedio, this.comienzoPaginaY + 12, { align: 'center', maxWidth: this.puntoMedio + 20 })
     let altura = obtenerAncho(this.doc, data.subTiutlo, this.maxMargen) + this.comienzoPaginaY;
     this.doc.setFontSize(11)
-    let mes = this.mes
-    mes = mes.charAt(0).toUpperCase() + mes.slice(1);
-    this.doc.text(mes + ' ' + data.ano, this.puntoMedio, altura + 20, { align: 'center' })
+    this.doc.text(this.date, this.puntoMedio, altura + 20, { align: 'center' })
   }
 
   implementarFuentes() {
@@ -772,11 +767,23 @@ export class InformeService {
     }
   }
 
+
+  completarDatos(inputs: FormGroup) {
+    let fecha = inputs.get('datos.fechaFinal')
+    let mesNum = fecha?.value.getMonth() + 1
+    let mes = fecha?.value.toLocaleString('default', { month: 'long' });
+    let ano = fecha?.value.getFullYear()
+    this.date = mes.charAt(0).toUpperCase() + mes.slice(1) + ' ' + ano;
+    this.numeroInforme = inputs.get('datos.numeroInforme')?.value
+    this.anoMes = ano + '.' + ('0' + mesNum).slice(-2)
+  }
+
   crearInforme(inputs: FormGroup, arrGCC: any[], arrGCD: any[], gcdElements: QueryList<ElementRef>, arrPrismas: any[], arrPiezometro: any[]) {
 
+    this.completarDatos(inputs)
     this.implementarFuentes()
-    this.implementarPortada()
-    this.generarTablaResumen(inputs.controls['gestores'])
+    this.implementarPortada(inputs.controls['datos'])
+    this.generarTablaResumen(inputs)
     this.generarSeccion1(inputs.controls['estaciones'])
     this.generarAnalisisDeDatos(arrGCC, arrGCD, arrPiezometro, inputs.controls['estaciones'])
     this.generarAnalisisGeneralPrismas(inputs.controls['prismas'])

@@ -137,7 +137,6 @@ export class InformeEfeComponent implements OnInit {
   }
 
   setFechas() {
-
     let fechaHoy = new Date()
     fechaHoy = new Date(fechaHoy.getFullYear() + '/' + (fechaHoy.getMonth() + 1) + '/21')
     let fechaMesPasado = new Date()
@@ -145,7 +144,6 @@ export class InformeEfeComponent implements OnInit {
     fechaMesPasado = new Date(fechaMesPasado.getFullYear() + '/' + (fechaMesPasado.getMonth() + 1) + '/21')
     this.inputs.get('datos.fechaInicio')?.setValue(fechaMesPasado)
     this.inputs.get('datos.fechaFinal')?.setValue(fechaHoy)  
-
   }
 
 
