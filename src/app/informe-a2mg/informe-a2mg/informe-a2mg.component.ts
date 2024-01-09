@@ -155,37 +155,35 @@ export class InformeA2mgComponent implements OnInit {
     let img = newElement.querySelector('img')!
     newElement.querySelector('input')?.addEventListener('change', (event) => this.saveImagenes(event, id, img))
 
-
-
     this.numImagen++
   }
 
   saveImagenes(event: Event, index: number, imgElm: HTMLImageElement) {
     let element = (event.target as HTMLInputElement)
+    imgElm.src = URL.createObjectURL(element.files![0]);
+    imgElm.onload = function () {
+      URL.revokeObjectURL(imgElm.src) // free memory
+    }
+
+    let file = element.files![0]
     var reader = new FileReader();
-    reader.readAsDataURL(element.files![0]);
+    reader.readAsDataURL(file);
 
     reader.onload = (_event) => {
-
-      // imgElm.src = reader.result
-      // console.log(reader.result);
+      let validator = this.comentariosImagenes.findIndex(dato => dato.num == index)
+      if (validator == -1) {
+        this.comentariosImagenes.push({
+          num: index,
+          comentario: '',
+          imagenes: [reader.result] as any[]
+        })
+      } else {
+        this.comentariosImagenes[index].imagenes.push(reader.result)
+      }
     }
-
-    let validator = this.comentariosImagenes.findIndex(dato => dato.num == index)
-    if (validator == -1) {
-      this.comentariosImagenes.push({
-        num: index,
-        comentario: '',
-        imagenes: [element.value] as any[]
-      })
-    } else {
-      this.comentariosImagenes[index].imagenes.push(element.value)
-    }
-    console.log(this.comentariosImagenes);
-
-    
-
   }
+
+
 
 
   loadImg(event: Event, index: number) {
@@ -207,7 +205,7 @@ export class InformeA2mgComponent implements OnInit {
   }
 
   activarInforme() {
-    this.informeService.onPrevizualizar(this.dataCriticisadad, this.dataMatrix, this.tablaDispo, this.imgCriticidad, this.comentariosCriticidad, this.inputs)
+    this.informeService.onPrevizualizar(this.dataCriticisadad, this.dataMatrix, this.tablaDispo, this.imgCriticidad, this.comentariosCriticidad, this.inputs, this.comentariosImagenes)
 
     // console.log(this.data);
     // let string = this.informeService.doc.output('datauristring');

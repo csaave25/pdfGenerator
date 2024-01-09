@@ -4,7 +4,7 @@ import autoTable from 'jspdf-autotable'
 import { font, latoRegular, montBold, montMedium, montSemi } from 'src/assets/fonts/fonts';
 import { AbstractControl, FormGroup } from '@angular/forms';
 import { dataInforme } from './data';
-import { espaciarTextosLargos } from '../informe-efe/data';
+import { espaciarTextosLargos } from '../helpers/helpers';
 
 
 interface Data {
@@ -313,7 +313,7 @@ export class InformeService {
     this.usoPagina = 1000
   }
 
-  implmentarConfiabilidad(inputs: FormGroup) {
+  implmentarConfiabilidad(inputs: FormGroup, comentariosImagenes: any[]) {
 
     let valor1 = inputs.controls['confiabilidad'].value.identificacion
     let valor2 = inputs.controls['confiabilidad'].value.clasificacion
@@ -392,60 +392,86 @@ export class InformeService {
     this.usoPagina += 430
 
 
-    if (this.usoPagina + 65 > this.totalUso)
-      this.nuevaPagina()
-
     this.doc.setFontSize(11)
     this.doc.setTextColor(this.colores.negro)
     this.doc.setFont('Lato', 'normal')
+
+    if (comentariosImagenes.length > 0) {
+
+      if (this.usoPagina + 30 > this.totalUso)
+        this.nuevaPagina()
+
+      comentariosImagenes.forEach(datos => {
+        this.usoPagina += espaciarTextosLargos(this.doc, datos.comentario, this.usoPagina, this.marginContent, this.marginRight - this.marginContent, this.fecha, '')
+
+        if (datos.imagenes.length > 0) {
+          datos.imagenes.forEach((elm: any, index: number) => {
+
+            if (this.usoPagina + 240 > this.totalUso)
+            this.nuevaPagina()
+
+            this.doc.addImage(elm, 'png', 70, this.usoPagina, this.marginRight - this.marginContent, 200, 'imgx-mm' + this.contadorFigura, 'FAST');
+            this.contadorFigura++;
+            this.usoPagina += 240
+           
+          });
+        }
+
+
+      })
+    }
+
+    // if (this.usoPagina + 65 > this.totalUso)
+    //   this.nuevaPagina()
+
     // justify(this.doc, text, this.marginContent, this.usoPagina, this.marginRight - this.marginContent)
-    espaciarTextosLargos(this.doc, dataInforme.confiabilidad.texto3, this.usoPagina, this.marginContent, this.marginRight - this.marginContent, this.fecha, '')
-
-    this.usoPagina += 65
-
-    if (this.usoPagina + 200 > this.totalUso)
-      this.nuevaPagina()
-
-    this.doc.addImage("assets/images/grieta1.png", 'PNG', 70, this.usoPagina, this.marginRight - this.marginContent, 200, 'imgx-mm' + this.contadorFigura, 'SLOW');
-    this.doc.setFontSize(8)
-    this.doc.setFont('Lato', 'normal')
-    this.doc.text('FIGURA ' + this.contadorFigura + ': GRIETA DE CRITICIDAD MEDIA', ((this.marginRight - this.marginContent) / 2 + this.marginContent), this.usoPagina + 210, { align: 'center', maxWidth: this.marginRight - this.marginContent })
-    this.contadorFigura++
-
-    this.usoPagina += 240
-
-    if (this.usoPagina + 65 > this.totalUso)
-      this.nuevaPagina()
-
-    this.doc.setFontSize(11)
-    this.doc.setTextColor(this.colores.negro)
-    this.doc.setFont('Lato', 'normal')
-    text = 'Por otra parte, durante el día 26/11/23 se detectan grietas en la cámara 3, que son identificadas y clasificadas según la matriz de criticidad. En el sector inferior de la Figura 2 se pueden observar las grietas C38 (criticidad media), C33 y C39 (criticidad alta), en la Figura 3 se observan lecturas posteriores el A2MG identifica las grietas de criticidad alta, pero no la grieta C38 (criticidad media).'
-    // justify(this.doc, text, this.marginContent, this.usoPagina, this.marginRight - this.marginContent)
-    this.usoPagina += 65
-
-    if (this.usoPagina + 200 > this.totalUso)
-      this.nuevaPagina()
-
-    this.doc.addImage("assets/images/grieta3.png", 'PNG', 70, this.usoPagina, this.marginRight - this.marginContent, 200, 'imgx-ms' + this.contadorFigura, 'SLOW');
-    this.doc.setFontSize(8)
-    this.doc.setFont('Lato', 'normal')
-    this.doc.text('FIGURA ' + this.contadorFigura + ': CRITICIDADES GRIETAS', ((this.marginRight - this.marginContent) / 2 + this.marginContent), this.usoPagina + 210, { align: 'center', maxWidth: this.marginRight - this.marginContent })
-    this.contadorFigura++
-
-    this.usoPagina += 240
 
 
-    if (this.usoPagina + 200 > this.totalUso)
-      this.nuevaPagina()
+    // this.usoPagina += 65
 
-    this.doc.addImage("assets/images/grieta2.png", 'PNG', 70, this.usoPagina, this.marginRight - this.marginContent, 200, 'imgx-m' + this.contadorFigura, 'SLOW');
-    this.doc.setFontSize(8)
-    this.doc.setFont('Lato', 'normal')
-    this.doc.text('FIGURA ' + this.contadorFigura + ': CRITICIDADES GRIETAS', ((this.marginRight - this.marginContent) / 2 + this.marginContent), this.usoPagina + 210, { align: 'center', maxWidth: this.marginRight - this.marginContent })
-    this.contadorFigura++
+    // if (this.usoPagina + 200 > this.totalUso)
+    //   this.nuevaPagina()
 
-    this.usoPagina += 240
+    // this.doc.addImage("assets/images/grieta1.png", 'PNG', 70, this.usoPagina, this.marginRight - this.marginContent, 200, 'imgx-mm' + this.contadorFigura, 'SLOW');
+    // this.doc.setFontSize(8)
+    // this.doc.setFont('Lato', 'normal')
+    // this.doc.text('FIGURA ' + this.contadorFigura + ': GRIETA DE CRITICIDAD MEDIA', ((this.marginRight - this.marginContent) / 2 + this.marginContent), this.usoPagina + 210, { align: 'center', maxWidth: this.marginRight - this.marginContent })
+    // this.contadorFigura++
+
+    // this.usoPagina += 240
+
+    // if (this.usoPagina + 65 > this.totalUso)
+    //   this.nuevaPagina()
+
+    // this.doc.setFontSize(11)
+    // this.doc.setTextColor(this.colores.negro)
+    // this.doc.setFont('Lato', 'normal')
+    // text = 'Por otra parte, durante el día 26/11/23 se detectan grietas en la cámara 3, que son identificadas y clasificadas según la matriz de criticidad. En el sector inferior de la Figura 2 se pueden observar las grietas C38 (criticidad media), C33 y C39 (criticidad alta), en la Figura 3 se observan lecturas posteriores el A2MG identifica las grietas de criticidad alta, pero no la grieta C38 (criticidad media).'
+    // // justify(this.doc, text, this.marginContent, this.usoPagina, this.marginRight - this.marginContent)
+    // this.usoPagina += 65
+
+    // if (this.usoPagina + 200 > this.totalUso)
+    //   this.nuevaPagina()
+
+    // this.doc.addImage("assets/images/grieta3.png", 'PNG', 70, this.usoPagina, this.marginRight - this.marginContent, 200, 'imgx-ms' + this.contadorFigura, 'SLOW');
+    // this.doc.setFontSize(8)
+    // this.doc.setFont('Lato', 'normal')
+    // this.doc.text('FIGURA ' + this.contadorFigura + ': CRITICIDADES GRIETAS', ((this.marginRight - this.marginContent) / 2 + this.marginContent), this.usoPagina + 210, { align: 'center', maxWidth: this.marginRight - this.marginContent })
+    // this.contadorFigura++
+
+    // this.usoPagina += 240
+
+
+    // if (this.usoPagina + 200 > this.totalUso)
+    //   this.nuevaPagina()
+
+    // this.doc.addImage("assets/images/grieta2.png", 'PNG', 70, this.usoPagina, this.marginRight - this.marginContent, 200, 'imgx-m' + this.contadorFigura, 'SLOW');
+    // this.doc.setFontSize(8)
+    // this.doc.setFont('Lato', 'normal')
+    // this.doc.text('FIGURA ' + this.contadorFigura + ': CRITICIDADES GRIETAS', ((this.marginRight - this.marginContent) / 2 + this.marginContent), this.usoPagina + 210, { align: 'center', maxWidth: this.marginRight - this.marginContent })
+    // this.contadorFigura++
+
+    // this.usoPagina += 240
 
 
     // autoTable(this.doc, {
@@ -480,9 +506,6 @@ export class InformeService {
     // this.doc.setFont('Lato', 'normal')
     // this.doc.text('FIGURA ' + this.contadorFigura + ': GRIETA DE CRITICIDAD MEDIA', ((this.marginRight - this.marginContent) / 2 + this.marginContent), this.usoPagina + 270, { align: 'center', maxWidth: this.marginRight - this.marginContent })
     // this.contadorFigura++
-
-
-
   }
 
 
@@ -879,17 +902,17 @@ export class InformeService {
     this.fecha = mes + ' ' + ano
   }
 
-  onPrevizualizar(dataCriticisdad: any, dataMatrix: any, tablaDispo: any, imgCriticidad: any, comentariosCriticidad: any, inputs: FormGroup) {
+  onPrevizualizar(dataCriticisdad: any, dataMatrix: any, tablaDispo: any, imgCriticidad: any, comentariosCriticidad: any, inputs: FormGroup, comentariosImagenes: any[]) {
 
     this.cargarDatos(inputs)
     this.implementarFuentes()
     this.implementarPortada()
     this.generarTablaResumen(inputs)
     this.implementarIndicadoresDeServicio(tablaDispo, inputs)
-    this.implmentarConfiabilidad(inputs)
+    this.implmentarConfiabilidad(inputs, comentariosImagenes)
     this.implementarAnalisis(dataCriticisdad, imgCriticidad, comentariosCriticidad, inputs)
     this.implementarParametroA2MG(dataMatrix)
-    this.implementarConclusion(inputs)
+    // this.implementarConclusion(inputs)
     this.implementarTablaContenido()
     this.previsualizar()
 
