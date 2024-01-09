@@ -877,9 +877,6 @@ export class InformeService {
     let ano = new Date(fecha).getFullYear()
     mes = mes.charAt(0).toUpperCase() + mes.slice(1);
     this.fecha = mes + ' ' + ano
-
-
-
   }
 
   onPrevizualizar(dataCriticisdad: any, dataMatrix: any, tablaDispo: any, imgCriticidad: any, comentariosCriticidad: any, inputs: FormGroup) {
