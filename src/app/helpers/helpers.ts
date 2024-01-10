@@ -47,9 +47,9 @@ function writeLine(pdfGen: jsPDF, wordsInfo: IWordInfo[], lineLength: number, li
     let x = xStart;
     const y = yStart + lineNumber * lineHeight;
     for (const wordInfo of wordsInfo) {
-        if(wordInfo.text.includes('*')){
+        if (wordInfo.text.includes('*')) {
             pdfGen.setFont('Lato', 'bold')
-        }else{
+        } else {
             pdfGen.setFont('Lato', 'normal')
         }
         pdfGen.text(wordInfo.text.replace('*', "").replace('*', ""), x, y);
@@ -62,39 +62,27 @@ interface IWordInfo {
     wordLength: number;
 }
 
-export const espaciarTextosLargos = (doc: jsPDF, texto: string, margenTop: number, inicio: number, anchoMax: number, date: string, anoMes: string, finalPag : number) => {
-    const arrText = dividirTexto(texto)
-    if (arrText) {
-        arrText.forEach(str => {
-            if (margenTop + obtenerAncho(doc, str, anchoMax) > finalPag) {
-                doc.addPage()
-                // genradorDeHeaderYFooter(doc, date, anoMes)
-                margenTop = 100
-                justify(doc, str, inicio, margenTop, anchoMax)
-                margenTop = margenTop + obtenerAncho(doc, str, anchoMax)
-            } else {
-                justify(doc, str, inicio, margenTop, anchoMax)
-                margenTop = margenTop + obtenerAncho(doc, str, anchoMax)
-            }
-        })
-    }
-
-    return margenTop
-}
-
 export const obtenerAncho = (pdfGen: jsPDF, texto: string, margen: number) => {
-    let dimensiones = pdfGen.getTextDimensions(texto)
+    // let dimensiones = pdfGen.getTextDimensions(texto)
+    // let tamanoFuente = pdfGen.getFontSize()
+    // let lines = dimensiones.w / margen
+    // let valor = ((Math.trunc(lines) + 0.5)* 1.7 * tamanoFuente) // Creo que 1.7 (espaciado) se multiplica por la cantidad de lineas
+    let width = pdfGen.getTextDimensions(texto).w
     let tamanoFuente = pdfGen.getFontSize()
-    let lines = dimensiones.w / margen
-    let valor = Math.trunc(lines) + 1.7 // Creo que 1.7 (espaciado) se multiplica por la cantidad de lineas
-    return tamanoFuente * valor
+    let dimensiones = (100 * tamanoFuente) / 72
+    let lines = width/ margen
+    console.log( dimensiones + ' ' + Math.trunc(lines) +' ' +tamanoFuente );
+    let valor =  dimensiones * Math.trunc(lines) * tamanoFuente // Creo que 1.7 (espaciado) se multiplica por la cantidad de lineas
+    console.log(valor);
+    
+    return valor
 }
 
 const dividirTexto = (text: string) => {
     return text.split('\n')
 }
 
-const saltoDePagina = (str: string, doc: jsPDF, ancho: number, usopag: number, date: string, anoMes: string ) => {
+const saltoDePagina = (str: string, doc: jsPDF, ancho: number, usopag: number, date: string, anoMes: string) => {
     if (usopag + obtenerAncho(doc, str, ancho) > 745) {
         doc.addPage()
         // genradorDeHeaderYFooter(doc, date, anoMes)
@@ -103,9 +91,12 @@ const saltoDePagina = (str: string, doc: jsPDF, ancho: number, usopag: number, d
     return usopag
 }
 
-export const formateadoraDeTexto = (doc: jsPDF, textos: string, margenTop: number, inicio: number, anchoMax: number, date: string, anoMes: string) => {
+//doc: jsPDF, texto: string, margenTop: number, inicio: number, anchoMax: number, date: string, anoMes: string, finalPag : number
+export const formateadoraDeTexto = (doc: jsPDF, textos: string, margenTop: number, inicio: number, anchoMax: number, date: string, anoMes: string, finalPag: number) => {
     if (textos) {
         let text = dividirTexto(textos)
+        console.log(text);
+        
         let init = inicio + 18
         let ancho = anchoMax - 18
         text.forEach(texto => {
@@ -121,7 +112,10 @@ export const formateadoraDeTexto = (doc: jsPDF, textos: string, margenTop: numbe
                 if (texto.length == 0) {
                     margenTop += 17
                 } else {
+                    console.log(margenTop);
                     margenTop = saltoDePagina(texto, doc, ancho, margenTop, date, anoMes)
+                    console.log(margenTop);
+
                     justify(doc, texto, inicio, margenTop, anchoMax)
                     margenTop = margenTop + obtenerAncho(doc, texto, anchoMax)
                 }

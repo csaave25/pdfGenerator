@@ -196,12 +196,11 @@ export class InformeA2mgComponent implements OnInit {
           this.comentariosImagenes[index].imagenes.push({ id: idImg, img: reader.result, nomFigura: '' })
         } else {
           let elm =  this.comentariosImagenes[index].imagenes[validador]
-          this.comentariosImagenes[index].imagenes.push({...elm ,img: reader.result })
+          this.comentariosImagenes[index].imagenes[validador].img = reader.result
         }
 
       }
     }
- 
   }
 
   saveNomFig(event: Event, index: number, idImg: number) {

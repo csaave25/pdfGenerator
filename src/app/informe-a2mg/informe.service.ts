@@ -4,7 +4,8 @@ import autoTable from 'jspdf-autotable'
 import { font, latoRegular, montBold, montMedium, montSemi } from 'src/assets/fonts/fonts';
 import { AbstractControl, FormGroup } from '@angular/forms';
 import { dataInforme } from './data';
-import { espaciarTextosLargos } from '../helpers/helpers';
+import { formateadoraDeTexto } from '../helpers/helpers';
+import { justify } from '../justifyText';
 
 
 interface Data {
@@ -34,6 +35,7 @@ export class InformeService {
   marginLeft = 20
   marginRight = 562
   endPage = 760
+  finalContenido = 710
   startPage = 20
   startcContent = this.startPage + 90
   marginContent = this.marginLeft + 50
@@ -113,8 +115,6 @@ export class InformeService {
     this.doc.text('Monitoreo de Ripios Aplicación A2MG', this.marginRight, this.startPage + 24, { align: 'right' })
     this.doc.text(this.fecha, this.marginRight, this.startPage + 36, { align: 'right' })
   }
-
-
 
   generarTablaResumen(inputs: FormGroup) {
 
@@ -255,7 +255,7 @@ export class InformeService {
     this.doc.setFont('Lato', 'normal')
     this.doc.setFontSize(11)
 
-    espaciarTextosLargos(this.doc, dataInforme.disponibilidad.texto1, this.startcContent + 60, this.marginContent, this.marginRight - this.marginContent, this.fecha, '', this.endPage)
+    formateadoraDeTexto(this.doc, dataInforme.disponibilidad.texto1, this.startcContent + 60, this.marginContent, this.marginRight - this.marginContent, this.fecha, '', this.finalContenido)
 
     this.doc.setFont('Time', 'italic')
     this.doc.setFontSize(12)
@@ -276,7 +276,7 @@ export class InformeService {
 
     this.doc.setFont('Lato', 'normal')
     this.doc.setFontSize(11)
-    espaciarTextosLargos(this.doc, dataInforme.disponibilidad.texto2, this.startcContent + 200, this.marginContent, this.marginRight - this.marginContent, this.fecha, '', this.endPage)
+    formateadoraDeTexto(this.doc, dataInforme.disponibilidad.texto2, this.startcContent + 200, this.marginContent, this.marginRight - this.marginContent, this.fecha, '', this.finalContenido)
 
 
     this.doc.text('La disponibilidad comprometida corresponde al 95% para el caso de Infraestructura EMT.', this.marginContent, this.startcContent + 250, { align: 'left', maxWidth: this.marginRight - this.marginContent })
@@ -286,6 +286,16 @@ export class InformeService {
     this.doc.setFont('Lato', 'normal')
     this.doc.text('TABLA ' + this.contadorTabla + ': DISPONIBILIDAD DEL SISTEMA', ((this.marginRight - this.marginContent) / 2 + this.marginContent), this.startcContent + 280, { align: 'center', maxWidth: this.marginRight - this.marginContent })
     this.contadorTabla++
+
+
+
+    let index = 0
+    let lastTableHeight = 0
+    let page = 1
+    let imgContador = 0
+    let flag = false
+
+    this.usoPagina += 285
 
     autoTable(this.doc, {
       tableWidth: this.marginRight - this.marginContent,
@@ -306,14 +316,39 @@ export class InformeService {
         [{ content: 'Enlace dedicado AMSA', styles: { halign: 'left', cellPadding: { left: 75, top: 5 } } }, { content: tablaDispo.enlace_dedicado, styles: { halign: 'center' } }, comnt7],
 
       ],
-      margin: { top: this.startcContent + 285, left: this.marginContent,  bottom: 80 },
+      margin: { top: this.startcContent, left: this.marginContent, bottom: 80 },
+      startY: this.usoPagina,
       alternateRowStyles: { fillColor: undefined },
       rowPageBreak: 'avoid',
-      
-      
+      didDrawCell: (data) => {
+
+        if (page == data.pageCount) {
+          if (data.row.index != index) {
+            index = data.row.index
+            this.usoPagina += data.row.height
+          }
+        }
+      },
+      willDrawPage: (data) => {
+        if (!flag && data.pageNumber != 1) {
+          flag = true
+        }
+      },
+
+      didDrawPage: (data) => {
+
+        if (data.pageNumber != 1) {
+          this.implementarFooter()
+          this.implementarHeader()
+        }
+        page++
+
+        lastTableHeight = this.usoPagina
+        this.usoPagina = 0
+      }
+
     })
-    // this.nuevaPagina()
-    this.usoPagina = 1000
+    this.usoPagina += 40 + lastTableHeight + this.startcContent
   }
 
   implmentarConfiabilidad(inputs: FormGroup, comentariosImagenes: any[]) {
@@ -323,7 +358,7 @@ export class InformeService {
     let valor3 = inputs.controls['confiabilidad'].value.comunicacion
     let promedio = ((valor1 + valor2 + valor3) / 3)?.toFixed(2)
 
-    if (this.usoPagina + 445 > this.totalUso)
+    if (this.usoPagina + 100 > this.totalUso)
       this.nuevaPagina()
 
     let contenido: Data = {
@@ -337,44 +372,75 @@ export class InformeService {
     this.doc.setFontSize(14)
     this.doc.setTextColor(this.colores.naranjo)
     this.doc.setFont('Lato', 'bold')
-    this.doc.text(this.contadorItem + '. Confiabilidad', this.marginContent, this.usoPagina, { align: 'left', maxWidth: this.marginRight - this.marginContent })
+    this.usoPagina = formateadoraDeTexto(this.doc, this.contadorItem + '. Confiabilidad', this.usoPagina, this.marginContent, this.marginRight - this.marginContent, this.fecha, '', this.finalContenido) + 30
+
     this.contadorItem++
 
     this.doc.setFontSize(11)
     this.doc.setTextColor(this.colores.negro)
     this.doc.setFont('Lato', 'normal')
-    espaciarTextosLargos(this.doc, dataInforme.confiabilidad.texto1, this.usoPagina + 30, this.marginContent, this.marginRight - this.marginContent, this.fecha, '', this.endPage)
-    this.doc.text('Dentro de los parámetros a considerar están:', this.marginContent, this.usoPagina + 90, { align: 'left', maxWidth: this.marginRight - this.marginContent })
+    this.usoPagina = formateadoraDeTexto(this.doc, dataInforme.confiabilidad.texto1, this.usoPagina, this.marginContent, this.marginRight - this.marginContent, this.fecha, '', this.finalContenido) + 15
+
+    if (this.usoPagina + 10 > this.totalUso)
+      this.nuevaPagina()
+
+
+
+    this.usoPagina = formateadoraDeTexto(this.doc, 'Dentro de los parámetros a considerar están :', this.usoPagina, this.marginContent, this.marginRight - this.marginContent, this.fecha, '', this.finalContenido) + 25
+
+
+    if (this.usoPagina + 10 > this.totalUso)
+      this.nuevaPagina()
 
     this.doc.setFont('Lato', 'bold')
-    this.doc.text('• Identificación :', this.marginContent + 30, this.usoPagina + 120, { align: 'left', maxWidth: this.marginRight - this.marginContent })
+    formateadoraDeTexto(this.doc, '*• Identificación :*', this.usoPagina, this.marginContent + 30, this.marginRight - this.marginContent, this.fecha, '', this.finalContenido)
+
     this.doc.setFont('Lato', 'normal')
     let text = 'mide el porcentaje de agrietamientos detectados (como conjunto, no individualmente).'
-    // espaciarTextosLargos(this.doc, text, this.usoPagina + 30,  this.doc.getTextWidth('• Identificación :') + 40 + this.marginContent,this.marginRight - this.marginContent, this.fecha, '')
+    // formateadoraDeTexto(this.doc, text, this.usoPagina + 30,  this.doc.getTextWidth('• Identificación :') + 40 + this.marginContent,this.marginRight - this.marginContent, this.fecha, '')
+    // this.doc.text(text, this.doc.getTextWidth('• Identificación :') + 40 + this.marginContent, this.usoPagina + 120, { align: 'left', maxWidth: this.marginRight - this.marginContent - 150 })
+    this.usoPagina = formateadoraDeTexto(this.doc, text, this.usoPagina, this.doc.getTextWidth('• Identificación :') + 40 + this.marginContent, this.marginRight - this.marginContent - 150, this.fecha, '', this.finalContenido) + 25
 
-    this.doc.text(text, this.doc.getTextWidth('• Identificación :') + 40 + this.marginContent, this.usoPagina + 120, { align: 'left', maxWidth: this.marginRight - this.marginContent - 150 })
+    if (this.usoPagina + 7 > this.totalUso)
+      this.nuevaPagina()
 
     this.doc.setFont('Lato', 'bold')
-    this.doc.text('• Clasificación :', this.marginContent + 30, this.startcContent + 160, { align: 'left', maxWidth: this.marginRight - this.marginContent })
+    // this.doc.text('• Clasificación :', this.marginContent + 30, this.startcContent + 160, { align: 'left', maxWidth: this.marginRight - this.marginContent })
+    formateadoraDeTexto(this.doc, '*• Clasificación :*', this.usoPagina, this.marginContent + 30, this.marginRight - this.marginContent, this.fecha, '', this.finalContenido)
+
     this.doc.setFont('Lato', 'normal')
     text = 'se refiere a la capacidad de asignar correctamente la criticidad a las grietas.'
-    this.doc.text(text, this.doc.getTextWidth('• Identificación :') + 40 + this.marginContent, this.usoPagina + 160, { align: 'left', maxWidth: this.marginRight - this.marginContent - 150 })
-    // espaciarTextosLargos(this.doc, text, this.usoPagina + 30,  this.doc.getTextWidth('• Identificación :') + 40 + this.marginContent,this.marginRight - this.marginContent, this.fecha, '')
+    // this.doc.text(text, this.doc.getTextWidth('• Identificación :') + 40 + this.marginContent, this.usoPagina + 160, { align: 'left', maxWidth: this.marginRight - this.marginContent - 150 })
+    this.usoPagina = formateadoraDeTexto(this.doc, text, this.usoPagina, this.doc.getTextWidth('• Identificación :') + 40 + this.marginContent, this.marginRight - this.marginContent - 150, this.fecha, '', this.finalContenido) + 25
 
+
+    if (this.usoPagina + 7 > this.totalUso)
+      this.nuevaPagina()
 
     this.doc.setFont('Lato', 'bold')
-    this.doc.text('• Comunicación :', this.marginContent + 30, this.usoPagina + 200, { align: 'left', maxWidth: this.marginRight - this.marginContent })
+    // this.doc.text('• Comunicación :', this.marginContent + 30, this.usoPagina + 200, { align: 'left', maxWidth: this.marginRight - this.marginContent })
+    formateadoraDeTexto(this.doc, '*• Comunicación :*', this.usoPagina, this.marginContent + 30, this.marginRight - this.marginContent, this.fecha, '', this.finalContenido)
+
     this.doc.setFont('Lato', 'normal')
-    this.doc.text('correcto aviso de EMT a ANT ante una grieta de criticidad alta.', this.doc.getTextWidth('• Identificación :') + 40 + this.marginContent, this.usoPagina + 200, { align: 'left', maxWidth: this.marginRight - this.marginContent - 150 })
+    // this.doc.text('correcto aviso de EMT a ANT ante una grieta de criticidad alta.', this.doc.getTextWidth('• Identificación :') + 40 + this.marginContent, this.usoPagina + 200, { align: 'left', maxWidth: this.marginRight - this.marginContent - 150 })
+    this.usoPagina = formateadoraDeTexto(this.doc, 'correcto aviso de EMT a ANT ante una grieta de criticidad alta.', this.usoPagina, this.doc.getTextWidth('• Identificación :') + 40 + this.marginContent, this.marginRight - this.marginContent - 150, this.fecha, '', this.finalContenido) + 25
 
+    if (this.usoPagina + 7 > this.totalUso)
+      this.nuevaPagina()
 
-    text = 'La confiabilidad del servicio durante el periodo fue del ' + promedio + '%, el cual se desglosa en la TABLA ' + this.contadorTabla + ' a continuación.'
-    this.doc.text(text, this.marginContent, this.usoPagina + 230, { align: 'left', maxWidth: this.marginRight - this.marginContent })
+    text = 'La confiabilidad del servicio durante el periodo fue del *' + promedio + '%*, el cual se desglosa en la *TABLA ' + this.contadorTabla + '* a continuación.'
+    // this.doc.text(text, this.marginContent, this.usoPagina + 230, { align: 'left', maxWidth: this.marginRight - this.marginContent })
+    this.usoPagina = formateadoraDeTexto(this.doc, text, this.usoPagina, this.marginContent, this.marginRight - this.marginContent, this.fecha, '', this.finalContenido) + 25
+
+    if (this.usoPagina + 120 > this.totalUso)
+      this.nuevaPagina()
 
     this.doc.setFontSize(8)
     this.doc.setFont('Lato', 'normal')
-    this.doc.text('TABLA ' + this.contadorTabla + ': CONFIABILIDAD', ((this.marginRight - this.marginContent) / 2 + this.marginContent), this.usoPagina + 275, { align: 'center', maxWidth: this.marginRight - this.marginContent })
+    this.doc.text('TABLA ' + this.contadorTabla + ': CONFIABILIDAD', ((this.marginRight - this.marginContent) / 2 + this.marginContent), this.usoPagina, { align: 'center', maxWidth: this.marginRight - this.marginContent })
     this.contadorTabla++
+    this.usoPagina += 5
+
 
     autoTable(this.doc, {
       styles: { lineWidth: .1, halign: 'center', fontSize: 10, cellWidth: 100, fillColor: undefined, lineColor: [1, 48, 51], textColor: [1, 48, 51] },
@@ -386,13 +452,14 @@ export class InformeService {
         ['Clasificación', valor2?.toFixed(2)],
         ['Comunicación', valor3?.toFixed(2)],
       ],
-      margin: { top: this.usoPagina + 280, left: (((this.marginRight - (100 * 2) + this.marginContent) / 2)) },
+      margin: { top: this.marginContent, left: (((this.marginRight - (100 * 2) + this.marginContent) / 2)) },
+      startY: this.usoPagina,
       alternateRowStyles: { fillColor: undefined },
       footStyles: { fillColor: [217, 217, 217] },
       foot: [['Confiabilidad', promedio]]
     })
 
-    this.usoPagina += 430
+    this.usoPagina += 150
 
 
     this.doc.setFontSize(11)
@@ -403,12 +470,15 @@ export class InformeService {
 
       comentariosImagenes.forEach(datos => {
 
-        this.usoPagina = espaciarTextosLargos(this.doc, datos.comentario, this.usoPagina, this.marginContent, this.marginRight - this.marginContent, this.fecha, '', this.endPage)
+        this.usoPagina = formateadoraDeTexto(this.doc, datos.comentario, this.usoPagina, this.marginContent, this.marginRight - this.marginContent, this.fecha, '', this.finalContenido ) +10
+
+        if (this.usoPagina + 30 > this.totalUso)
+          this.nuevaPagina()
 
         if (datos.imagenes.length > 0) {
           datos.imagenes.forEach((elm: any, index: number) => {
 
-            if (this.usoPagina + 230 > this.totalUso)
+            if (this.usoPagina + 150 > this.totalUso)
               this.nuevaPagina()
 
             this.doc.setFontSize(8)
@@ -508,7 +578,7 @@ export class InformeService {
       this.doc.setFont('Lato', 'normal')
       let text = 'Durante el periodo se registran grietas de criticidad alta, pero estas no están asociadas a alguna condición de fallamiento. '
       // justify(this.doc, text, this.marginContent, this.usoPagina + 30, this.marginRight - this.marginContent)
-      espaciarTextosLargos(this.doc, text, this.usoPagina + 30, this.marginContent, this.marginRight - this.marginContent, this.fecha, '', this.endPage)
+      formateadoraDeTexto(this.doc, text, this.usoPagina + 30, this.marginContent, this.marginRight - this.marginContent, this.fecha, '', this.finalContenido)
 
       this.usoPagina += 40
       let index = 0
@@ -841,19 +911,36 @@ export class InformeService {
 
   onPrevizualizar(dataCriticisdad: any, dataMatrix: any, tablaDispo: any, imgCriticidad: any, comentariosCriticidad: any, inputs: FormGroup, comentariosImagenes: any[]) {
 
-    this.cargarDatos(inputs)
+    // this.cargarDatos(inputs)
     this.implementarFuentes()
-    this.implementarPortada()
-    this.generarTablaResumen(inputs)
-    this.implementarIndicadoresDeServicio(tablaDispo, inputs)
-    this.implmentarConfiabilidad(inputs, comentariosImagenes)
-    this.implementarAnalisis(dataCriticisdad, imgCriticidad, comentariosCriticidad, inputs)
-    this.implementarParametroA2MG(dataMatrix)
-    this.implementarConclusion(inputs)
-    this.implementarTablaContenido()
+    // this.implementarPortada()
+    // this.generarTablaResumen(inputs)
+    // this.implementarIndicadoresDeServicio(tablaDispo, inputs)
+    // this.implmentarConfiabilidad(inputs, comentariosImagenes)
+    // this.implementarAnalisis(dataCriticisdad, imgCriticidad, comentariosCriticidad, inputs)
+    // this.implementarParametroA2MG(dataMatrix)
+    // this.implementarConclusion(inputs)
+    // this.implementarTablaContenido()
+    this.pruebaPagina()
     this.previsualizar()
 
   }
 
+
+  pruebaPagina(){
+    this.doc.setFontSize(11)
+    this.doc.setTextColor(this.colores.negro)
+    this.doc.setFont('Lato', 'normal')
+    this.doc.addPage()
+    let text = 'Este es un comentario escrito por mi donde puedo escribir lo que yo quiera, por que esto es una mera prueba para para probar el funcionamiento de una prueba que necesita textos, con espacios y sin espacios. Este es un comentario escrito por mi donde puedo escribir lo que yo quiera, por que esto es una mera prueba para para probar el funcionamiento de una prueba que necesita textos, con espacios y sin espacios. Este es un comentario escrito por mi donde puedo escribir lo que yo quiera, por que esto es una mera prueba para para probar el funcionamiento de una prueba que necesita textos, con espacios y sin espacios. Este es un comentario escrito por mi donde puedo escribir lo que yo quiera, por que esto es una mera prueba para para probar el funcionamiento de una prueba que necesita textos, con espacios y sin espacios. Este es un comentario escrito por mi donde puedo escribir lo que yo quiera, por que esto es una mera prueba para para probar el funcionamiento de una prueba que necesita textos, con espacios y sin espacios. Este es un comentario escrito por mi donde puedo escribir lo que yo quiera, por que esto es una mera prueba para para probar el funcionamiento de una prueba que necesita textos, con espacios y sin espacios. Este es un comentario escrito por mi donde puedo escribir lo que yo quiera, por que esto es una mera prueba para para probar el funcionamiento de una prueba que necesita textos, con espacios y sin espacios.\nEste es un comentario escrito por mi donde puedo escribir lo que yo quiera, por que esto es una mera prueba para para probar el funcionamiento de una prueba que necesita textos, con espacios y sin espacios. Este es un comentario escrito por mi donde puedo escribir lo que yo quiera, por que esto es una mera prueba para para probar el funcionamiento de una prueba que necesita textos, con espacios y sin espacios. Este es un comentario escrito por mi donde puedo escribir lo que yo quiera, por que esto es una mera prueba para para probar el funcionamiento de una prueba que necesita textos, con espacios y sin espacios. Este es un comentario escrito por mi donde puedo escribir lo que yo quiera, por que esto es una mera prueba para para probar el funcionamiento de una prueba que necesita textos, con espacios y sin espacios. Este es un comentario escrito por mi donde puedo escribir lo que yo quiera, por que esto es una mera prueba para para probar el funcionamiento de una prueba que necesita textos, con espacios y sin espacios. Este es un comentario escrito por mi donde puedo escribir lo que yo quiera, por que esto es una mera prueba para para probar el funcionamiento de una prueba que necesita textos, con espacios y sin espacios. Este es un comentario escrito por mi donde puedo escribir lo que yo quiera, por que esto es una mera prueba para para probar el funcionamiento de una prueba que necesita textos, con espacios y sin espacios.'
+    formateadoraDeTexto(this.doc, text, this.usoPagina + 30, this.marginContent, this.marginRight - this.marginContent, this.fecha, '', this.finalContenido)
+
+
+    this.doc.addPage()
+
+    let text2 = 'Este es un comentario escrito por mi donde puedo escribir lo que yo quiera, por que esto es una mera prueba para para probar el funcionamiento de una prueba que necesita textos, con espacios y sin espacios. Este es un comentario escrito por mi donde puedo escribir lo que yo quiera, por que esto es una mera prueba para para probar el funcionamiento de una prueba que necesita textos, con espacios y sin espacios. Este es un comentario escrito por mi donde puedo escribir lo que yo quiera, por que esto es una mera prueba para para probar el funcionamiento de una prueba que necesita textos, con espacios y sin espacios. Este es un comentario escrito por mi donde puedo escribir lo que yo quiera, por que esto es una mera prueba para para probar el funcionamiento de una prueba que necesita textos, con espacios y sin espacios. Este es un comentario escrito por mi donde puedo escribir lo que yo quiera, por que esto es una mera prueba para para probar el funcionamiento de una prueba que necesita textos, con espacios y sin espacios. Este es un comentario escrito por mi donde puedo escribir lo que yo quiera, por que esto es una mera prueba para para probar el funcionamiento de una prueba que necesita textos, con espacios y sin espacios. Este es un comentario escrito por mi donde puedo escribir lo que yo quiera, por que esto es una mera prueba para para probar el funcionamiento de una prueba que necesita textos, con espacios y sin espacios.'
+    justify(this.doc,text2,this.marginContent,140, this.marginRight - this.marginContent)
+    justify(this.doc,text2,this.marginContent,401.8, this.marginRight - this.marginContent)
+  }
 
 }
