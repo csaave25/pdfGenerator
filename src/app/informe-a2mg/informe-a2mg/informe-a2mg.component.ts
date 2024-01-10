@@ -129,12 +129,14 @@ export class InformeA2mgComponent implements OnInit {
       this.comentariosImagenes.push({
         num,
         comentario: elemento.value,
-        imagenes: [] as any[]
+        imagenes: [] as any[],
       })
     } else {
       this.comentariosImagenes[validator].comentario = elemento.value
     }
-    console.log(this.comentariosImagenes);
+
+   
+
   }
 
   loadTemplateImagenes(id: number) {
@@ -142,6 +144,10 @@ export class InformeA2mgComponent implements OnInit {
                     <input type="file" class="form-control" id="customFile" />
                     <div class="border col-12" style="height: 200px;">
                         <img src="#" height="200" class="col-12">
+                    </div>
+                    <div class="mt-2">
+                      <label mdbLabel class="form-label" for="figura${this.numImagen}" >Nombre Figura</label>
+                      <input mdbInput type="text" id="figura${this.numImagen}" class="form-control"/>
                     </div>
                 </div>`
 
@@ -153,12 +159,17 @@ export class InformeA2mgComponent implements OnInit {
 
 
     let img = newElement.querySelector('img')!
-    newElement.querySelector('input')?.addEventListener('change', (event) => this.saveImagenes(event, id, img))
+    let idImg = this.numImagen
+    let nomFigura = newElement.querySelector('#figura' + this.numImagen)!
+
+    nomFigura.addEventListener('change', (event) => { this.saveNomFig(event, id, idImg) })
+    newElement.querySelector('input')?.addEventListener('change', (event) => this.saveImagenes(event, id, img,idImg))
 
     this.numImagen++
   }
 
-  saveImagenes(event: Event, index: number, imgElm: HTMLImageElement) {
+
+  saveImagenes(event: Event, index: number, imgElm: HTMLImageElement, idImg: number) {
     let element = (event.target as HTMLInputElement)
     imgElm.src = URL.createObjectURL(element.files![0]);
     imgElm.onload = function () {
@@ -169,21 +180,52 @@ export class InformeA2mgComponent implements OnInit {
     var reader = new FileReader();
     reader.readAsDataURL(file);
 
+    
+
     reader.onload = (_event) => {
       let validator = this.comentariosImagenes.findIndex(dato => dato.num == index)
       if (validator == -1) {
         this.comentariosImagenes.push({
           num: index,
           comentario: '',
-          imagenes: [reader.result] as any[]
+          imagenes: [{ id: idImg, img: reader.result, nomFigura: '' }] as any[],
         })
       } else {
-        this.comentariosImagenes[index].imagenes.push(reader.result)
+        let validador = this.comentariosImagenes[index].imagenes.findIndex((dato: any) => dato.id == idImg)
+        if (validador == -1) {
+          this.comentariosImagenes[index].imagenes.push({ id: idImg, img: reader.result, nomFigura: '' })
+        } else {
+          let elm =  this.comentariosImagenes[index].imagenes[validador]
+          this.comentariosImagenes[index].imagenes.push({...elm ,img: reader.result })
+        }
+
       }
     }
+ 
   }
 
+  saveNomFig(event: Event, index: number, idImg: number) {
+    let nomFig = (event.target as HTMLInputElement).value
+    let validator = this.comentariosImagenes.findIndex(dato => dato.num == index)
+    if (validator == -1) {
+      this.comentariosImagenes.push({
+        num: index,
+        comentario: '',
+        imagenes: [{ id: idImg, img: '', nomFigura: '' }] as any[],
+      })
+    } else {
+      let validador = this.comentariosImagenes[index].imagenes.findIndex((dato: any) => dato.id == idImg)
+      if (validador == -1) {
+        this.comentariosImagenes[index].imagenes.push({ id: idImg, img: '', nomFigura: '' })
+      } else {
+        this.comentariosImagenes[index].imagenes[validador].nomFigura = nomFig
+      }
 
+    }
+
+  
+
+  }
 
 
   loadImg(event: Event, index: number) {
@@ -206,16 +248,6 @@ export class InformeA2mgComponent implements OnInit {
 
   activarInforme() {
     this.informeService.onPrevizualizar(this.dataCriticisadad, this.dataMatrix, this.tablaDispo, this.imgCriticidad, this.comentariosCriticidad, this.inputs, this.comentariosImagenes)
-
-    // console.log(this.data);
-    // let string = this.informeService.doc.output('datauristring');
-    // let elemento = this.element.nativeElement
-    // let embed = this.render.createElement("embed")
-    // this.render.setAttribute(embed,'width', '100%')
-    // this.render.setAttribute(embed,'height', '100%')
-    // this.render.setAttribute(embed,'src', string)
-    // this.render.appendChild(elemento,embed)
-
   }
 
 }

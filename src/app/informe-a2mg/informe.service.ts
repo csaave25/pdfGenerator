@@ -255,7 +255,7 @@ export class InformeService {
     this.doc.setFont('Lato', 'normal')
     this.doc.setFontSize(11)
 
-    espaciarTextosLargos(this.doc, dataInforme.disponibilidad.texto1, this.startcContent + 60, this.marginContent, this.marginRight - this.marginContent, this.fecha, '')
+    espaciarTextosLargos(this.doc, dataInforme.disponibilidad.texto1, this.startcContent + 60, this.marginContent, this.marginRight - this.marginContent, this.fecha, '', this.endPage)
 
     this.doc.setFont('Time', 'italic')
     this.doc.setFontSize(12)
@@ -276,7 +276,7 @@ export class InformeService {
 
     this.doc.setFont('Lato', 'normal')
     this.doc.setFontSize(11)
-    espaciarTextosLargos(this.doc, dataInforme.disponibilidad.texto2, this.startcContent + 200, this.marginContent, this.marginRight - this.marginContent, this.fecha, '')
+    espaciarTextosLargos(this.doc, dataInforme.disponibilidad.texto2, this.startcContent + 200, this.marginContent, this.marginRight - this.marginContent, this.fecha, '', this.endPage)
 
 
     this.doc.text('La disponibilidad comprometida corresponde al 95% para el caso de Infraestructura EMT.', this.marginContent, this.startcContent + 250, { align: 'left', maxWidth: this.marginRight - this.marginContent })
@@ -306,8 +306,11 @@ export class InformeService {
         [{ content: 'Enlace dedicado AMSA', styles: { halign: 'left', cellPadding: { left: 75, top: 5 } } }, { content: tablaDispo.enlace_dedicado, styles: { halign: 'center' } }, comnt7],
 
       ],
-      margin: { top: this.startcContent + 285, left: this.marginContent },
-      alternateRowStyles: { fillColor: undefined }
+      margin: { top: this.startcContent + 285, left: this.marginContent,  bottom: 80 },
+      alternateRowStyles: { fillColor: undefined },
+      rowPageBreak: 'avoid',
+      
+      
     })
     // this.nuevaPagina()
     this.usoPagina = 1000
@@ -340,7 +343,7 @@ export class InformeService {
     this.doc.setFontSize(11)
     this.doc.setTextColor(this.colores.negro)
     this.doc.setFont('Lato', 'normal')
-    espaciarTextosLargos(this.doc, dataInforme.confiabilidad.texto1, this.usoPagina + 30, this.marginContent, this.marginRight - this.marginContent, this.fecha, '')
+    espaciarTextosLargos(this.doc, dataInforme.confiabilidad.texto1, this.usoPagina + 30, this.marginContent, this.marginRight - this.marginContent, this.fecha, '', this.endPage)
     this.doc.text('Dentro de los parámetros a considerar están:', this.marginContent, this.usoPagina + 90, { align: 'left', maxWidth: this.marginRight - this.marginContent })
 
     this.doc.setFont('Lato', 'bold')
@@ -398,117 +401,44 @@ export class InformeService {
 
     if (comentariosImagenes.length > 0) {
 
-      if (this.usoPagina + 30 > this.totalUso)
-        this.nuevaPagina()
-
       comentariosImagenes.forEach(datos => {
-        this.usoPagina += espaciarTextosLargos(this.doc, datos.comentario, this.usoPagina, this.marginContent, this.marginRight - this.marginContent, this.fecha, '')
+
+        this.usoPagina = espaciarTextosLargos(this.doc, datos.comentario, this.usoPagina, this.marginContent, this.marginRight - this.marginContent, this.fecha, '', this.endPage)
 
         if (datos.imagenes.length > 0) {
           datos.imagenes.forEach((elm: any, index: number) => {
 
-            if (this.usoPagina + 240 > this.totalUso)
-            this.nuevaPagina()
+            if (this.usoPagina + 230 > this.totalUso)
+              this.nuevaPagina()
 
-            this.doc.addImage(elm, 'png', 70, this.usoPagina, this.marginRight - this.marginContent, 200, 'imgx-mm' + this.contadorFigura, 'FAST');
+            this.doc.setFontSize(8)
+            this.doc.setFont('Lato', 'normal')
+            this.doc.addImage(elm.img, 'png', 70, this.usoPagina, this.marginRight - this.marginContent, 200, 'imgx-mm' + this.contadorFigura, 'FAST');
+            this.doc.text('FIGURA ' + this.contadorFigura + ': ' + elm.nomFigura?.toUpperCase(), ((this.marginRight - this.marginContent) / 2 + this.marginContent), this.usoPagina + 210, { align: 'center', maxWidth: this.marginRight - this.marginContent })
+
             this.contadorFigura++;
-            this.usoPagina += 240
-           
+            this.usoPagina += 230
           });
+
+          this.doc.setFontSize(11)
+          this.doc.setTextColor(this.colores.negro)
+
         }
 
+        if (comentariosImagenes.length > 0 && datos.imagenes.length > 0) {
+          this.usoPagina += 25
+        } else {
+          this.usoPagina += 45
+        }
 
       })
+
+
     }
 
-    // if (this.usoPagina + 65 > this.totalUso)
-    //   this.nuevaPagina()
-
-    // justify(this.doc, text, this.marginContent, this.usoPagina, this.marginRight - this.marginContent)
-
-
-    // this.usoPagina += 65
-
-    // if (this.usoPagina + 200 > this.totalUso)
-    //   this.nuevaPagina()
-
-    // this.doc.addImage("assets/images/grieta1.png", 'PNG', 70, this.usoPagina, this.marginRight - this.marginContent, 200, 'imgx-mm' + this.contadorFigura, 'SLOW');
-    // this.doc.setFontSize(8)
-    // this.doc.setFont('Lato', 'normal')
-    // this.doc.text('FIGURA ' + this.contadorFigura + ': GRIETA DE CRITICIDAD MEDIA', ((this.marginRight - this.marginContent) / 2 + this.marginContent), this.usoPagina + 210, { align: 'center', maxWidth: this.marginRight - this.marginContent })
-    // this.contadorFigura++
-
-    // this.usoPagina += 240
-
-    // if (this.usoPagina + 65 > this.totalUso)
-    //   this.nuevaPagina()
-
-    // this.doc.setFontSize(11)
-    // this.doc.setTextColor(this.colores.negro)
-    // this.doc.setFont('Lato', 'normal')
-    // text = 'Por otra parte, durante el día 26/11/23 se detectan grietas en la cámara 3, que son identificadas y clasificadas según la matriz de criticidad. En el sector inferior de la Figura 2 se pueden observar las grietas C38 (criticidad media), C33 y C39 (criticidad alta), en la Figura 3 se observan lecturas posteriores el A2MG identifica las grietas de criticidad alta, pero no la grieta C38 (criticidad media).'
-    // // justify(this.doc, text, this.marginContent, this.usoPagina, this.marginRight - this.marginContent)
-    // this.usoPagina += 65
-
-    // if (this.usoPagina + 200 > this.totalUso)
-    //   this.nuevaPagina()
-
-    // this.doc.addImage("assets/images/grieta3.png", 'PNG', 70, this.usoPagina, this.marginRight - this.marginContent, 200, 'imgx-ms' + this.contadorFigura, 'SLOW');
-    // this.doc.setFontSize(8)
-    // this.doc.setFont('Lato', 'normal')
-    // this.doc.text('FIGURA ' + this.contadorFigura + ': CRITICIDADES GRIETAS', ((this.marginRight - this.marginContent) / 2 + this.marginContent), this.usoPagina + 210, { align: 'center', maxWidth: this.marginRight - this.marginContent })
-    // this.contadorFigura++
-
-    // this.usoPagina += 240
-
-
-    // if (this.usoPagina + 200 > this.totalUso)
-    //   this.nuevaPagina()
-
-    // this.doc.addImage("assets/images/grieta2.png", 'PNG', 70, this.usoPagina, this.marginRight - this.marginContent, 200, 'imgx-m' + this.contadorFigura, 'SLOW');
-    // this.doc.setFontSize(8)
-    // this.doc.setFont('Lato', 'normal')
-    // this.doc.text('FIGURA ' + this.contadorFigura + ': CRITICIDADES GRIETAS', ((this.marginRight - this.marginContent) / 2 + this.marginContent), this.usoPagina + 210, { align: 'center', maxWidth: this.marginRight - this.marginContent })
-    // this.contadorFigura++
-
-    // this.usoPagina += 240
-
-
-    // autoTable(this.doc, {
-    //   styles: { lineWidth: .1, halign: 'center', fontSize: 10, fillColor: undefined, lineColor: [1, 48, 51], textColor: [1, 48, 51], cellWidth: this.marginRight - this.marginContent },
-    //   // headStyles: { font: 'Lato', fontStyle: 'bold', fillColor: [217, 217, 217] },
-
-    //   bodyStyles: { font: 'Lato', fontStyle: 'normal', fontSize: 9, fillColor: undefined },
-    //   body: [
-    //     [{ content: '', styles: { minCellHeight: 200 } }],
-    //     [{ content: 'Durante el mes de noviembre, se detectan grietas de criticidad media durante la madrugada del día 26 / 11 / 23 desde la 03: 30 a través de la cámara 4(ver Figura 1) en específico la grieta C1, la cuál se mantiene hasta las 07:04 del mismo día.La detección de esta grieta es posible dado que existe iluminación en el sector.La grieta C0, identificada en el borde de la solución corresponde a un falso positivo.', styles: { minCellHeight: 60, halign: 'left' } }],
-    //   ],
-    //   margin: { top: this.usoPagina, left: this.marginContent },
-    //   alternateRowStyles: { fillColor: undefined },
-    //   didDrawCell: (data) => {
-    //     if (data.row.index == 0 && data.cell.section == 'body') {
-    //       let width = data.cell.width - 20;
-    //       let height = data.cell.height - 10
-    //       let x = data.cell.x + 10
-    //       let y = data.cell.y + 5
-
-    //       // if (imgCriticidad[imgContador]) {
-    //       //   this.doc.addImage(imgCriticidad[imgContador], 'png', x, y, width, 65, 'imgx' + imgContador, 'SLOW');
-    //       // }
-    //       this.doc.addImage("assets/images/Luis.jpg", 'JPG', x, y, width, height, 'imgx-mm' + 5, 'SLOW');
-
-    //     }
-    //   }
-
-    // })
-
-    // this.doc.setFontSize(8)
-    // this.doc.setFont('Lato', 'normal')
-    // this.doc.text('FIGURA ' + this.contadorFigura + ': GRIETA DE CRITICIDAD MEDIA', ((this.marginRight - this.marginContent) / 2 + this.marginContent), this.usoPagina + 270, { align: 'center', maxWidth: this.marginRight - this.marginContent })
-    // this.contadorFigura++
+    if (comentariosImagenes.length > 0)
+      this.usoPagina -= 10
   }
-
-
 
   implementarAnalisis(DataCriticidad: any, imgCriticidad: any, comentariosCriticidad: any, inputs: FormGroup) {
 
@@ -578,13 +508,18 @@ export class InformeService {
       this.doc.setFont('Lato', 'normal')
       let text = 'Durante el periodo se registran grietas de criticidad alta, pero estas no están asociadas a alguna condición de fallamiento. '
       // justify(this.doc, text, this.marginContent, this.usoPagina + 30, this.marginRight - this.marginContent)
+      espaciarTextosLargos(this.doc, text, this.usoPagina + 30, this.marginContent, this.marginRight - this.marginContent, this.fecha, '', this.endPage)
 
-      // this.doc.text('', this.marginContent, this.usoPagina + 30, { align: 'left', maxWidth: this.marginRight - this.marginContent })
       this.usoPagina += 40
       let index = 0
       let lastTableHeight = 0
       let page = 1
       let imgContador = 0
+
+
+      if (this.usoPagina + 65 > this.totalUso)
+        this.nuevaPagina()
+
       this.doc.setTextColor(this.colores.negro)
       this.doc.setFontSize(8)
       this.doc.setFont('Lato', 'normal')
@@ -592,6 +527,8 @@ export class InformeService {
       this.doc.setFontSize(11)
       this.doc.setFont('Lato', 'normal')
       this.contadorTabla++
+
+
 
       let flag = false
       autoTable(this.doc, {
@@ -912,7 +849,7 @@ export class InformeService {
     this.implmentarConfiabilidad(inputs, comentariosImagenes)
     this.implementarAnalisis(dataCriticisdad, imgCriticidad, comentariosCriticidad, inputs)
     this.implementarParametroA2MG(dataMatrix)
-    // this.implementarConclusion(inputs)
+    this.implementarConclusion(inputs)
     this.implementarTablaContenido()
     this.previsualizar()
 

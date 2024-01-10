@@ -62,11 +62,11 @@ interface IWordInfo {
     wordLength: number;
 }
 
-export const espaciarTextosLargos = (doc: jsPDF, texto: string, margenTop: number, inicio: number, anchoMax: number, date: string, anoMes: string) => {
+export const espaciarTextosLargos = (doc: jsPDF, texto: string, margenTop: number, inicio: number, anchoMax: number, date: string, anoMes: string, finalPag : number) => {
     const arrText = dividirTexto(texto)
     if (arrText) {
         arrText.forEach(str => {
-            if (margenTop + obtenerAncho(doc, str, anchoMax) > 745) {
+            if (margenTop + obtenerAncho(doc, str, anchoMax) > finalPag) {
                 doc.addPage()
                 // genradorDeHeaderYFooter(doc, date, anoMes)
                 margenTop = 100
