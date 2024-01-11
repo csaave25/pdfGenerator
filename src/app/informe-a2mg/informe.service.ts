@@ -50,6 +50,7 @@ export class InformeService {
   contadorTabla = 1
   contadorFigura = 1
   fecha: string = ''
+  fechaNum: string = ''
 
 
   doc = new jsPDF('p', 'pt', 'letter')
@@ -470,7 +471,7 @@ export class InformeService {
 
       comentariosImagenes.forEach(datos => {
 
-        this.usoPagina = formateadoraDeTexto(this.doc, datos.comentario, this.usoPagina, this.marginContent, this.marginRight - this.marginContent, this.fecha, '', this.finalContenido ) +10
+        this.usoPagina = formateadoraDeTexto(this.doc, datos.comentario, this.usoPagina, this.marginContent, this.marginRight - this.marginContent, this.fecha, '', this.finalContenido) + 10
 
         if (this.usoPagina + 30 > this.totalUso)
           this.nuevaPagina()
@@ -661,12 +662,9 @@ export class InformeService {
 
   implementarParametroA2MG(dataMatrix: any) {
 
-    let matrix: any = {
-      matrixNombre: [],
-      matrixLongitud: [],
-      matrixApertura: [],
-      matrixAreas: []
-    }
+    let tablaMatrix: any[] = []
+    let inicioMes = new Date(this.fechaNum)
+
 
     const colores = (nivel: string): [number, number, number] => {
       if (nivel.includes('BAJA'))
@@ -683,29 +681,49 @@ export class InformeService {
     let ab = 'aa'
 
 
-    // dataMatrix.objects.forEach((data: any) => {
-    //   matrix.matrixNombre.push([{ content: data.name.toUpperCase(), styles: {} }]);
-    //   matrix.matrixLongitud.push([data.length_min, data.length_max])
-    //   matrix.matrixApertura.push([data.openning_min, data.openning_max])
-    //   matrix.matrixAreas.push([
-    //     { content: data.m1, styles: { fillColor: colores(data.m1) } },
-    //     { content: data.m2, styles: { fillColor: colores(data.m2) } },
-    //     { content: data.m3, styles: { fillColor: colores(data.m3) } },
-    //     { content: data.m4, styles: { fillColor: colores(data.m4) } }
-    //   ])
+    dataMatrix.forEach((elm: any) => {
+      let matrix: any = {
+        matrixNombre: [] as any[],
+        matrixLongitud: [] as any[],
+        matrixApertura: [] as any[],
+        matrixAreas: [] as any[]
+      }
+      elm.matrix.forEach((data: any) => {
+        matrix.matrixNombre.push([{ content: data.name.toUpperCase(), styles: {} }]);
+        matrix.matrixLongitud.push([data.length_min, data.length_max])
+        matrix.matrixApertura.push([data.openning_min, data.openning_max])
+        matrix.matrixAreas.push([
+          { content: data.m1, styles: { fillColor: colores(data.m1) } },
+          { content: data.m2, styles: { fillColor: colores(data.m2) } },
+          { content: data.m3, styles: { fillColor: colores(data.m3) } },
+          { content: data.m4, styles: { fillColor: colores(data.m4) } }
+        ])
+      });
+    
 
-    // })
+      let fecha
+      let hora
+      if (new Date(elm.initDate).getTime() < inicioMes.getTime()) {
+        fecha = inicioMes.toLocaleDateString('en-GB');
+        hora = '00:00:00'
+      } else {
+        fecha = new Date(elm.initDate).toLocaleDateString('en-GB');
+        hora = ('0'+new Date(elm.initDate).getUTCHours()).slice(-2) + ':' + ('0' +new Date(elm.initDate).getUTCMinutes()).slice(-2) + ':'+('0'+new Date(elm.initDate).getUTCSeconds()).slice(-2)
+      }
 
-    // let ultimosCambios: any = []
-    // dataUltimosCambiosMatrix.logs.forEach((data: any) => {
+      tablaMatrix.push({
+        matrix,
+        fechaInicio: fecha,
+        horaInicio: hora ,
+        fechaFinal: new Date(elm.endDate).toLocaleDateString('en-GB'),
+        horaFinal: ('0'+new Date(elm.endDate).getUTCHours()).slice(-2) + ':' + ('0' +new Date(elm.endDate).getUTCMinutes()).slice(-2) + ':'+('0'+new Date(elm.endDate).getUTCSeconds()).slice(-2) 
+      })
+    });
 
-    //   let fecha = new Date(data.date).getMonth()
+    console.log(tablaMatrix);
+    
 
-    //   if (fecha == this.mesNum) {
-    //     let fecha = new Date(data.date).toLocaleString()
-    //     ultimosCambios.push([fecha, data.user, data.before, data.current, data.column])
-    //   }
-    // });
+
 
     if (this.usoPagina + 170 > this.totalUso)
       this.nuevaPagina()
@@ -723,124 +741,84 @@ export class InformeService {
     this.doc.text(this.contadorItem + '. Registro de Cambios de Parámetros del A2MG', this.marginContent, this.usoPagina, { align: 'left', maxWidth: this.marginRight - this.marginContent })
     this.contadorItem++
 
-    let ultimoDiaMes = new Date(this.anoNum, this.mesNum + 1, 0);
     this.doc.setFontSize(11)
     this.doc.setTextColor(this.colores.negro)
     this.doc.setFont('Lato', 'normal')
 
-
-    let index = 0
-    let lastTableHeight = 0
-    let page = 1
-    function addZero(i: any) {
-      if (i < 10) { i = "0" + i }
-      return i;
-    }
-
     this.doc.text('Registro de matrices utilizadas en el periodo: ', this.marginContent, this.usoPagina + 30, { align: 'left', maxWidth: this.marginRight - this.marginContent })
 
-    // if (ultimosCambios.length < 1) {
-    //   this.doc.text('Matriz utilizada entre 01-' + addZero(this.mesNum + 1) + '-' + this.anoNum + ' 00:00 y ' + ultimoDiaMes + '-' + this.mesNum + '-' + this.anoNum + ' 23:59, no se registraron cambios.', this.marginContent, this.usoPagina + 30, { align: 'left', maxWidth: this.marginRight - this.marginContent })
 
-    // } else {
-    //   this.doc.text('Matriz utilizada entre 01-' + (this.mesNum + 1) + '-' + this.anoNum + ' 00:00 y ' + ultimoDiaMes + '-' + this.mesNum + '-' + this.anoNum + ' 23:59.', this.marginContent, this.usoPagina + 30, { align: 'left', maxWidth: this.marginRight - this.marginContent })
+    tablaMatrix.forEach(mtx => {
 
-    //   autoTable(this.doc, {
-    //     styles: { lineWidth: .1, halign: 'center', fontSize: 10, fillColor: undefined, lineColor: [1, 48, 51], textColor: [1, 48, 51] },
-    //     headStyles: { font: 'Lato', fontStyle: 'bold', fillColor: [217, 217, 217] },
-    //     head: [['Fecha', 'Usuario', 'Anterior', 'Actual', 'Columna']],
-    //     bodyStyles: { font: 'Lato', fontStyle: 'normal', fontSize: 9, fillColor: undefined },
-    //     body: ultimosCambios,
-    //     margin: { top: this.startcContent, left: this.marginContent, bottom: 80 },
-    //     alternateRowStyles: { fillColor: undefined },
-    //     startY: this.usoPagina + 60,
-    //     didDrawCell: (data) => {
-    //       if (page == data.pageCount) {
-    //         if (data.row.index != index) {
-    //           index = data.row.index
-    //           this.usoPagina += data.row.height
-    //         }
-    //       }
-    //     },
+      let doc = this.doc
+      this.doc.setFontSize(8)
+      this.doc.setFont('Lato', 'normal')
+      this.doc.text('TABLA ' + this.contadorTabla + ': DESDE ' + mtx.fechaInicio + ' ' + mtx.horaInicio + ' HASTA ' + mtx.fechaFinal + ' ' + mtx.horaFinal, ((this.marginRight - this.marginContent) / 2 + this.marginContent), this.usoPagina + 55, { align: 'center', maxWidth: this.marginRight - this.marginContent })
+      // this.doc.setFontSize(11)
+      // this.doc.setTextColor(this.colores.negro)
+      // this.doc.setFont('Lato', 'normal')
 
-    //     didDrawPage: (data) => {
-    //       if (data.pageNumber != 1) {
-    //         this.implementarFooter()
-    //         this.implementarHeader()
-    //       }
-    //       page++
-    //       lastTableHeight = this.usoPagina
-    //       this.usoPagina = 0
-    //     }
-    //   })
+      autoTable(doc, {
+        margin: { left: this.marginContent },
+        styles: { halign: 'center', lineWidth: .1, fillColor: undefined, lineColor: [1, 48, 51], textColor: [1, 48, 51] },
+        bodyStyles: { fontStyle: 'bold' },
+        headStyles: { fillColor: [217, 217, 217] },
+        alternateRowStyles: { fillColor: undefined },
+        head: [[{ content: 'Probabilidad de daño al esparcidor', styles: { cellWidth: 125, cellPadding: { top: 15, bottom: 15 } } }, { content: 'Longitud' }, { content: 'Apertura' }, { content: 'Áreas de criticidad' }]],
+        columnStyles: { 0: { fillColor: [217, 217, 217] } },
+        body: mtx.matrix.matrixNombre,
+        startY: this.usoPagina + 60,
+        didDrawCell: function (data) {
 
-    // }
+          if (data.cell.text[0].includes('Longitud')) {
+            autoTable(doc, {
+              styles: { fillColor: undefined, halign: 'center', textColor: [1, 48, 51], lineWidth: .1, lineColor: [1, 48, 51] },
+              alternateRowStyles: { fillColor: undefined },
+              startY: data.cell.y + 20,
+              margin: { left: data.cell.x },
+              tableWidth: data.cell.width,
+              head: [['Min\n[px]', 'Max\n[px]']],
+              body: mtx.matrix.matrixLongitud
 
+            })
+          }
 
+          if (data.cell.text[0].includes('Apertura')) {
+            autoTable(doc, {
+              styles: { fillColor: undefined, halign: 'center', textColor: [1, 48, 51], lineWidth: .1, lineColor: [1, 48, 51] },
+              alternateRowStyles: { fillColor: undefined },
+              startY: data.cell.y + 20,
+              margin: { left: data.cell.x },
+              tableWidth: data.cell.width,
+              head: [['Min\n[px]', 'Max\n[px]']],
+              body: mtx.matrix.matrixApertura
 
-    let doc = this.doc
-    this.doc.setFontSize(8)
-    this.doc.setFont('Lato', 'normal')
-    this.doc.text('TABLA ' + this.contadorTabla + ': DESDE 01/11/2023 00:00 HASTA 30/11/2023 23:59', ((this.marginRight - this.marginContent) / 2 + this.marginContent), this.usoPagina + 55, { align: 'center', maxWidth: this.marginRight - this.marginContent })
-    // this.doc.setFontSize(11)
-    // this.doc.setTextColor(this.colores.negro)
-    // this.doc.setFont('Lato', 'normal')
+            })
+          }
 
-    autoTable(doc, {
-      margin: { left: this.marginContent },
-      styles: { halign: 'center', lineWidth: .1, fillColor: undefined, lineColor: [1, 48, 51], textColor: [1, 48, 51] },
-      bodyStyles: { fontStyle: 'bold' },
-      headStyles: { fillColor: [217, 217, 217] },
-      alternateRowStyles: { fillColor: undefined },
-      head: [[{ content: 'Probabilidad de daño al esparcidor', styles: { cellWidth: 125, cellPadding: { top: 15, bottom: 15 } } }, { content: 'Longitud' }, { content: 'Apertura' }, { content: 'Áreas de criticidad' }]],
-      columnStyles: { 0: { fillColor: [217, 217, 217] } },
-      body: matrix.matrixNombre,
-      startY: this.usoPagina + 60,
-      didDrawCell: function (data) {
+          if (data.cell.text[0].includes('Áreas de criticidad')) {
+            autoTable(doc, {
+              styles: { fillColor: undefined, halign: 'center', textColor: [1, 48, 51], lineWidth: .1, lineColor: [1, 48, 51] },
+              alternateRowStyles: { fillColor: undefined },
+              headStyles: { cellPadding: { top: 11.5, bottom: 10 }, },
+              startY: data.cell.y + 20,
+              margin: { left: data.cell.x },
+              tableWidth: data.cell.width,
+              head: [['A4', 'A3', 'A2', 'A1']],
+              body: mtx.matrix.matrixAreas
 
-        if (data.cell.text[0].includes('Longitud')) {
-          autoTable(doc, {
-            styles: { fillColor: undefined, halign: 'center', textColor: [1, 48, 51], lineWidth: .1, lineColor: [1, 48, 51] },
-            alternateRowStyles: { fillColor: undefined },
-            startY: data.cell.y + 20,
-            margin: { left: data.cell.x },
-            tableWidth: data.cell.width,
-            head: [['Min\n[px]', 'Max\n[px]']],
-            body: matrix.matrixLongitud
-
-          })
+            })
+          }
         }
+      })
 
-        if (data.cell.text[0].includes('Apertura')) {
-          autoTable(doc, {
-            styles: { fillColor: undefined, halign: 'center', textColor: [1, 48, 51], lineWidth: .1, lineColor: [1, 48, 51] },
-            alternateRowStyles: { fillColor: undefined },
-            startY: data.cell.y + 20,
-            margin: { left: data.cell.x },
-            tableWidth: data.cell.width,
-            head: [['Min\n[px]', 'Max\n[px]']],
-            body: matrix.matrixApertura
 
-          })
-        }
-
-        if (data.cell.text[0].includes('Áreas de criticidad')) {
-          autoTable(doc, {
-            styles: { fillColor: undefined, halign: 'center', textColor: [1, 48, 51], lineWidth: .1, lineColor: [1, 48, 51] },
-            alternateRowStyles: { fillColor: undefined },
-            headStyles: { cellPadding: { top: 11.5, bottom: 10 }, },
-            startY: data.cell.y + 20,
-            margin: { left: data.cell.x },
-            tableWidth: data.cell.width,
-            head: [['A4', 'A3', 'A2', 'A1']],
-            body: matrix.matrixAreas
-
-          })
-        }
-      }
+      this.usoPagina += 230
     })
 
-    this.usoPagina += 240 + lastTableHeight
+
+
+
   }
 
   implementarConclusion(inputs: FormGroup) {
@@ -902,32 +880,34 @@ export class InformeService {
 
   cargarDatos(inputs: FormGroup) {
 
-    let fecha = inputs.get('fecha')?.value + '-07'
+    let fecha = inputs.get('fecha')?.value.replace("-", "/") + '/01'
     let mes = new Date(fecha).toLocaleString('default', { month: 'long' })
     let ano = new Date(fecha).getFullYear()
     mes = mes.charAt(0).toUpperCase() + mes.slice(1);
     this.fecha = mes + ' ' + ano
+    this.fechaNum = fecha
+
   }
 
   onPrevizualizar(dataCriticisdad: any, dataMatrix: any, tablaDispo: any, imgCriticidad: any, comentariosCriticidad: any, inputs: FormGroup, comentariosImagenes: any[]) {
 
-    // this.cargarDatos(inputs)
+    this.cargarDatos(inputs)
     this.implementarFuentes()
-    // this.implementarPortada()
-    // this.generarTablaResumen(inputs)
-    // this.implementarIndicadoresDeServicio(tablaDispo, inputs)
-    // this.implmentarConfiabilidad(inputs, comentariosImagenes)
-    // this.implementarAnalisis(dataCriticisdad, imgCriticidad, comentariosCriticidad, inputs)
-    // this.implementarParametroA2MG(dataMatrix)
-    // this.implementarConclusion(inputs)
-    // this.implementarTablaContenido()
-    this.pruebaPagina()
+    this.implementarPortada()
+    this.generarTablaResumen(inputs)
+    this.implementarIndicadoresDeServicio(tablaDispo, inputs)
+    this.implmentarConfiabilidad(inputs, comentariosImagenes)
+    this.implementarAnalisis(dataCriticisdad, imgCriticidad, comentariosCriticidad, inputs)
+    this.implementarParametroA2MG(dataMatrix)
+    this.implementarConclusion(inputs)
+    this.implementarTablaContenido()
+    // this.pruebaPagina()
     this.previsualizar()
 
   }
 
 
-  pruebaPagina(){
+  pruebaPagina() {
     this.doc.setFontSize(11)
     this.doc.setTextColor(this.colores.negro)
     this.doc.setFont('Lato', 'normal')
@@ -939,8 +919,8 @@ export class InformeService {
     this.doc.addPage()
 
     let text2 = 'Este es un comentario escrito por mi donde puedo escribir lo que yo quiera, por que esto es una mera prueba para para probar el funcionamiento de una prueba que necesita textos, con espacios y sin espacios. Este es un comentario escrito por mi donde puedo escribir lo que yo quiera, por que esto es una mera prueba para para probar el funcionamiento de una prueba que necesita textos, con espacios y sin espacios. Este es un comentario escrito por mi donde puedo escribir lo que yo quiera, por que esto es una mera prueba para para probar el funcionamiento de una prueba que necesita textos, con espacios y sin espacios. Este es un comentario escrito por mi donde puedo escribir lo que yo quiera, por que esto es una mera prueba para para probar el funcionamiento de una prueba que necesita textos, con espacios y sin espacios. Este es un comentario escrito por mi donde puedo escribir lo que yo quiera, por que esto es una mera prueba para para probar el funcionamiento de una prueba que necesita textos, con espacios y sin espacios. Este es un comentario escrito por mi donde puedo escribir lo que yo quiera, por que esto es una mera prueba para para probar el funcionamiento de una prueba que necesita textos, con espacios y sin espacios. Este es un comentario escrito por mi donde puedo escribir lo que yo quiera, por que esto es una mera prueba para para probar el funcionamiento de una prueba que necesita textos, con espacios y sin espacios.'
-    justify(this.doc,text2,this.marginContent,140, this.marginRight - this.marginContent)
-    justify(this.doc,text2,this.marginContent,401.8, this.marginRight - this.marginContent)
+    justify(this.doc, text2, this.marginContent, 140, this.marginRight - this.marginContent)
+    justify(this.doc, text2, this.marginContent, 401.8, this.marginRight - this.marginContent)
   }
 
 }

@@ -55,8 +55,9 @@ export class ApiService {
     return tabla
   }
 
-  getTablaMatrix() {
-
+  getTablaMatrix(mes : string, ano : number) {
+    let url= 'https://m2d.emt.cl/api3/matrixLogs/logs/matrixChanges?month='+ mes +'&year='+ ano 
+    return this.http.get<any>(url);
   }
 
   getTablaDispo(mes: string): any {

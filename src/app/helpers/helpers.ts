@@ -63,17 +63,17 @@ interface IWordInfo {
 }
 
 export const obtenerAncho = (pdfGen: jsPDF, texto: string, margen: number) => {
-    // let dimensiones = pdfGen.getTextDimensions(texto)
-    // let tamanoFuente = pdfGen.getFontSize()
-    // let lines = dimensiones.w / margen
-    // let valor = ((Math.trunc(lines) + 0.5)* 1.7 * tamanoFuente) // Creo que 1.7 (espaciado) se multiplica por la cantidad de lineas
-    let width = pdfGen.getTextDimensions(texto).w
+    let dimensiones = pdfGen.getTextDimensions(texto)
     let tamanoFuente = pdfGen.getFontSize()
-    let dimensiones = (100 * tamanoFuente) / 72
-    let lines = width/ margen
-    console.log( dimensiones + ' ' + Math.trunc(lines) +' ' +tamanoFuente );
-    let valor =  dimensiones * Math.trunc(lines) * tamanoFuente // Creo que 1.7 (espaciado) se multiplica por la cantidad de lineas
-    console.log(valor);
+    let lines = dimensiones.w / margen
+    let valor = Math.trunc(lines) * 1.7 * tamanoFuente // Creo que 1.7 (espaciado) se multiplica por la cantidad de lineas
+    // let width = pdfGen.getTextDimensions(texto).w
+    // let tamanoFuente = pdfGen.getFontSize()
+    // let dimensiones = (100 * tamanoFuente) / 72
+    // let lines = width/ margen
+    // console.log( dimensiones + ' ' + Math.trunc(lines) +' ' +tamanoFuente );
+    // let valor =  dimensiones * Math.trunc(lines) * tamanoFuente // Creo que 1.7 (espaciado) se multiplica por la cantidad de lineas
+    // console.log(valor);
     
     return valor
 }

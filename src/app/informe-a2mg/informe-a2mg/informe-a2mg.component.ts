@@ -46,7 +46,7 @@ export class InformeA2mgComponent implements OnInit {
   })
 
   dataCriticisadad: any
-  dataMatrix: any
+  dataMatrix: any[] = [] 
   tablaDispo: any
   imgCriticidad: any = []
   comentariosCriticidad: any = []
@@ -63,10 +63,11 @@ export class InformeA2mgComponent implements OnInit {
   loadTablas() {
     this.loadGrietasCriticidad()
     this.loadDisponibilidad()
+    this.loadMatriz()
   }
 
   loadGrietasCriticidad() {
-    let fecha = this.inputs.get('fecha')?.value
+    let fecha = this.inputs.get('fecha')?.value.replace("-", "/")
     let mes = new Date(fecha).getMonth() + 1
     this.dataCriticisadad = this.rq.getTablaAlertas(mes)
     this.imgCriticidad = new Array(this.dataCriticisadad.length)
@@ -74,7 +75,7 @@ export class InformeA2mgComponent implements OnInit {
   }
 
   loadDisponibilidad() {
-    let fecha = this.inputs.get('fecha')?.value
+    let fecha = this.inputs.get('fecha')?.value.replace("-", "/")
     let mes = new Date(fecha).toLocaleString('default', { month: 'long' })
     let ano = new Date(fecha).getFullYear()
     let buscar = ano + '/' + mes
@@ -92,6 +93,20 @@ export class InformeA2mgComponent implements OnInit {
         enlace_dedicado: dato.enlace_dedicado?.toFixed(2)
       }
     });
+  }
+
+  loadMatriz() {
+    let str: string = this.inputs.get('fecha')?.value
+    str = str.replace("-", "/")
+    let fecha = new Date(str)
+    let ano = fecha.getFullYear()
+    let mes = ('0' + (fecha.getMonth() + 1)).slice(-2)
+    this.rq.getTablaMatrix(mes, ano).subscribe((data) => {
+      data.objects.forEach((elm:any) => {
+        this.dataMatrix.push(elm)
+      })
+
+    })
   }
 
   loadTemplateComentarios() {
@@ -135,7 +150,7 @@ export class InformeA2mgComponent implements OnInit {
       this.comentariosImagenes[validator].comentario = elemento.value
     }
 
-   
+
 
   }
 
@@ -163,7 +178,7 @@ export class InformeA2mgComponent implements OnInit {
     let nomFigura = newElement.querySelector('#figura' + this.numImagen)!
 
     nomFigura.addEventListener('change', (event) => { this.saveNomFig(event, id, idImg) })
-    newElement.querySelector('input')?.addEventListener('change', (event) => this.saveImagenes(event, id, img,idImg))
+    newElement.querySelector('input')?.addEventListener('change', (event) => this.saveImagenes(event, id, img, idImg))
 
     this.numImagen++
   }
@@ -180,7 +195,7 @@ export class InformeA2mgComponent implements OnInit {
     var reader = new FileReader();
     reader.readAsDataURL(file);
 
-    
+
 
     reader.onload = (_event) => {
       let validator = this.comentariosImagenes.findIndex(dato => dato.num == index)
@@ -195,7 +210,7 @@ export class InformeA2mgComponent implements OnInit {
         if (validador == -1) {
           this.comentariosImagenes[index].imagenes.push({ id: idImg, img: reader.result, nomFigura: '' })
         } else {
-          let elm =  this.comentariosImagenes[index].imagenes[validador]
+          let elm = this.comentariosImagenes[index].imagenes[validador]
           this.comentariosImagenes[index].imagenes[validador].img = reader.result
         }
 
@@ -222,7 +237,7 @@ export class InformeA2mgComponent implements OnInit {
 
     }
 
-  
+
 
   }
 
