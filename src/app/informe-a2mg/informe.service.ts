@@ -463,14 +463,15 @@ export class InformeService {
     this.usoPagina += 150
 
 
-    this.doc.setFontSize(11)
-    this.doc.setTextColor(this.colores.negro)
-    this.doc.setFont('Lato', 'normal')
+
 
     if (comentariosImagenes.length > 0) {
 
       comentariosImagenes.forEach(datos => {
 
+        this.doc.setFontSize(11)
+        this.doc.setTextColor(this.colores.negro)
+        this.doc.setFont('Lato', 'normal')
         this.usoPagina = formateadoraDeTexto(this.doc, datos.comentario, this.usoPagina, this.marginContent, this.marginRight - this.marginContent, this.fecha, '', this.finalContenido) + 10
 
         if (this.usoPagina + 30 > this.totalUso)
@@ -491,8 +492,6 @@ export class InformeService {
             this.usoPagina += 230
           });
 
-          this.doc.setFontSize(11)
-          this.doc.setTextColor(this.colores.negro)
 
         }
 
@@ -699,7 +698,7 @@ export class InformeService {
           { content: data.m4, styles: { fillColor: colores(data.m4) } }
         ])
       });
-    
+
 
       let fecha
       let hora
@@ -708,22 +707,17 @@ export class InformeService {
         hora = '00:00:00'
       } else {
         fecha = new Date(elm.initDate).toLocaleDateString('en-GB');
-        hora = ('0'+new Date(elm.initDate).getUTCHours()).slice(-2) + ':' + ('0' +new Date(elm.initDate).getUTCMinutes()).slice(-2) + ':'+('0'+new Date(elm.initDate).getUTCSeconds()).slice(-2)
+        hora = ('0' + new Date(elm.initDate).getUTCHours()).slice(-2) + ':' + ('0' + new Date(elm.initDate).getUTCMinutes()).slice(-2) + ':' + ('0' + new Date(elm.initDate).getUTCSeconds()).slice(-2)
       }
 
       tablaMatrix.push({
         matrix,
         fechaInicio: fecha,
-        horaInicio: hora ,
+        horaInicio: hora,
         fechaFinal: new Date(elm.endDate).toLocaleDateString('en-GB'),
-        horaFinal: ('0'+new Date(elm.endDate).getUTCHours()).slice(-2) + ':' + ('0' +new Date(elm.endDate).getUTCMinutes()).slice(-2) + ':'+('0'+new Date(elm.endDate).getUTCSeconds()).slice(-2) 
+        horaFinal: ('0' + new Date(elm.endDate).getUTCHours()).slice(-2) + ':' + ('0' + new Date(elm.endDate).getUTCMinutes()).slice(-2) + ':' + ('0' + new Date(elm.endDate).getUTCSeconds()).slice(-2)
       })
     });
-
-    console.log(tablaMatrix);
-    
-
-
 
     if (this.usoPagina + 170 > this.totalUso)
       this.nuevaPagina()
@@ -753,10 +747,9 @@ export class InformeService {
       let doc = this.doc
       this.doc.setFontSize(8)
       this.doc.setFont('Lato', 'normal')
-      this.doc.text('TABLA ' + this.contadorTabla + ': DESDE ' + mtx.fechaInicio + ' ' + mtx.horaInicio + ' HASTA ' + mtx.fechaFinal + ' ' + mtx.horaFinal, ((this.marginRight - this.marginContent) / 2 + this.marginContent), this.usoPagina + 55, { align: 'center', maxWidth: this.marginRight - this.marginContent })
-      // this.doc.setFontSize(11)
-      // this.doc.setTextColor(this.colores.negro)
-      // this.doc.setFont('Lato', 'normal')
+      this.doc.text('TABLA ' + this.contadorTabla + ': DESDE ' + mtx.fechaInicio + ' ' + mtx.horaInicio + ' HASTA 31/12/2023 23:59:59', ((this.marginRight - this.marginContent) / 2 + this.marginContent), this.usoPagina + 55, { align: 'center', maxWidth: this.marginRight - this.marginContent })
+
+      // this.doc.text('TABLA ' + this.contadorTabla + ': DESDE ' + mtx.fechaInicio + ' ' + mtx.horaInicio + ' HASTA ' + mtx.fechaFinal + ' ' + mtx.horaFinal, ((this.marginRight - this.marginContent) / 2 + this.marginContent), this.usoPagina + 55, { align: 'center', maxWidth: this.marginRight - this.marginContent })
 
       autoTable(doc, {
         margin: { left: this.marginContent },
@@ -845,17 +838,11 @@ export class InformeService {
     this.doc.setTextColor(this.colores.negro)
     this.doc.setFont('Lato', 'normal')
 
-    let text = 'Con respecto a la disponibilidad de la Infraestructura EMT este mes corresponde a 92.41%, como plan de acción para mejorar la respuesta ante la baja disponibilidad se implementó un sistema de alerta de caída de procesos.'
-    // justify(this.doc, text, this.marginContent, this.usoPagina + 30, this.marginRight - this.marginContent)
-    text = 'Se realiza el monitoreo de acuerdo a lo establecido, y con base en los registros de la aplicación A2MG, se puede indicar que se registran grietas longitudinales de criticidad alta los días 25/11/23 y 26/11/23, las que no comprometen la estabilidad del esparcidor.'
-    // justify(this.doc, text, this.marginContent, this.usoPagina + 80, this.marginRight - this.marginContent)
-    text = 'Las grietas registradas con alta criticidad, que corresponden a falsos positivos se registraron e identificaron para mejorar la capacidad de detección del sistema y así el algoritmo las pueda discriminar en las próximas versiones.'
-    // justify(this.doc, text, this.marginContent, this.usoPagina + 130, this.marginRight - this.marginContent)
-    text = 'Las grietas detectadas el día 26/11/23 en la madrugada evidencian que el A2MG tiene la capacidad detectar grietas durante la noche. En base a lo anterior se recomienda incorporar iluminación en el sector de operación al esparcidor, para mejorar la detección de las grietas durante los periodos sin luz natural.'
-    // justify(this.doc,text, this.marginContent, this.usoPagina + 180, this.marginRight - this.marginContent)
+
 
     // justify(this.doc, conc ? conc : '', this.marginContent, this.usoPagina + 30, this.marginRight - this.marginContent)
     // this.doc.text(conc ? conc : '', this.marginContent, this.usoPagina + 30, { align: 'justify', maxWidth: this.marginRight - this.marginContent })
+    formateadoraDeTexto(this.doc, conc ? conc : '', this.usoPagina + 30, this.marginContent, this.marginRight - this.marginContent, this.fecha, '', this.endPage)
 
     this.usoPagina += 150
   }

@@ -28,15 +28,15 @@
         </div>
         <div [formGroup]="inputs.controls.usrs">
             <label mdbLabel class="form-label" for="Revisado">Revisado</label>
-            <input mdbInput type="text" id="Revisado" class="form-control" formControlName="revisado" />
+            <input mdbInput type="text" id="Revisado" class="form-control" formControlName="revisado"  />
             <label mdbLabel class="form-label" for="cargos">Cargo</label>
-            <input mdbInput type="text" id="cargos" class="form-control" formControlName="cargo2" />
+            <input mdbInput type="text" id="cargos" class="form-control" formControlName="cargo2"/>
         </div>
         <div [formGroup]="inputs.controls.usrs">
             <label mdbLabel class="form-label" for="Aprobado">Aprobado</label>
             <input mdbInput type="text" id="Aprobado" class="form-control" formControlName="aprobado" />
             <label mdbLabel class="form-label" for="cargos">Cargo</label>
-            <input mdbInput type="text" id="cargos" class="form-control" formControlName="cargo3" />
+            <input mdbInput type="text" id="cargos" class="form-control" formControlName="cargo3"/>
         </div>
     </div>
     <!-- <div class="col-8 mt-4" *ngIf="dataCriticisadad && tablaDispo"> -->
@@ -84,8 +84,8 @@
                         <label mdbLabel class="form-label" for="textAreaExample">Añadir comentario</label>
                     </mdb-form-control>
                 </li>
-                <li class="d-flex gap-4 ">
-                    <p class="col-4">Promedio: {{tablaDispo.infraestructura}}</p>
+                <li class="d-flex gap-4">
+                    <p class="col-4" style="color: #00838F;">Promedio: {{tablaDispo.infraestructura}}</p>
                 </li>
                 <li class="d-flex gap-4 ">
                     <p class="col-4">Sistema de adquisición de imágenes: {{tablaDispo.sistema_adquisicion_imagenes}}</p>

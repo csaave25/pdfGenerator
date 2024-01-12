@@ -65,8 +65,8 @@ interface IWordInfo {
 export const obtenerAncho = (pdfGen: jsPDF, texto: string, margen: number) => {
     let dimensiones = pdfGen.getTextDimensions(texto)
     let tamanoFuente = pdfGen.getFontSize()
-    let lines = dimensiones.w / margen
-    let valor = Math.trunc(lines) * 1.7 * tamanoFuente // Creo que 1.7 (espaciado) se multiplica por la cantidad de lineas
+    let lines = ((dimensiones.w * tamanoFuente )/ margen)
+    let valor = Math.trunc(lines) * 1.7  // Creo que 1.7 (espaciado) se multiplica por la cantidad de lineas
     // let width = pdfGen.getTextDimensions(texto).w
     // let tamanoFuente = pdfGen.getFontSize()
     // let dimensiones = (100 * tamanoFuente) / 72
@@ -74,7 +74,7 @@ export const obtenerAncho = (pdfGen: jsPDF, texto: string, margen: number) => {
     // console.log( dimensiones + ' ' + Math.trunc(lines) +' ' +tamanoFuente );
     // let valor =  dimensiones * Math.trunc(lines) * tamanoFuente // Creo que 1.7 (espaciado) se multiplica por la cantidad de lineas
     // console.log(valor);
-    
+
     return valor
 }
 
@@ -95,11 +95,17 @@ const saltoDePagina = (str: string, doc: jsPDF, ancho: number, usopag: number, d
 export const formateadoraDeTexto = (doc: jsPDF, textos: string, margenTop: number, inicio: number, anchoMax: number, date: string, anoMes: string, finalPag: number) => {
     if (textos) {
         let text = dividirTexto(textos)
-        console.log(text);
-        
         let init = inicio + 18
         let ancho = anchoMax - 18
+        console.log(text);
+
         text.forEach(texto => {
+
+            let copytext = texto
+            copytext = copytext.replace(' ', '')
+
+
+            console.log('paso1');
             if (texto[0] == '-') {
                 let txt = texto.slice(1, texto.length)
                 margenTop = saltoDePagina(txt, doc, ancho, margenTop, date, anoMes)
@@ -109,17 +115,17 @@ export const formateadoraDeTexto = (doc: jsPDF, textos: string, margenTop: numbe
                 justify(doc, txt, init, margenTop, ancho)
                 margenTop = margenTop + obtenerAncho(doc, txt, ancho)
             } else {
-                if (texto.length == 0) {
-                    margenTop += 17
+                if (copytext.length == 0) {
+                    margenTop += 10
                 } else {
-                    console.log(margenTop);
                     margenTop = saltoDePagina(texto, doc, ancho, margenTop, date, anoMes)
-                    console.log(margenTop);
-
                     justify(doc, texto, inicio, margenTop, anchoMax)
                     margenTop = margenTop + obtenerAncho(doc, texto, anchoMax)
                 }
+
+                console.log(margenTop);
             }
+
         })
     }
     return margenTop
