@@ -2,9 +2,8 @@ import { Injectable, Input } from '@angular/core';
 import { jsPDF } from 'jspdf'
 import autoTable from 'jspdf-autotable'
 import { font, latoRegular, montBold, montMedium, montSemi } from 'src/assets/fonts/fonts';
-import { AbstractControl, FormGroup } from '@angular/forms';
-import { dataInforme } from './data';
-import { formateadoraDeTexto } from '../helpers/helpers';
+import { FormGroup } from '@angular/forms';
+import { dataInforme,formateadoraDeTexto } from './data';
 import { justify } from '../justifyText';
 
 
@@ -142,7 +141,7 @@ export class InformeService {
 
 
 
-    let nombre1 = inputs.controls['usrs'].value.elavorado
+    let nombre1 = inputs.controls['usrs'].value.elaborado
     let cargo1 = inputs.controls['usrs'].value.cargo1
     let nombre2 = inputs.controls['usrs'].value.revisado
     let cargo2 = inputs.controls['usrs'].value.cargo2

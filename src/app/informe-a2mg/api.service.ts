@@ -45,9 +45,10 @@ export class ApiService {
     let tabla: any = []
     this.getAlerta().subscribe(dato => {
       dato.objects.alerts.forEach((element: any) => {
-        let date = new Date(element.date).getMonth()
+        let fechaElm = (element.date as string).slice(0, 10).replaceAll("-", "/")
+        let date = new Date(fechaElm).getMonth() +1
         if (!element.fake && fecha == date) {
-          tabla.push({...element, comentario: null})
+          tabla.push({ ...element, comentario: null })
         }
       });
     });
@@ -55,8 +56,8 @@ export class ApiService {
     return tabla
   }
 
-  getTablaMatrix(mes : string, ano : number) {
-    let url= 'https://m2d.emt.cl/api3/matrixLogs/logs/matrixChanges?month='+ mes +'&year='+ ano 
+  getTablaMatrix(mes: string, ano: number) {
+    let url = 'https://m2d.emt.cl/api3/matrixLogs/logs/matrixChanges?month=' + mes + '&year=' + ano
     return this.http.get<any>(url);
   }
 

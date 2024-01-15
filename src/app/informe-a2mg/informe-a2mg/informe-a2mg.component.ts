@@ -21,7 +21,7 @@ export class InformeA2mgComponent implements OnInit {
   inputs = new FormGroup({
     fecha: new FormControl(),
     usrs: new FormGroup({
-      elavorado: new FormControl('CONSTANZA SARRÍA'),
+      elaborado: new FormControl('CONSTANZA SARRÍA'),
       cargo1: new FormControl('INGENIERO GEOTÉCNICO MCM'),
       revisado: new FormControl('VALERIA MIRANDA'),
       cargo2: new FormControl('LÍDER MCM-AMSA'),
@@ -55,30 +55,39 @@ export class InformeA2mgComponent implements OnInit {
   numImagen = 0
   comentariosImagenes: any[] = []
 
+
+
+
+  ngOnInit(): void {
+    this.loadLocalStorage()
+  }
+
   loadLocalStorage() {
     let data = localStorage.getItem('data')
     if (data) {
       let datos = JSON.parse(data)
-      console.log(datos.inputs);
-      
-      // this.inputs.get('fecha')?.setValue()
-      // this.inputs.get('usrs.elavorado')?.setValue()
-      // this.inputs.get('usrs.cargo1')?.setValue()
-      // this.inputs.get('usrs.revisado')?.setValue()
-      // this.inputs.get('usrs.cargo2')?.setValue()
-      // this.inputs.get('usrs.aprobado')?.setValue()
-      // this.inputs.get('usrs.cargo3')?.setValue()
-      // this.inputs.get('disponibilidadComentario.web')?.setValue()
-      // this.inputs.get('disponibilidadComentario.img')?.setValue()
-      // this.inputs.get('disponibilidadComentario.bd')?.setValue()
-      // this.inputs.get('disponibilidadComentario.api')?.setValue()
-      // this.inputs.get('disponibilidadComentario.computo')?.setValue()
-      // this.inputs.get('disponibilidadComentario.sistema')?.setValue()
-      // this.inputs.get('disponibilidadComentario.enlace')?.setValue()
-      // this.inputs.get('confiabilidad.identificacion')?.setValue()
-      // this.inputs.get('confiabilidad.clasificacion')?.setValue()
-      // this.inputs.get('confiabilidad.comunicacion')?.setValue()
-      // this.inputs.get('conclusion')?.setValue()
+      this.inputs.get('fecha')?.setValue(datos.inputs.fecha)
+      this.inputs.get('usrs.elaborado')?.setValue(datos.inputs.usrs.elaborado)
+      this.inputs.get('usrs.cargo1')?.setValue(datos.inputs.usrs.cargo1)
+      this.inputs.get('usrs.revisado')?.setValue(datos.inputs.usrs.revisado)
+      this.inputs.get('usrs.cargo2')?.setValue(datos.inputs.usrs.cargo2)
+      this.inputs.get('usrs.aprobado')?.setValue(datos.inputs.usrs.aprobado)
+      this.inputs.get('usrs.cargo3')?.setValue(datos.inputs.usrs.cargo3)
+      this.inputs.get('disponibilidadComentario.web')?.setValue(datos.inputs.disponibilidadComentario.web)
+      this.inputs.get('disponibilidadComentario.img')?.setValue(datos.inputs.disponibilidadComentario.img)
+      this.inputs.get('disponibilidadComentario.bd')?.setValue(datos.inputs.disponibilidadComentario.bd)
+      this.inputs.get('disponibilidadComentario.api')?.setValue(datos.inputs.disponibilidadComentario.api)
+      this.inputs.get('disponibilidadComentario.computo')?.setValue(datos.inputs.disponibilidadComentario.computo)
+      this.inputs.get('disponibilidadComentario.sistema')?.setValue(datos.inputs.disponibilidadComentario.sistema)
+      this.inputs.get('disponibilidadComentario.enlace')?.setValue(datos.inputs.disponibilidadComentario.enalce)
+      this.inputs.get('confiabilidad.identificacion')?.setValue(datos.inputs.confiabilidad.identificacion)
+      this.inputs.get('confiabilidad.clasificacion')?.setValue(datos.inputs.confiabilidad.clasificacion)
+      this.inputs.get('confiabilidad.comunicacion')?.setValue(datos.inputs.confiabilidad.comunicacion)
+      this.inputs.get('conclusion')?.setValue(datos.inputs.conclusion)
+
+
+
+      this.loadTablas()
     }
   }
 
@@ -87,7 +96,7 @@ export class InformeA2mgComponent implements OnInit {
       inputs: {
         fecha: this.inputs.get('fecha')?.value,
         usrs: {
-          elavorado: this.inputs.get('usrs.elavorado')?.value,
+          elaborado: this.inputs.get('usrs.elaborado')?.value,
           cargo1: this.inputs.get('usrs.cargo1')?.value,
           revisado: this.inputs.get('usrs.revisado')?.value,
           cargo2: this.inputs.get('usrs.cargo2')?.value,
@@ -110,8 +119,7 @@ export class InformeA2mgComponent implements OnInit {
         },
         conclusion: this.inputs.get('conclusion')?.value
       },
-      dataCriticisadad: this.dataCriticisadad,
-      dataMatrix: this.dataMatrix,
+    
       tablaDispo: this.tablaDispo,
       imgCriticidad: this.imgCriticidad,
       comentariosCriticidad: this.comentariosCriticidad,
@@ -124,11 +132,6 @@ export class InformeA2mgComponent implements OnInit {
     localStorage.setItem('data', JSON.stringify(datos))
   }
 
-
-  ngOnInit(): void {
-    this.loadLocalStorage()
-  }
-
   loadTablas() {
     this.loadGrietasCriticidad()
     this.loadDisponibilidad()
@@ -136,11 +139,12 @@ export class InformeA2mgComponent implements OnInit {
   }
 
   loadGrietasCriticidad() {
-    let fecha = this.inputs.get('fecha')?.value.replace("-", "/")
+    let fecha = this.inputs.get('fecha')?.value.replaceAll("-", "/")
     let mes = new Date(fecha).getMonth() + 1
+    
     this.dataCriticisadad = this.rq.getTablaAlertas(mes)
     this.imgCriticidad = new Array(this.dataCriticisadad.length)
-    // this.rq.getMatrix().subscribe(dato => this.dataMatrix = dato)
+   
   }
 
   loadDisponibilidad() {
