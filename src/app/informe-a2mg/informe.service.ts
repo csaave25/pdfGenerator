@@ -898,14 +898,14 @@ export class InformeService {
 
     this.cargarDatos(inputs)
     this.implementarFuentes()
-    this.implementarPortada()
-    this.generarTablaResumen(inputs)
-    this.implementarIndicadoresDeServicio(tablaDispo, inputs)
+    // this.implementarPortada()
+    // this.generarTablaResumen(inputs)
+    // this.implementarIndicadoresDeServicio(tablaDispo, inputs)
     this.implmentarConfiabilidad(inputs, comentariosImagenes)
-    this.implementarAnalisis(dataCriticisdad, imgCriticidad, comentariosCriticidad, inputs)
-    this.implementarParametroA2MG(dataMatrix)
-    this.implementarConclusion(inputs)
-    this.implementarTablaContenido()
+    // this.implementarAnalisis(dataCriticisdad, imgCriticidad, comentariosCriticidad, inputs)
+    // this.implementarParametroA2MG(dataMatrix)
+    // this.implementarConclusion(inputs)
+    // this.implementarTablaContenido()
     this.previsualizar()
 
   }

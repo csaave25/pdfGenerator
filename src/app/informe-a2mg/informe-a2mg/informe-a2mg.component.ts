@@ -41,7 +41,7 @@ export class InformeA2mgComponent implements OnInit {
       identificacion: new FormControl(0),
       clasificacion: new FormControl(0),
       comunicacion: new FormControl(0),
-      promedioConfia :  new FormControl(0),
+      promedioConfia: new FormControl(0),
     }),
     conclusion: new FormControl('')
   })
@@ -55,8 +55,8 @@ export class InformeA2mgComponent implements OnInit {
   numTemplate = 0
   numImagen = 0
   comentariosImagenes: any[] = []
-  hoy : any = ""
- 
+  hoy: any = ""
+
 
 
 
@@ -64,14 +64,14 @@ export class InformeA2mgComponent implements OnInit {
     this.loadLocalStorage()
     this.inputs.get('confiabilidad.promedioConfia')?.disable()
     let date = new Date()
-    this.hoy = date.getFullYear() + '-'+ ( '0' +(date.getMonth()+1)).slice(-2)
+    this.hoy = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2)
   }
 
   calcularPromedioConfiabilidad() {
     let uno = this.inputs.get('confiabilidad.identificacion')?.value!
     let dos = this.inputs.get('confiabilidad.clasificacion')?.value!
     let tres = this.inputs.get('confiabilidad.comunicacion')?.value!
-    let promedio = (uno+dos+tres)/3
+    let promedio = (uno + dos + tres) / 3
     this.inputs.get('confiabilidad.promedioConfia')?.setValue(promedio)
   }
 
@@ -196,30 +196,42 @@ export class InformeA2mgComponent implements OnInit {
   }
 
   loadTemplateComentarios() {
+    let num = this.numTemplate
     let template = `
-      <mdb-form-control class="col-12 mt-5">
-        <label mdbLabel class="form-label"
-        for="comentarioImagenes">Añadir comentario</label>
-        <textarea mdbInput class="form-control"
+      <div id="template${num}">
+        <mdb-form-control class="col-12 mt-5">
+          <div class="my-2 d-flex justify-content-between">
+            <label mdbLabel class="form-label"
+                for="comentarioImagenes">Comentario</label>
+            <button id="eliminarComentario" type="button" class="btn btn-danger "  mdbRipple>
+                <i class="fas fa-trash" size="sm"></i>
+            </button>
+         </div>
+         <textarea mdbInput class="form-control"
             id="comentarioImagenes" rows="4" ></textarea>
-      </mdb-form-control>
+        </mdb-form-control>
       
-      <div class="mt-3">
+        <div class="mt-3">
           <div id="contenedorImg${this.numTemplate}">
           </div>
-          <button type="button" style="background-color: #00838F; color: #fbfbfb" class="btn btn-sm mt-2 mb-4" mdbRipple> Añadir Imagen
+          <button id="imagen" type="button" style="background-color: #00838F; color: #fbfbfb" class="btn btn-sm mt-2 mb-4" mdbRipple> Añadir Imagen
           </button>
         </div>
-    `
+      </div>`
     let newElement = document.createElement('div')
     newElement.innerHTML = template
     let elemento: HTMLElement = this.templateComentario.nativeElement
     elemento.appendChild(newElement)
-    let num = this.numTemplate
-    newElement.querySelector('button')?.addEventListener('click', () => this.loadTemplateImagenes(num))
+    newElement.querySelector('#imagen')?.addEventListener('click', () => this.loadTemplateImagenes(num))
     newElement.querySelector('textarea')?.addEventListener('change', (event) => this.saveComentario(event, num))
+    newElement.querySelector('#eliminarComentario')?.addEventListener('click', (event) => this.eliminarComentario(event, num))
     this.numTemplate++
 
+  }
+  eliminarComentario(event: Event, num: number) {
+    let element = document.querySelector('#template' + num)
+    element?.remove()
+    this.comentariosImagenes = this.comentariosImagenes.filter(dato => dato.num != num)
   }
 
   saveComentario(event: Event, num: number) {
@@ -241,14 +253,22 @@ export class InformeA2mgComponent implements OnInit {
   }
 
   loadTemplateImagenes(id: number) {
-    let template = `<div class="mt-4" id="imagen${this.numImagen}">
+    let idImagen = this.numImagen
+    let template = `<div class="mt-4" id="imagen${idImagen}">
+                    <div class="d-flex justify-content-between my-2">
+                      <div class="">
+                      </div>
+                      <button type="button" class="btn btn-danger ms-2"  mdbRipple>
+                        <i class="fas fa-trash" size="sm"></i>
+                      </button>
+                    </div>
                     <input type="file" class="form-control" id="customFile" />
                     <div class="border col-12" style="height: 300px;">
                         <img src="#" height="300" class="col-12">
                     </div>
                     <div class="mt-2">
-                      <label mdbLabel class="form-label" for="figura${this.numImagen}" >Nombre Figura</label>
-                      <input mdbInput type="text" id="figura${this.numImagen}" class="form-control"/>
+                      <label mdbLabel class="form-label" for="figura${idImagen}" >Nombre Figura</label>
+                      <input mdbInput type="text" id="figura${idImagen}" class="form-control"/>
                     </div>
                 </div>`
 
@@ -265,8 +285,24 @@ export class InformeA2mgComponent implements OnInit {
 
     nomFigura.addEventListener('change', (event) => { this.saveNomFig(event, id, idImg) })
     newElement.querySelector('input')?.addEventListener('change', (event) => this.saveImagenes(event, id, img, idImg))
+    newElement.querySelector('button')?.addEventListener('click', (event) => this.eliminarImagen(event, id, idImagen))
 
     this.numImagen++
+  }
+
+  eliminarImagen(event: Event, id: number, num: number) {
+    let element = document.querySelector('#imagen' + num)!
+    let index = this.comentariosImagenes.findIndex(data => data.num == id)
+    if (index != -1) {
+      let imagenes = this.comentariosImagenes[index].imagenes
+      let imgs = imagenes.filter((data: any) => data.id != num)
+      if (imgs.length > 0) {
+        this.comentariosImagenes[index].imagenes = []
+      } else[
+        this.comentariosImagenes[index].imagenes = imgs
+      ]
+    }
+    element?.remove()
   }
 
 
@@ -284,7 +320,9 @@ export class InformeA2mgComponent implements OnInit {
 
 
     reader.onload = (_event) => {
+
       let validator = this.comentariosImagenes.findIndex(dato => dato.num == index)
+
       if (validator == -1) {
         this.comentariosImagenes.push({
           num: index,
@@ -292,13 +330,19 @@ export class InformeA2mgComponent implements OnInit {
           imagenes: [{ id: idImg, img: reader.result, nomFigura: '' }] as any[],
         })
       } else {
+
+        let exist = this.comentariosImagenes[index]?.imagenes
+        console.log(this.comentariosImagenes[index]);
+
         let validador = this.comentariosImagenes[index].imagenes.findIndex((dato: any) => dato.id == idImg)
+
         if (validador == -1) {
           this.comentariosImagenes[index].imagenes.push({ id: idImg, img: reader.result, nomFigura: '' })
         } else {
           let elm = this.comentariosImagenes[index].imagenes[validador]
           this.comentariosImagenes[index].imagenes[validador].img = reader.result
         }
+
 
       }
     }
