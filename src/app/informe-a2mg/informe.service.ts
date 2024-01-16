@@ -222,133 +222,137 @@ export class InformeService {
   }
 
   implementarIndicadoresDeServicio(tablaDispo: any, inputs: FormGroup) {
-    let contenido: Data = {
-      titulo: this.contadorItem + '. Indicadores de Servicio',
-      pagina: this.contadorPagina,
-      sub: [{
-        titulo: this.contadorItem + '.1 Disponibilidad del Sistema',
+    if (tablaDispo) {
+
+
+      let contenido: Data = {
+        titulo: this.contadorItem + '. Indicadores de Servicio',
         pagina: this.contadorPagina,
-        sub: null
-      }]
-    }
-
-    let comnt1 = inputs.controls['disponibilidadComentario'].value.web
-    let comnt2 = inputs.controls['disponibilidadComentario'].value.img
-    let comnt3 = inputs.controls['disponibilidadComentario'].value.bd
-    let comnt4 = inputs.controls['disponibilidadComentario'].value.api
-    let comnt5 = inputs.controls['disponibilidadComentario'].value.computo
-    let comnt6 = inputs.controls['disponibilidadComentario'].value.sistema
-    let comnt7 = inputs.controls['disponibilidadComentario'].value.enlace
-
-    this.listaContenido.push(contenido)
-
-
-    this.doc.setFontSize(14)
-    this.doc.setTextColor(this.colores.naranjo)
-    this.doc.setFont('Lato', 'bold')
-    this.doc.text(this.contadorItem + '. Indicadores de Servicio', this.marginContent, this.startcContent, { align: 'left' })
-
-    this.doc.setTextColor(this.colores.negro)
-    this.doc.setFontSize(12)
-    this.doc.text(this.contadorItem + '.1 Disponibilidad del Sistema', this.marginContent, this.startcContent + 30, { align: 'left' })
-    this.contadorItem++
-    this.doc.setFont('Lato', 'normal')
-    this.doc.setFontSize(11)
-
-    formateadoraDeTexto(this.doc, dataInforme.disponibilidad.texto1, this.startcContent + 60, this.marginContent, this.marginRight - this.marginContent, this.fecha, '', this.finalContenido)
-
-    this.doc.setFont('Time', 'italic')
-    this.doc.setFontSize(12)
-    this.doc.text('Disponibilidad del sistema [%] =', this.marginContent + 20, this.startcContent + 130, { align: 'left' })
-    this.doc.text('Tiempo', this.marginContent + 190, this.startcContent + 120, { align: 'left' })
-    this.doc.text('Tiempo', this.marginContent + 190, this.startcContent + 144, { align: 'left' })
-    this.doc.setFontSize(9)
-    this.doc.text('disponible', this.marginContent + 228, this.startcContent + 124, { align: 'left' })
-    this.doc.text('nominal', this.marginContent + 228, this.startcContent + 148, { align: 'left' })
-    this.doc.line(this.marginContent + 190, this.startcContent + 128, this.marginContent + 270, this.startcContent + 128)
-    this.doc.setFontSize(12)
-    this.doc.text('=', this.marginContent + 280, this.startcContent + 130, { align: 'left' })
-    this.doc.text('Efectivo+Demoras+Reserva', this.marginContent + 306, this.startcContent + 120, { align: 'left', })
-    this.doc.text('Tiempo', this.marginContent + 345, this.startcContent + 144, { align: 'left' })
-    this.doc.setFontSize(9)
-    this.doc.text('nominal', this.marginContent + 383, this.startcContent + 148, { align: 'left', maxWidth: this.marginRight - this.marginContent })
-    this.doc.line(this.marginContent + 300, this.startcContent + 128, this.marginContent + 450, this.startcContent + 128)
-
-    this.doc.setFont('Lato', 'normal')
-    this.doc.setFontSize(11)
-    formateadoraDeTexto(this.doc, dataInforme.disponibilidad.texto2, this.startcContent + 200, this.marginContent, this.marginRight - this.marginContent, this.fecha, '', this.finalContenido)
-
-
-    this.doc.text('La disponibilidad comprometida corresponde al 95% para el caso de Infraestructura EMT.', this.marginContent, this.startcContent + 250, { align: 'left', maxWidth: this.marginRight - this.marginContent })
-
-
-    this.doc.setFontSize(8)
-    this.doc.setFont('Lato', 'normal')
-    this.doc.text('TABLA ' + this.contadorTabla + ': DISPONIBILIDAD DEL SISTEMA', ((this.marginRight - this.marginContent) / 2 + this.marginContent), this.startcContent + 280, { align: 'center', maxWidth: this.marginRight - this.marginContent })
-    this.contadorTabla++
-
-
-
-    let index = 0
-    let lastTableHeight = 0
-    let page = 1
-    let imgContador = 0
-    let flag = false
-
-    this.usoPagina += 285
-
-    autoTable(this.doc, {
-      tableWidth: this.marginRight - this.marginContent,
-      styles: { fontSize: 10, lineWidth: .1, fillColor: undefined, lineColor: [1, 48, 51], textColor: [1, 48, 51] },
-      headStyles: { font: 'Lato', fontStyle: 'bold', fillColor: [217, 217, 217], halign: 'center' },
-      head: [[{ content: 'Indicador', styles: { minCellWidth: 250 } }, 'Disponibilidad [%]', 'Observaciones']],
-      bodyStyles: { font: 'Lato', fontStyle: 'normal', fontSize: 9, fillColor: undefined, halign: 'left' },
-      body: [
-        [{ content: 'Infraestructura EMT', styles: { minCellWidth: 200, font: 'Lato', fontStyle: 'bold', fillColor: [218, 218, 217], cellPadding: { left: 50, top: 5 } } }, { content: tablaDispo.infraestructura, styles: { font: 'Lato', fontStyle: 'bold', fillColor: [218, 218, 217], halign: 'center' } }, { content: '', styles: { fillColor: [218, 218, 217] } }],
-        [{ content: 'Servicio web', styles: { halign: 'left', cellPadding: { left: 75, top: 5 } } }, { content: tablaDispo.servicio_web, styles: { halign: 'center' } }, comnt1],
-        [{ content: 'Servicio imágenes', styles: { halign: 'left', cellPadding: { left: 75, top: 5 } } }, { content: tablaDispo.servicio_imagenes, styles: { halign: 'center' } }, comnt2],
-        [{ content: 'Servicio base de datos', styles: { halign: 'left', cellPadding: { left: 75, top: 5 } } }, { content: tablaDispo.servicio_db, styles: { halign: 'center' } }, comnt3],
-        [{ content: 'Servicio API', styles: { halign: 'left', cellPadding: { left: 75, top: 5 } } }, { content: tablaDispo.servicio_api, styles: { halign: 'center' } }, comnt4],
-        [{ content: 'Servicio de computo', styles: { halign: 'left', cellPadding: { left: 75, top: 5 } } }, { content: tablaDispo.servicio_computo, styles: { halign: 'center' } }, comnt5],
-        [{ content: 'Infraestructura ANT', styles: { font: 'Lato', fontStyle: 'bold', fillColor: [218, 218, 217], cellPadding: { left: 50, top: 5 } } }, { content: tablaDispo.sistema_adquisicion_imagenes, styles: { font: 'Lato', fontStyle: 'bold', fillColor: [218, 218, 217], halign: 'center' } }, { content: '', styles: { fillColor: [218, 218, 217] } }],
-        [{ content: 'Sistema de adquisición de imágenes', styles: { halign: 'left', cellPadding: { left: 75, top: 5 } } }, { content: tablaDispo.sistema_adquisicion_imagenes, styles: { halign: 'center' } }, comnt6],
-        [{ content: ' Enlaces', styles: { font: 'Lato', fontStyle: 'bold', fillColor: [218, 218, 217], cellPadding: { left: 50, top: 5 } } }, { content: tablaDispo.enlace_dedicado, styles: { font: 'Lato', fontStyle: 'bold', fillColor: [218, 218, 217], halign: 'center' } }, { content: '', styles: { fillColor: [218, 218, 217] } }],
-        [{ content: 'Enlace dedicado AMSA', styles: { halign: 'left', cellPadding: { left: 75, top: 5 } } }, { content: tablaDispo.enlace_dedicado, styles: { halign: 'center' } }, comnt7],
-
-      ],
-      margin: { top: this.startcContent, left: this.marginContent, bottom: 80 },
-      startY: this.usoPagina,
-      alternateRowStyles: { fillColor: undefined },
-      rowPageBreak: 'avoid',
-      didDrawCell: (data) => {
-
-        if (page == data.pageCount) {
-          if (data.row.index != index) {
-            index = data.row.index
-            this.usoPagina += data.row.height
-          }
-        }
-      },
-      willDrawPage: (data) => {
-        if (!flag && data.pageNumber != 1) {
-          flag = true
-        }
-      },
-
-      didDrawPage: (data) => {
-
-        if (data.pageNumber != 1) {
-          this.implementarFooter()
-          this.implementarHeader()
-        }
-        page++
-
-        lastTableHeight = this.usoPagina
-        this.usoPagina = 0
+        sub: [{
+          titulo: this.contadorItem + '.1 Disponibilidad del Sistema',
+          pagina: this.contadorPagina,
+          sub: null
+        }]
       }
 
-    })
-    this.usoPagina += 40 + lastTableHeight + this.startcContent
+      let comnt1 = inputs.controls['disponibilidadComentario'].value.web
+      let comnt2 = inputs.controls['disponibilidadComentario'].value.img
+      let comnt3 = inputs.controls['disponibilidadComentario'].value.bd
+      let comnt4 = inputs.controls['disponibilidadComentario'].value.api
+      let comnt5 = inputs.controls['disponibilidadComentario'].value.computo
+      let comnt6 = inputs.controls['disponibilidadComentario'].value.sistema
+      let comnt7 = inputs.controls['disponibilidadComentario'].value.enlace
+
+      this.listaContenido.push(contenido)
+
+
+      this.doc.setFontSize(14)
+      this.doc.setTextColor(this.colores.naranjo)
+      this.doc.setFont('Lato', 'bold')
+      this.doc.text(this.contadorItem + '. Indicadores de Servicio', this.marginContent, this.startcContent, { align: 'left' })
+
+      this.doc.setTextColor(this.colores.negro)
+      this.doc.setFontSize(12)
+      this.doc.text(this.contadorItem + '.1 Disponibilidad del Sistema', this.marginContent, this.startcContent + 30, { align: 'left' })
+      this.contadorItem++
+      this.doc.setFont('Lato', 'normal')
+      this.doc.setFontSize(11)
+
+      formateadoraDeTexto(this.doc, dataInforme.disponibilidad.texto1, this.startcContent + 60, this.marginContent, this.marginRight - this.marginContent, this.fecha, '', this.finalContenido)
+
+      this.doc.setFont('Time', 'italic')
+      this.doc.setFontSize(12)
+      this.doc.text('Disponibilidad del sistema [%] =', this.marginContent + 20, this.startcContent + 130, { align: 'left' })
+      this.doc.text('Tiempo', this.marginContent + 190, this.startcContent + 120, { align: 'left' })
+      this.doc.text('Tiempo', this.marginContent + 190, this.startcContent + 144, { align: 'left' })
+      this.doc.setFontSize(9)
+      this.doc.text('disponible', this.marginContent + 228, this.startcContent + 124, { align: 'left' })
+      this.doc.text('nominal', this.marginContent + 228, this.startcContent + 148, { align: 'left' })
+      this.doc.line(this.marginContent + 190, this.startcContent + 128, this.marginContent + 270, this.startcContent + 128)
+      this.doc.setFontSize(12)
+      this.doc.text('=', this.marginContent + 280, this.startcContent + 130, { align: 'left' })
+      this.doc.text('Efectivo+Demoras+Reserva', this.marginContent + 306, this.startcContent + 120, { align: 'left', })
+      this.doc.text('Tiempo', this.marginContent + 345, this.startcContent + 144, { align: 'left' })
+      this.doc.setFontSize(9)
+      this.doc.text('nominal', this.marginContent + 383, this.startcContent + 148, { align: 'left', maxWidth: this.marginRight - this.marginContent })
+      this.doc.line(this.marginContent + 300, this.startcContent + 128, this.marginContent + 450, this.startcContent + 128)
+
+      this.doc.setFont('Lato', 'normal')
+      this.doc.setFontSize(11)
+      formateadoraDeTexto(this.doc, dataInforme.disponibilidad.texto2, this.startcContent + 200, this.marginContent, this.marginRight - this.marginContent, this.fecha, '', this.finalContenido)
+
+
+      this.doc.text('La disponibilidad comprometida corresponde al 95% para el caso de Infraestructura EMT.', this.marginContent, this.startcContent + 250, { align: 'left', maxWidth: this.marginRight - this.marginContent })
+
+
+      this.doc.setFontSize(8)
+      this.doc.setFont('Lato', 'normal')
+      this.doc.text('TABLA ' + this.contadorTabla + ': DISPONIBILIDAD DEL SISTEMA', ((this.marginRight - this.marginContent) / 2 + this.marginContent), this.startcContent + 280, { align: 'center', maxWidth: this.marginRight - this.marginContent })
+      this.contadorTabla++
+
+
+
+      let index = 0
+      let lastTableHeight = 0
+      let page = 1
+      let imgContador = 0
+      let flag = false
+
+      this.usoPagina += 285
+
+      autoTable(this.doc, {
+        tableWidth: this.marginRight - this.marginContent,
+        styles: { fontSize: 10, lineWidth: .1, fillColor: undefined, lineColor: [1, 48, 51], textColor: [1, 48, 51] },
+        headStyles: { font: 'Lato', fontStyle: 'bold', fillColor: [217, 217, 217], halign: 'center' },
+        head: [[{ content: 'Indicador', styles: { minCellWidth: 250 } }, 'Disponibilidad [%]', 'Observaciones']],
+        bodyStyles: { font: 'Lato', fontStyle: 'normal', fontSize: 9, fillColor: undefined, halign: 'left' },
+        body: [
+          [{ content: 'Infraestructura EMT', styles: { minCellWidth: 200, font: 'Lato', fontStyle: 'bold', fillColor: [218, 218, 217], cellPadding: { left: 50, top: 5 } } }, { content: tablaDispo.infraestructura, styles: { font: 'Lato', fontStyle: 'bold', fillColor: [218, 218, 217], halign: 'center' } }, { content: '', styles: { fillColor: [218, 218, 217] } }],
+          [{ content: 'Servicio web', styles: { halign: 'left', cellPadding: { left: 75, top: 5 } } }, { content: tablaDispo.servicio_web, styles: { halign: 'center' } }, comnt1],
+          [{ content: 'Servicio imágenes', styles: { halign: 'left', cellPadding: { left: 75, top: 5 } } }, { content: tablaDispo.servicio_imagenes, styles: { halign: 'center' } }, comnt2],
+          [{ content: 'Servicio base de datos', styles: { halign: 'left', cellPadding: { left: 75, top: 5 } } }, { content: tablaDispo.servicio_db, styles: { halign: 'center' } }, comnt3],
+          [{ content: 'Servicio API', styles: { halign: 'left', cellPadding: { left: 75, top: 5 } } }, { content: tablaDispo.servicio_api, styles: { halign: 'center' } }, comnt4],
+          [{ content: 'Servicio de computo', styles: { halign: 'left', cellPadding: { left: 75, top: 5 } } }, { content: tablaDispo.servicio_computo, styles: { halign: 'center' } }, comnt5],
+          [{ content: 'Infraestructura ANT', styles: { font: 'Lato', fontStyle: 'bold', fillColor: [218, 218, 217], cellPadding: { left: 50, top: 5 } } }, { content: tablaDispo.sistema_adquisicion_imagenes, styles: { font: 'Lato', fontStyle: 'bold', fillColor: [218, 218, 217], halign: 'center' } }, { content: '', styles: { fillColor: [218, 218, 217] } }],
+          [{ content: 'Sistema de adquisición de imágenes', styles: { halign: 'left', cellPadding: { left: 75, top: 5 } } }, { content: tablaDispo.sistema_adquisicion_imagenes, styles: { halign: 'center' } }, comnt6],
+          [{ content: ' Enlaces', styles: { font: 'Lato', fontStyle: 'bold', fillColor: [218, 218, 217], cellPadding: { left: 50, top: 5 } } }, { content: tablaDispo.enlace_dedicado, styles: { font: 'Lato', fontStyle: 'bold', fillColor: [218, 218, 217], halign: 'center' } }, { content: '', styles: { fillColor: [218, 218, 217] } }],
+          [{ content: 'Enlace dedicado AMSA', styles: { halign: 'left', cellPadding: { left: 75, top: 5 } } }, { content: tablaDispo.enlace_dedicado, styles: { halign: 'center' } }, comnt7],
+
+        ],
+        margin: { top: this.startcContent, left: this.marginContent, bottom: 80 },
+        startY: this.usoPagina,
+        alternateRowStyles: { fillColor: undefined },
+        rowPageBreak: 'avoid',
+        didDrawCell: (data) => {
+
+          if (page == data.pageCount) {
+            if (data.row.index != index) {
+              index = data.row.index
+              this.usoPagina += data.row.height
+            }
+          }
+        },
+        willDrawPage: (data) => {
+          if (!flag && data.pageNumber != 1) {
+            flag = true
+          }
+        },
+
+        didDrawPage: (data) => {
+
+          if (data.pageNumber != 1) {
+            this.implementarFooter()
+            this.implementarHeader()
+          }
+          page++
+
+          lastTableHeight = this.usoPagina
+          this.usoPagina = 0
+        }
+
+      })
+      this.usoPagina += 40 + lastTableHeight + this.startcContent
+    }
   }
 
   implmentarConfiabilidad(inputs: FormGroup, comentariosImagenes: any[]) {
@@ -517,14 +521,14 @@ export class InformeService {
             this.usoPagina += 20
           }
 
-        }        
+        }
 
       })
 
 
     }
 
-   
+
   }
 
   implementarAnalisis(DataCriticidad: any, imgCriticidad: any, comentariosCriticidad: any, inputs: FormGroup) {
