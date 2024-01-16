@@ -28,15 +28,15 @@
         </div>
         <div [formGroup]="inputs.controls.usrs">
             <label mdbLabel class="form-label" for="Revisado">Revisado</label>
-            <input mdbInput type="text" id="Revisado" class="form-control" formControlName="revisado"  />
+            <input mdbInput type="text" id="Revisado" class="form-control" formControlName="revisado" />
             <label mdbLabel class="form-label" for="cargos">Cargo</label>
-            <input mdbInput type="text" id="cargos" class="form-control" formControlName="cargo2"/>
+            <input mdbInput type="text" id="cargos" class="form-control" formControlName="cargo2" />
         </div>
         <div [formGroup]="inputs.controls.usrs">
             <label mdbLabel class="form-label" for="Aprobado">Aprobado</label>
             <input mdbInput type="text" id="Aprobado" class="form-control" formControlName="aprobado" />
             <label mdbLabel class="form-label" for="cargos">Cargo</label>
-            <input mdbInput type="text" id="cargos" class="form-control" formControlName="cargo3"/>
+            <input mdbInput type="text" id="cargos" class="form-control" formControlName="cargo3" />
         </div>
     </div>
     <!-- <div class="col-8 mt-4" *ngIf="dataCriticisadad && tablaDispo"> -->
@@ -113,27 +113,34 @@
                 <li class="d-flex ">
                     <p class="col-2">Identificación:</p>
                     <div class="col-2">
-                        <input type="number" id="Identificación" class="form-control"
-                            formControlName="identificacion" />
+                        <input type="number" id="Identificación" class="form-control" formControlName="identificacion"
+                            (change)="calcularPromedioConfiabilidad()" />
                     </div>
                 </li>
                 <li class="d-flex  ">
                     <p class="col-2">Clasificación:</p>
                     <div class="col-2">
-                        <input type="number" id="Clasificacion" class="form-control" formControlName="clasificacion" />
+                        <input type="number" id="Clasificacion" class="form-control" formControlName="clasificacion"
+                            (change)="calcularPromedioConfiabilidad()" />
                     </div>
                 </li>
                 <li class="d-flex  ">
                     <p class="col-2">Comunicación:</p>
                     <div class="col-2">
-                        <input type="number" id="Porcentaje" class="form-control" formControlName="comunicacion" />
+                        <input type="number" id="Porcentaje" class="form-control" formControlName="comunicacion"
+                            (change)="calcularPromedioConfiabilidad()" />
+                    </div>
+                </li>
+                <li class="d-flex  ">
+                    <p class="col-2">Promedio:</p>
+                    <div class="col-2">
+                        <input type="number" id="Porcentaje" class="form-control" formControlName="promedioConfia" />
                     </div>
                 </li>
             </ul>
             <div>
                 <h5>Agregar Comentarios e Imagenes</h5>
                 <div #templateComentarios>
-                    
                 </div>
                 <div class="mt-3">
                     <button type="button" style="background-color: #00838F; color: #fbfbfb" class="btn btn-sm" mdbRipple
@@ -141,9 +148,9 @@
                 </div>
             </div>
         </div>
-        <div class="mt-4" *ngIf="dataCriticisadad ">
+        <div class="mt-4">
             <h4>Análisis de Criticidades</h4>
-            <div class="d-flex flex-wrap gap-5">
+            <div class="d-flex flex-wrap gap-5" *ngIf="dataCriticisadad.length > 0 ; else elseBlock ">
                 <div class="col-5" *ngFor="let criticidad of dataCriticisadad.reverse(); index as i">
                     <div class="border border-primary p-2">
                         <p>Fecha: {{criticidad.date}}</p>
@@ -160,6 +167,10 @@
                     </div>
                 </div>
             </div>
+            <ng-template #elseBlock>
+                <p>Durante el período no se registran grietas de criticidad alta asociadas a alguna condición de
+                    fallamiento.</p>
+            </ng-template>
         </div>
         <div class="my-4">
             <h4>Conclusiones y recomendaciones</h4>

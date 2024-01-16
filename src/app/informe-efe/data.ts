@@ -96,10 +96,13 @@ export const espaciarTextosLargos = (doc: jsPDF, texto: string, margenTop: numbe
 
 export const obtenerAncho = (pdfGen: jsPDF, texto: string, margen: number) => {
     let dimensiones = pdfGen.getTextDimensions(texto)
-    let tamanoFuente = pdfGen.getFontSize()
-    let lines = dimensiones.w / margen
-    let valor = Math.trunc(lines) + 1.7 // Creo que 1.7 (espaciado) se multiplica por la cantidad de lineas
-    return tamanoFuente * valor
+    let lineHeight = dimensiones.h * 1.15
+    let lines = Math.round(dimensiones.w / margen)
+    if ((dimensiones.w / margen) > Math.round(dimensiones.w / margen)) {
+        lines += 1
+    }
+    let valor = lines * lineHeight
+    return valor
 }
 
 const dividirTexto = (text: string) => {

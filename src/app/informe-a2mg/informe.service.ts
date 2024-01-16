@@ -3,7 +3,7 @@ import { jsPDF } from 'jspdf'
 import autoTable from 'jspdf-autotable'
 import { font, latoRegular, montBold, montMedium, montSemi } from 'src/assets/fonts/fonts';
 import { FormGroup } from '@angular/forms';
-import { dataInforme,formateadoraDeTexto } from './data';
+import { dataInforme, formateadoraDeTexto } from './data';
 import { justify } from '../justifyText';
 
 
@@ -465,48 +465,66 @@ export class InformeService {
 
 
     if (comentariosImagenes.length > 0) {
+      this.usoPagina += 10
 
       comentariosImagenes.forEach(datos => {
 
         this.doc.setFontSize(11)
         this.doc.setTextColor(this.colores.negro)
         this.doc.setFont('Lato', 'normal')
-        this.usoPagina = formateadoraDeTexto(this.doc, datos.comentario, this.usoPagina, this.marginContent, this.marginRight - this.marginContent, this.fecha, '', this.finalContenido) + 10
+        this.usoPagina = formateadoraDeTexto(this.doc, datos.comentario, this.usoPagina, this.marginContent, this.marginRight - this.marginContent, this.fecha, '', this.finalContenido)
 
-        if (this.usoPagina + 30 > this.totalUso)
+        if (this.usoPagina + 30 > this.totalUso) {
           this.nuevaPagina()
 
-        if (datos.imagenes.length > 0) {
-          datos.imagenes.forEach((elm: any, index: number) => {
+          if (datos.imagenes.length > 0) {
+            datos.imagenes.forEach((elm: any, index: number) => {
 
-            if (this.usoPagina + 150 > this.totalUso)
-              this.nuevaPagina()
+              if (this.usoPagina + 130 > this.totalUso)
+                this.nuevaPagina()
 
-            this.doc.setFontSize(8)
-            this.doc.setFont('Lato', 'normal')
-            this.doc.addImage(elm.img, 'png', 70, this.usoPagina, this.marginRight - this.marginContent, 200, 'imgx-mm' + this.contadorFigura, 'FAST');
-            this.doc.text('FIGURA ' + this.contadorFigura + ': ' + elm.nomFigura?.toUpperCase(), ((this.marginRight - this.marginContent) / 2 + this.marginContent), this.usoPagina + 210, { align: 'center', maxWidth: this.marginRight - this.marginContent })
+              this.doc.setFontSize(8)
+              this.doc.setFont('Lato', 'normal')
+              this.doc.addImage(elm.img, 'png', 70, this.usoPagina, this.marginRight - this.marginContent, 200, 'imgx-mm' + this.contadorFigura, 'FAST');
+              this.doc.text('FIGURA ' + this.contadorFigura + ': ' + elm.nomFigura?.toUpperCase(), ((this.marginRight - this.marginContent) / 2 + this.marginContent), this.usoPagina + 210, { align: 'center', maxWidth: this.marginRight - this.marginContent })
 
-            this.contadorFigura++;
-            this.usoPagina += 230
-          });
-
-
-        }
-
-        if (comentariosImagenes.length > 0 && datos.imagenes.length > 0) {
-          this.usoPagina += 25
+              this.contadorFigura++;
+              this.usoPagina += 230
+            });
+          }
+          this.usoPagina += 20
         } else {
-          this.usoPagina += 45
-        }
+
+          if (datos.imagenes.length > 0) {
+            datos.imagenes.forEach((elm: any, index: number) => {
+
+              if (this.usoPagina + 150 > this.totalUso)
+                this.nuevaPagina()
+
+              this.doc.setFontSize(8)
+              this.doc.setFont('Lato', 'normal')
+              this.doc.addImage(elm.img, 'png', 70, this.usoPagina, this.marginRight - this.marginContent, 200, 'imgx-mm' + this.contadorFigura, 'FAST');
+              this.doc.text('FIGURA ' + this.contadorFigura + ': ' + elm.nomFigura?.toUpperCase(), ((this.marginRight - this.marginContent) / 2 + this.marginContent), this.usoPagina + 210, { align: 'center', maxWidth: this.marginRight - this.marginContent })
+
+              this.contadorFigura++;
+              this.usoPagina += 230
+            });
+          }
+
+          if (comentariosImagenes.length > 0 && datos.imagenes.length > 0) {
+            this.usoPagina += 25
+          } else {
+            this.usoPagina += 20
+          }
+
+        }        
 
       })
 
 
     }
 
-    if (comentariosImagenes.length > 0)
-      this.usoPagina -= 10
+   
   }
 
   implementarAnalisis(DataCriticidad: any, imgCriticidad: any, comentariosCriticidad: any, inputs: FormGroup) {
@@ -749,6 +767,7 @@ export class InformeService {
       this.doc.text('TABLA ' + this.contadorTabla + ': DESDE ' + mtx.fechaInicio + ' ' + mtx.horaInicio + ' HASTA 31/12/2023 23:59:59', ((this.marginRight - this.marginContent) / 2 + this.marginContent), this.usoPagina + 55, { align: 'center', maxWidth: this.marginRight - this.marginContent })
 
       // this.doc.text('TABLA ' + this.contadorTabla + ': DESDE ' + mtx.fechaInicio + ' ' + mtx.horaInicio + ' HASTA ' + mtx.fechaFinal + ' ' + mtx.horaFinal, ((this.marginRight - this.marginContent) / 2 + this.marginContent), this.usoPagina + 55, { align: 'center', maxWidth: this.marginRight - this.marginContent })
+      //
 
       autoTable(doc, {
         margin: { left: this.marginContent },
@@ -837,10 +856,6 @@ export class InformeService {
     this.doc.setTextColor(this.colores.negro)
     this.doc.setFont('Lato', 'normal')
 
-
-
-    // justify(this.doc, conc ? conc : '', this.marginContent, this.usoPagina + 30, this.marginRight - this.marginContent)
-    // this.doc.text(conc ? conc : '', this.marginContent, this.usoPagina + 30, { align: 'justify', maxWidth: this.marginRight - this.marginContent })
     formateadoraDeTexto(this.doc, conc ? conc : '', this.usoPagina + 30, this.marginContent, this.marginRight - this.marginContent, this.fecha, '', this.endPage)
 
     this.usoPagina += 150
@@ -887,26 +902,10 @@ export class InformeService {
     this.implementarParametroA2MG(dataMatrix)
     this.implementarConclusion(inputs)
     this.implementarTablaContenido()
-    // this.pruebaPagina()
     this.previsualizar()
 
   }
 
 
-  pruebaPagina() {
-    this.doc.setFontSize(11)
-    this.doc.setTextColor(this.colores.negro)
-    this.doc.setFont('Lato', 'normal')
-    this.doc.addPage()
-    let text = 'Este es un comentario escrito por mi donde puedo escribir lo que yo quiera, por que esto es una mera prueba para para probar el funcionamiento de una prueba que necesita textos, con espacios y sin espacios. Este es un comentario escrito por mi donde puedo escribir lo que yo quiera, por que esto es una mera prueba para para probar el funcionamiento de una prueba que necesita textos, con espacios y sin espacios. Este es un comentario escrito por mi donde puedo escribir lo que yo quiera, por que esto es una mera prueba para para probar el funcionamiento de una prueba que necesita textos, con espacios y sin espacios. Este es un comentario escrito por mi donde puedo escribir lo que yo quiera, por que esto es una mera prueba para para probar el funcionamiento de una prueba que necesita textos, con espacios y sin espacios. Este es un comentario escrito por mi donde puedo escribir lo que yo quiera, por que esto es una mera prueba para para probar el funcionamiento de una prueba que necesita textos, con espacios y sin espacios. Este es un comentario escrito por mi donde puedo escribir lo que yo quiera, por que esto es una mera prueba para para probar el funcionamiento de una prueba que necesita textos, con espacios y sin espacios. Este es un comentario escrito por mi donde puedo escribir lo que yo quiera, por que esto es una mera prueba para para probar el funcionamiento de una prueba que necesita textos, con espacios y sin espacios.\nEste es un comentario escrito por mi donde puedo escribir lo que yo quiera, por que esto es una mera prueba para para probar el funcionamiento de una prueba que necesita textos, con espacios y sin espacios. Este es un comentario escrito por mi donde puedo escribir lo que yo quiera, por que esto es una mera prueba para para probar el funcionamiento de una prueba que necesita textos, con espacios y sin espacios. Este es un comentario escrito por mi donde puedo escribir lo que yo quiera, por que esto es una mera prueba para para probar el funcionamiento de una prueba que necesita textos, con espacios y sin espacios. Este es un comentario escrito por mi donde puedo escribir lo que yo quiera, por que esto es una mera prueba para para probar el funcionamiento de una prueba que necesita textos, con espacios y sin espacios. Este es un comentario escrito por mi donde puedo escribir lo que yo quiera, por que esto es una mera prueba para para probar el funcionamiento de una prueba que necesita textos, con espacios y sin espacios. Este es un comentario escrito por mi donde puedo escribir lo que yo quiera, por que esto es una mera prueba para para probar el funcionamiento de una prueba que necesita textos, con espacios y sin espacios. Este es un comentario escrito por mi donde puedo escribir lo que yo quiera, por que esto es una mera prueba para para probar el funcionamiento de una prueba que necesita textos, con espacios y sin espacios.'
-    formateadoraDeTexto(this.doc, text, this.usoPagina + 30, this.marginContent, this.marginRight - this.marginContent, this.fecha, '', this.finalContenido)
-
-
-    this.doc.addPage()
-
-    let text2 = 'Este es un comentario escrito por mi donde puedo escribir lo que yo quiera, por que esto es una mera prueba para para probar el funcionamiento de una prueba que necesita textos, con espacios y sin espacios. Este es un comentario escrito por mi donde puedo escribir lo que yo quiera, por que esto es una mera prueba para para probar el funcionamiento de una prueba que necesita textos, con espacios y sin espacios. Este es un comentario escrito por mi donde puedo escribir lo que yo quiera, por que esto es una mera prueba para para probar el funcionamiento de una prueba que necesita textos, con espacios y sin espacios. Este es un comentario escrito por mi donde puedo escribir lo que yo quiera, por que esto es una mera prueba para para probar el funcionamiento de una prueba que necesita textos, con espacios y sin espacios. Este es un comentario escrito por mi donde puedo escribir lo que yo quiera, por que esto es una mera prueba para para probar el funcionamiento de una prueba que necesita textos, con espacios y sin espacios. Este es un comentario escrito por mi donde puedo escribir lo que yo quiera, por que esto es una mera prueba para para probar el funcionamiento de una prueba que necesita textos, con espacios y sin espacios. Este es un comentario escrito por mi donde puedo escribir lo que yo quiera, por que esto es una mera prueba para para probar el funcionamiento de una prueba que necesita textos, con espacios y sin espacios.'
-    justify(this.doc, text2, this.marginContent, 140, this.marginRight - this.marginContent)
-    justify(this.doc, text2, this.marginContent, 401.8, this.marginRight - this.marginContent)
-  }
 
 }

@@ -91,9 +91,12 @@ interface IWordInfo {
 
 export const obtenerAncho = (pdfGen: jsPDF, texto: string, margen: number) => {
     let dimensiones = pdfGen.getTextDimensions(texto)
-    let tamanoFuente = pdfGen.getFontSize()
-    let lines = ((dimensiones.w * tamanoFuente) / margen)
-    let valor = Math.trunc(lines) * 1.7  // Creo que 1.7 (espaciado) se multiplica por la cantidad de lineas
+    let lineHeight = dimensiones.h * 1.15
+    let lines = Math.round(dimensiones.w / margen)
+    if ((dimensiones.w / margen) > Math.round(dimensiones.w / margen)) {
+        lines += 1
+    }
+    let valor = lines * lineHeight
     return valor
 }
 
@@ -102,9 +105,12 @@ const dividirTexto = (text: string) => {
 }
 
 const saltoDePagina = (str: string, doc: jsPDF, ancho: number, usopag: number, date: string, anoMes: string) => {
-    if (usopag + obtenerAncho(doc, str, ancho) > 745) {
+    if (usopag + obtenerAncho(doc, str, ancho) > 730) {
         doc.addPage()
-        // genradorDeHeaderYFooter(doc, date, anoMes)
+        nuevaPagina(doc, date)
+        doc.setFontSize(11)
+        doc.setTextColor(colores.negro)
+        doc.setFont('Lato', 'normal')
         return 100
     }
     return usopag
@@ -116,10 +122,7 @@ export const formateadoraDeTexto = (doc: jsPDF, textos: string, margenTop: numbe
         let text = dividirTexto(textos)
         let init = inicio + 18
         let ancho = anchoMax - 18
-        console.log(text);
-
         text.forEach(texto => {
-
             let copytext = texto
             copytext = copytext.replace(' ', '')
             if (texto[0] == '-') {
@@ -130,6 +133,7 @@ export const formateadoraDeTexto = (doc: jsPDF, textos: string, margenTop: numbe
                 doc.setFont("Lato", 'normal')
                 justify(doc, txt, init, margenTop, ancho)
                 margenTop = margenTop + obtenerAncho(doc, txt, ancho)
+                console.log('entro aca');
             } else {
                 if (copytext.length == 0) {
                     margenTop += 10
@@ -147,21 +151,24 @@ export const formateadoraDeTexto = (doc: jsPDF, textos: string, margenTop: numbe
 
 
 
-// function nuevaPagina(doc : jsPDF) {
+function nuevaPagina(doc: jsPDF, fecha: string) {
 
-//     doc.addImage("assets/images/marca.jpg", 'JPG', 0, 0, 612, 792, 'marca-x', 'SLOW');
-//     // implementarHeader()
-//     implementarFooter(doc)
-// }
-
-
-function implementarFooter(doc : jsPDF) {
     let marginLeft = 20
     let marginRight = 562
+    let startPage = 10
+    let contadorPagina = doc.getCurrentPageInfo().pageNumber - 1
     let endPage = 760
     let marginContent = marginLeft + 50
-    let contadorPagina = 2
-  
+    console.log(fecha);
+
+
+    doc.addImage("assets/images/marca.jpg", 'JPG', 0, 0, 612, 792, 'marca-x', 'SLOW');
+    implementarHeader(doc, marginLeft, marginRight, startPage, fecha, contadorPagina)
+    implementarFooter(doc, marginRight, marginContent, endPage, contadorPagina)
+}
+
+
+function implementarFooter(doc: jsPDF, marginRight: number, marginContent: number, endPage: number, contadorPagina: number) {
 
 
     doc.setFontSize(8.5)
@@ -176,18 +183,19 @@ function implementarFooter(doc : jsPDF) {
     contadorPagina++
 }
 
-// function implementarHeader() {
+function implementarHeader(doc: jsPDF, marginLeft: number, marginRight: number, startPage: number, fecha: string, contadorPagina: number) {
 
-//     // this.doc.addImage("assets/images/logo.png", 'PNG', this.marginLeft , 20, 222, 69, 'logo', 'SLOW'); LOGO CON PORTE IGUAL AL DE PORTADA
-//     this.doc.addImage("assets/images/logo.png", 'PNG', this.marginLeft, this.startPage, 160, 50, 'logo' + this.contadorPagina, 'SLOW');
-//     this.doc.setFontSize(8)
-//     this.doc.setTextColor(this.colores.negro)
-//     this.doc.setFont('Lato', 'normal')
-//     this.doc.text('Informe Mensual', this.marginRight, this.startPage + 12, { align: 'right' })
-//     this.doc.setTextColor(this.colores.negro)
-//     this.doc.text('Monitoreo de Ripios Aplicación A2MG', this.marginRight, this.startPage + 24, { align: 'right' })
-//     this.doc.text(this.fecha, this.marginRight, this.startPage + 36, { align: 'right' })
-// }
+
+    // this.doc.addImage("assets/images/logo.png", 'PNG', this.marginLeft , 20, 222, 69, 'logo', 'SLOW'); LOGO CON PORTE IGUAL AL DE PORTADA
+    doc.addImage("assets/images/logo.png", 'PNG', marginLeft, startPage, 160, 50, 'logo' + contadorPagina, 'SLOW');
+    doc.setFontSize(8)
+    doc.setTextColor(colores.negro)
+    doc.setFont('Lato', 'normal')
+    doc.text('Informe Mensual', marginRight, startPage + 12, { align: 'right' })
+    doc.setTextColor(colores.negro)
+    doc.text('Monitoreo de Ripios Aplicación A2MG', marginRight, startPage + 24, { align: 'right' })
+    doc.text(fecha, marginRight, startPage + 36, { align: 'right' })
+}
 
 
 

@@ -40,7 +40,8 @@ export class InformeA2mgComponent implements OnInit {
     confiabilidad: new FormGroup({
       identificacion: new FormControl(0),
       clasificacion: new FormControl(0),
-      comunicacion: new FormControl(0)
+      comunicacion: new FormControl(0),
+      promedioConfia :  new FormControl(0),
     }),
     conclusion: new FormControl('')
   })
@@ -54,12 +55,21 @@ export class InformeA2mgComponent implements OnInit {
   numTemplate = 0
   numImagen = 0
   comentariosImagenes: any[] = []
-
+ 
 
 
 
   ngOnInit(): void {
     this.loadLocalStorage()
+    this.inputs.get('confiabilidad.promedioConfia')?.disable()
+  }
+
+  calcularPromedioConfiabilidad() {
+    let uno = this.inputs.get('confiabilidad.identificacion')?.value!
+    let dos = this.inputs.get('confiabilidad.clasificacion')?.value!
+    let tres = this.inputs.get('confiabilidad.comunicacion')?.value!
+    let promedio = (uno+dos+tres)/3
+    this.inputs.get('confiabilidad.promedioConfia')?.setValue(promedio)
   }
 
   loadLocalStorage() {
@@ -119,7 +129,7 @@ export class InformeA2mgComponent implements OnInit {
         },
         conclusion: this.inputs.get('conclusion')?.value
       },
-    
+
       tablaDispo: this.tablaDispo,
       imgCriticidad: this.imgCriticidad,
       comentariosCriticidad: this.comentariosCriticidad,
@@ -141,10 +151,10 @@ export class InformeA2mgComponent implements OnInit {
   loadGrietasCriticidad() {
     let fecha = this.inputs.get('fecha')?.value.replaceAll("-", "/")
     let mes = new Date(fecha).getMonth() + 1
-    
+
     this.dataCriticisadad = this.rq.getTablaAlertas(mes)
     this.imgCriticidad = new Array(this.dataCriticisadad.length)
-   
+
   }
 
   loadDisponibilidad() {
@@ -230,8 +240,8 @@ export class InformeA2mgComponent implements OnInit {
   loadTemplateImagenes(id: number) {
     let template = `<div class="mt-4" id="imagen${this.numImagen}">
                     <input type="file" class="form-control" id="customFile" />
-                    <div class="border col-12" style="height: 200px;">
-                        <img src="#" height="200" class="col-12">
+                    <div class="border col-12" style="height: 300px;">
+                        <img src="#" height="300" class="col-12">
                     </div>
                     <div class="mt-2">
                       <label mdbLabel class="form-label" for="figura${this.numImagen}" >Nombre Figura</label>
