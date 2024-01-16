@@ -16,7 +16,7 @@
         <div>
             <label mdbLabel class="form-label" for="mes">Mes y año</label>
             <input mdbInput type="month" id="mes" class="form-control" formControlName="fecha"
-                (change)="loadTablas()" />
+                (change)="loadTablas()" [max]="hoy"/>
         </div>
     </div>
     <div class="mt-4 d-flex col-8 justify-content-between">
@@ -150,20 +150,23 @@
         </div>
         <div class="mt-4">
             <h4>Análisis de Criticidades</h4>
-            <div class="d-flex flex-wrap gap-5" *ngIf="dataCriticisadad.length > 0 ; else elseBlock ">
-                <div class="col-5" *ngFor="let criticidad of dataCriticisadad.reverse(); index as i">
-                    <div class="border border-primary p-2">
-                        <p>Fecha: {{criticidad.date}}</p>
-                        <p>{{criticidad.id}}</p>
-                        <p>Camara:{{criticidad.camera}}</p>
-                        <label class="form-label" for="customFile">Imagen Grieta</label>
-                        <input type="file" class="form-control" id="customFile" (change)="loadImg($event, i)" />
-                        <img *ngIf="imgCriticidad[i]" [src]="imgCriticidad[i]" width="200" height="180" class="m-2 ">
-                        <mdb-form-control class="mt-1">
-                            <textarea mdbInput class="form-control" id="textAreaExamples" rows="1"
-                                (change)="loadComentarios($event,i, criticidad.id)"></textarea>
-                            <label mdbLabel class="form-label" for="textAreaExamples">Añadir comentario</label>
-                        </mdb-form-control>
+            <div *ngIf="dataCriticisadad">
+                <div class="d-flex flex-wrap gap-5" *ngIf="dataCriticisadad.length > 0; else elseBlock ">
+                    <div class="col-5" *ngFor="let criticidad of dataCriticisadad.reverse(); index as i">
+                        <div class="border border-primary p-2">
+                            <p>Fecha: {{criticidad.date}}</p>
+                            <p>{{criticidad.id}}</p>
+                            <p>Camara:{{criticidad.camera}}</p>
+                            <label class="form-label" for="customFile">Imagen Grieta</label>
+                            <input type="file" class="form-control" id="customFile" (change)="loadImg($event, i)" />
+                            <img *ngIf="imgCriticidad[i]" [src]="imgCriticidad[i]" width="200" height="180"
+                                class="m-2 ">
+                            <mdb-form-control class="mt-1">
+                                <textarea mdbInput class="form-control" id="textAreaExamples" rows="1"
+                                    (change)="loadComentarios($event,i, criticidad.id)"></textarea>
+                                <label mdbLabel class="form-label" for="textAreaExamples">Añadir comentario</label>
+                            </mdb-form-control>
+                        </div>
                     </div>
                 </div>
             </div>

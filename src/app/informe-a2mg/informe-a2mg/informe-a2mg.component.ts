@@ -55,6 +55,7 @@ export class InformeA2mgComponent implements OnInit {
   numTemplate = 0
   numImagen = 0
   comentariosImagenes: any[] = []
+  hoy = new Date().toLocaleString()
  
 
 
