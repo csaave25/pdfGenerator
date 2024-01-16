@@ -55,7 +55,7 @@ export class InformeA2mgComponent implements OnInit {
   numTemplate = 0
   numImagen = 0
   comentariosImagenes: any[] = []
-  hoy = new Date().toLocaleString()
+  hoy : any = ""
  
 
 
@@ -63,6 +63,8 @@ export class InformeA2mgComponent implements OnInit {
   ngOnInit(): void {
     this.loadLocalStorage()
     this.inputs.get('confiabilidad.promedioConfia')?.disable()
+    let date = new Date()
+    this.hoy = date.getFullYear() + '-'+ ( '0' +(date.getMonth()+1)).slice(-2)
   }
 
   calcularPromedioConfiabilidad() {
