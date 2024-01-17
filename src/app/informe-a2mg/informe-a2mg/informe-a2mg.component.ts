@@ -247,7 +247,8 @@ export class InformeA2mgComponent implements OnInit {
     } else {
       this.comentariosImagenes[validator].comentario = elemento.value
     }
-
+    console.log(this.comentariosImagenes);
+    
 
 
   }
@@ -317,8 +318,6 @@ export class InformeA2mgComponent implements OnInit {
     var reader = new FileReader();
     reader.readAsDataURL(file);
 
-
-
     reader.onload = (_event) => {
 
       let validator = this.comentariosImagenes.findIndex(dato => dato.num == index)
@@ -331,21 +330,20 @@ export class InformeA2mgComponent implements OnInit {
         })
       } else {
 
-        let exist = this.comentariosImagenes[index]?.imagenes
-        console.log(this.comentariosImagenes[index]);
-
-        let validador = this.comentariosImagenes[index].imagenes.findIndex((dato: any) => dato.id == idImg)
+        let validador = this.comentariosImagenes[validator].imagenes.findIndex((dato: any) => dato.id == idImg)
 
         if (validador == -1) {
-          this.comentariosImagenes[index].imagenes.push({ id: idImg, img: reader.result, nomFigura: '' })
+          this.comentariosImagenes[validator].imagenes.push({ id: idImg, img: reader.result, nomFigura: '' })
         } else {
-          let elm = this.comentariosImagenes[index].imagenes[validador]
-          this.comentariosImagenes[index].imagenes[validador].img = reader.result
+          let elm = this.comentariosImagenes[validator].imagenes[validador]
+          this.comentariosImagenes[validator].imagenes[validador].img = reader.result
         }
 
 
       }
     }
+
+    console.log(this.comentariosImagenes);
   }
 
   saveNomFig(event: Event, index: number, idImg: number) {
@@ -358,11 +356,11 @@ export class InformeA2mgComponent implements OnInit {
         imagenes: [{ id: idImg, img: '', nomFigura: nomFig }] as any[],
       })
     } else {
-      let validador = this.comentariosImagenes[index].imagenes.findIndex((dato: any) => dato.id == idImg)
+      let validador = this.comentariosImagenes[validator].imagenes.findIndex((dato: any) => dato.id == idImg)
       if (validador == -1) {
-        this.comentariosImagenes[index].imagenes.push({ id: idImg, img: '', nomFigura: nomFig })
+        this.comentariosImagenes[validator].imagenes.push({ id: idImg, img: '', nomFigura: nomFig })
       } else {
-        this.comentariosImagenes[index].imagenes[validador].nomFigura = nomFig
+        this.comentariosImagenes[validator].imagenes[validador].nomFigura = nomFig
       }
 
     }
