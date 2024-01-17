@@ -1,0 +1,32 @@
+<div class="d-flex justify-content-center">
+    <div class="col-9 mt-2 ">
+        <button type="button" class="btn btn-sm mb-5" style="background-color: #00838F; color: #eeefef" routerLink="/"
+            mdbRipple>Atras </button>
+        <div class="d-flex flex-column align-items-center mt-5 ">
+            <h3>REPORTE SISMOS</h3>
+            <div class="gap-3 d-flex mt-5">
+                <button type="button" style="background-color: #00838F; color: #fbfbfb" class="btn " (click)="false"
+                    mdbRipple>mostrar</button>
+                <button type="button" style="background-color: #00838F; color: #fbfbfb" class="btn " (click)="false"
+                    mdbRipple>Subir</button>
+            </div>
+            <div class="my-4 d-flex flex-column align-items-center">
+                <mdb-form-control class="col-2">
+                    <input mdbInput type="date" id="fecha-inicio" [disabled]="false" class="form-control"
+                        (change)="false" />
+                    <label mdbLabel class="form-label" for="fecha-inicio">Fecha Inicio</label>
+                </mdb-form-control>
+                <div class="mt-4" >
+                    <h4>Seleccione el sismo</h4>
+                    <div class="mt-4 d-flex flex-wrap gap-3" >
+                        <div class="border rounded  d-flex flex-column align-items-center justify-content-center" style="width: 300px; height: 150px;" *ngFor="let data of dataUltimosSismos">
+                            <p style="text-align: center;">{{data.RefGeografica}}</p>
+                            <p>{{data.Fecha}}</p>
+                            <p>{{data.Magnitud}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -23,13 +23,15 @@ import { InformeEfeComponent } from './informe-efe/informe-efe/informe-efe.compo
 import { MenuComponent } from './menu/menu.component';
 import { RouterModule, RouterOutlet, Routes, provideRouter } from '@angular/router';
 import { InformeA2mgComponent } from './informe-a2mg/informe-a2mg/informe-a2mg.component';
+import { ReporteSismosComponent } from './reportes/reporte-sismo/reporte-sismos/reporte-sismos.component';
 
 
 
 const routes: Routes = [
   { path: '', component: MenuComponent },
   { path: 'efe', component: InformeEfeComponent },
-  { path: 'a2mg', component: InformeA2mgComponent }
+  { path: 'a2mg', component: InformeA2mgComponent },
+  { path: 'sismos', component: ReporteSismosComponent }
 ];
 
 export const appConfig: ApplicationConfig = {
@@ -42,7 +44,8 @@ export const appConfig: ApplicationConfig = {
     AppComponent,
     InformeEfeComponent,
     MenuComponent,
-    InformeA2mgComponent
+    InformeA2mgComponent,
+    ReporteSismosComponent
   ],
   imports: [
     HttpClientModule,
