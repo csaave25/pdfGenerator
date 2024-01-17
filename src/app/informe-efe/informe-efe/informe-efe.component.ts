@@ -143,7 +143,7 @@ export class InformeEfeComponent implements OnInit {
     fechaMesPasado.setDate(fechaMesPasado.getMonth() - 1)
     fechaMesPasado = new Date(fechaMesPasado.getFullYear() + '/' + (fechaMesPasado.getMonth() + 1) + '/21')
     this.inputs.get('datos.fechaInicio')?.setValue(fechaMesPasado)
-    this.inputs.get('datos.fechaFinal')?.setValue(fechaHoy)  
+    this.inputs.get('datos.fechaFinal')?.setValue(fechaHoy)
   }
 
 
@@ -471,11 +471,11 @@ export class InformeEfeComponent implements OnInit {
 
   LoadPiezometro() {
     let dateMin = new Date(this.inputs.get('datos.fechaInicio')?.value).getTime()
-    let dateMax = new Date(this.inputs.get('datos.fechaFinal')?.value).getTime()  
-    
-    
-    
-    
+    let dateMax = new Date(this.inputs.get('datos.fechaFinal')?.value).getTime()
+
+
+
+
 
     let dataPiezometros: any[] = []
     this.api.getNombrePiezometros().subscribe(data => {
@@ -550,7 +550,7 @@ export class InformeEfeComponent implements OnInit {
   crearGraficosDeformacion() {
     let i = 0
     Chart.defaults.font.size = 8;
-    this.geocentinelasDeformacion.forEach((element: any) => {
+    this.geocentinelasDeformacion.reverse().forEach((element: any) => {
       let data: any[] = []
       element.forEach((elm: any) => {
         let dataGCD = {
@@ -561,7 +561,7 @@ export class InformeEfeComponent implements OnInit {
           gid: 0
         }
 
-        elm.reverse().forEach((el: any) => {
+        elm.forEach((el: any) => {
 
           dataGCD.dates.push(el.fecha.slice(0, 10))
           dataGCD.numbers.push(el.medicion)
@@ -595,22 +595,30 @@ export class InformeEfeComponent implements OnInit {
               {
                 label: data[0].canal + '/ ' + Math.abs(data[0].profundidad) + ' [m]',
                 data: data[0].numbers,
-                borderWidth: 1
+                borderWidth: 1,
+                backgroundColor: '#118DFF',
+                borderColor: '#118DFF',
               },
               {
                 label: data[1].canal + '/ ' + Math.abs(data[1].profundidad) + ' [m]',
                 data: data[1].numbers,
-                borderWidth: 1
+                borderWidth: 1,
+                backgroundColor: '#12239E',
+                borderColor: '#12239E',
               },
               {
                 label: data[2].canal + '/ ' + Math.abs(data[2].profundidad) + ' [m]',
                 data: data[2].numbers,
-                borderWidth: 1
+                borderWidth: 1,
+                backgroundColor: '#E66C37',
+                borderColor: '#E66C37',
               },
               {
                 label: data[3].canal + '/ ' + Math.abs(data[3].profundidad) + ' [m]',
                 data: data[3].numbers,
-                borderWidth: 1
+                borderWidth: 1,
+                backgroundColor: '#6B007B',
+                borderColor: '#6B007B',
               },
               // {
               //   data: [15,15,30,31] 
@@ -689,10 +697,11 @@ export class InformeEfeComponent implements OnInit {
   }
 
   crearGraficosPrismas(dataGraph1: any[], dataGraph2: any[]) {
+    let colores = ['#118DFF', '#12239E', '#E66C37', '#6B007B', '#E044A7', '#744EC2', '#D9B300', '#D64550', '#197278', '#1AAB40', '#15C6F4', '#4092FF', '#FFA25C', '#BF61CA', '#F475D1', '#B7A3FF', '#C5A406', '#FF8383']
 
     function loadData(dataGraph: any[]) {
       let dataset: any[] = []
-      dataGraph.forEach(elm => {
+      dataGraph.forEach((elm ,index) => {
         let elemento: any[] = []
         for (let i = 0; i < elm.date.length; i++) {
 
@@ -705,7 +714,9 @@ export class InformeEfeComponent implements OnInit {
 
         dataset.push({
           label: elm.nombre,
-          data: elemento
+          data: elemento,
+          backgroundColor: colores[index],
+          borderColor: colores[index],
         })
 
       })
@@ -853,7 +864,9 @@ export class InformeEfeComponent implements OnInit {
       })
       datas.push({
         label: nombre,
-        data: arr
+        data: arr,
+        backgroundColor: '#12239E',
+        borderColor: '#12239E',
       })
 
       return datas
@@ -865,7 +878,7 @@ export class InformeEfeComponent implements OnInit {
       new Chart("piezometro" + piezometro.gid, {
         type: "line",
         data: {
-          datasets: datos
+          datasets: datos,
         },
         options: {
           animation: false,

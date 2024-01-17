@@ -767,10 +767,10 @@ export class InformeService {
       let doc = this.doc
       this.doc.setFontSize(8)
       this.doc.setFont('Lato', 'normal')
-      this.doc.text('TABLA ' + this.contadorTabla + ': DESDE ' + mtx.fechaInicio + ' ' + mtx.horaInicio + ' HASTA 31/12/2023 23:59:59', ((this.marginRight - this.marginContent) / 2 + this.marginContent), this.usoPagina + 55, { align: 'center', maxWidth: this.marginRight - this.marginContent })
+      // this.doc.text('TABLA ' + this.contadorTabla + ': DESDE ' + mtx.fechaInicio + ' ' + mtx.horaInicio + ' HASTA 31/12/2023 23:59:59', ((this.marginRight - this.marginContent) / 2 + this.marginContent), this.usoPagina + 55, { align: 'center', maxWidth: this.marginRight - this.marginContent })
 
-      // this.doc.text('TABLA ' + this.contadorTabla + ': DESDE ' + mtx.fechaInicio + ' ' + mtx.horaInicio + ' HASTA ' + mtx.fechaFinal + ' ' + mtx.horaFinal, ((this.marginRight - this.marginContent) / 2 + this.marginContent), this.usoPagina + 55, { align: 'center', maxWidth: this.marginRight - this.marginContent })
-      //
+      this.doc.text('TABLA ' + this.contadorTabla + ': DESDE ' + mtx.fechaInicio + ' ' + mtx.horaInicio + ' HASTA ' + mtx.fechaFinal + ' ' + mtx.horaFinal, ((this.marginRight - this.marginContent) / 2 + this.marginContent), this.usoPagina + 55, { align: 'center', maxWidth: this.marginRight - this.marginContent })
+      
 
       autoTable(doc, {
         margin: { left: this.marginContent },
