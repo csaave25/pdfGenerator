@@ -247,7 +247,7 @@ export class InformeA2mgComponent implements OnInit {
     } else {
       this.comentariosImagenes[validator].comentario = elemento.value
     }
-    console.log(this.comentariosImagenes);
+    
     
 
 
@@ -342,8 +342,6 @@ export class InformeA2mgComponent implements OnInit {
 
       }
     }
-
-    console.log(this.comentariosImagenes);
   }
 
   saveNomFig(event: Event, index: number, idImg: number) {
