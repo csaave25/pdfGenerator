@@ -1,4 +1,4 @@
-<div class="d-flex justify-content-center">
+<div class="d-flex justify-content-center" [formGroup]="inputs">
     <div class="col-9 mt-2 ">
         <button type="button" class="btn btn-sm mb-5" style="background-color: #00838F; color: #eeefef" routerLink="/"
             mdbRipple>Atras </button>
@@ -11,20 +11,28 @@
                     mdbRipple>Subir</button>
             </div>
             <div class="my-4 d-flex flex-column align-items-center">
-                <mdb-form-control class="col-2">
-                    <input mdbInput type="date" id="fecha-inicio" [disabled]="false" class="form-control"
-                        (change)="false" />
+                <mdb-form-control style="width: 200px;">
+                    <input mdbInput type="date" id="fecha-inicio" [max]="fechaMaxima" class="form-control"
+                        (change)="false" formControlName="fecha" (change)="onSeleccionarFecha()"/>
                     <label mdbLabel class="form-label" for="fecha-inicio">Fecha Inicio</label>
                 </mdb-form-control>
-                <div class="mt-4" >
+                <div class="mt-4 d-flex flex-column align-items-center">
                     <h4>Seleccione el sismo</h4>
-                    <div class="mt-4 d-flex flex-wrap gap-3" >
-                        <div class="border rounded  d-flex flex-column align-items-center justify-content-center" style="width: 300px; height: 150px;" *ngFor="let data of dataUltimosSismos">
-                            <p style="text-align: center;">{{data.RefGeografica}}</p>
-                            <p>{{data.Fecha}}</p>
-                            <p>{{data.Magnitud}}</p>
+                    <div class="mt-4 d-flex flex-wrap gap-3">
+                        <div class="border rounded  d-flex flex-column align-items-center justify-content-center"
+                             *ngFor="let data of dataUltimosSismos">
+                            <a  href="#" style="width: 300px; height: 150px; color: rgb(42, 125, 169);" (click)="seleccionarSismo(data.id,$event)" class=" d-flex flex-column align-items-center justify-content-center">
+                                <p style="text-align: center;">{{data.lugar}}</p>
+                                <p>{{data.tiempo}}</p>
+                                <p>{{data.magnitud}}</p>
+                            </a>
                         </div>
                     </div>
+                </div>
+            </div>
+            <div class="map-container">
+                <div class="map-frame">
+                    <div id="map"></div>
                 </div>
             </div>
         </div>
