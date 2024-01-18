@@ -13,18 +13,23 @@
             <div class="my-4 d-flex flex-column align-items-center">
                 <mdb-form-control style="width: 200px;">
                     <input mdbInput type="date" id="fecha-inicio" [max]="fechaMaxima" class="form-control"
-                        (change)="false" formControlName="fecha" (change)="onSeleccionarFecha()"/>
+                        (change)="false" formControlName="fecha" (change)="onSeleccionarFecha()" />
                     <label mdbLabel class="form-label" for="fecha-inicio">Fecha Inicio</label>
                 </mdb-form-control>
                 <div class="mt-4 d-flex flex-column align-items-center">
                     <h4>Seleccione el sismo</h4>
                     <div class="mt-4 d-flex flex-wrap gap-3">
                         <div class="border rounded  d-flex flex-column align-items-center justify-content-center"
-                             *ngFor="let data of dataUltimosSismos">
-                            <a  href="#" style="width: 300px; height: 150px; color: rgb(42, 125, 169);" (click)="seleccionarSismo(data.id,$event)" class=" d-flex flex-column align-items-center justify-content-center">
-                                <p style="text-align: center;">{{data.lugar}}</p>
-                                <p>{{data.tiempo}}</p>
-                                <p>{{data.magnitud}}</p>
+                            *ngFor="let data of dataUltimosSismos">
+                            <a href="#" style="width: 300px; height: 150px; color: rgb(42, 125, 169);"
+                                (click)="seleccionarSismo(data.id,$event)"
+                                class=" d-flex flex-column align-items-center justify-content-center">
+                                <p class="m-0" style="text-align: center; font-size: 13px; font-weight: bold;">{{data.lugar}}</p>
+                                <div class="d-flex gap-1">
+                                    <p style="font-size: 11px;"><span style="font-weight: bold;">Fecha:</span> {{data.tiempo}}</p>
+                                    <p style="font-size: 11px;"><span style="font-weight: bold;">Magnitud:</span> {{data.magnitud}}</p>
+                                </div>
+                                
                             </a>
                         </div>
                     </div>
@@ -33,6 +38,16 @@
             <div class="map-container">
                 <div class="map-frame">
                     <div id="map"></div>
+                </div>
+                <div class="mt-2 d-flex flex-column gap-2">
+                    <div class="d-flex gap-2 align-items-center">
+                        <img src="../../../../assets/Sismos/minaMarker.png" alt="minaMarker" width="15" height="15">
+                        <p style="font-size: 11px; text-align: center;" class="m-0">Referencia de Minera Los Pelambres</p>  
+                    </div>
+                    <div class="d-flex gap-2 align-items-center">
+                        <img src="../../../../assets/Sismos/sismoMarker.png" alt="minaMarker" width="15" height="15">
+                        <p style="font-size: 11px; text-align: center;" class="m-0">Referencia del Sismo</p>  
+                    </div>
                 </div>
             </div>
         </div>
