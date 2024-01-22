@@ -18,7 +18,7 @@ export class ApiService {
     siguienteDia.setDate(siguienteDia.getDate() + 1)
     let manana = new Date(siguienteDia).toISOString().slice(0,10)
     
-    return this.http.get(`https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&minmagnitude=4&latitude=${latitud}&longitude=${longitud}&maxradiuskm=450&starttime=${fecha}&endtime=${manana}`)
+    return this.http.get(`https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&minmagnitude=4&latitude=${latitud}&longitude=${longitud}&maxradiuskm=459&starttime=${fecha}&endtime=${manana}`)
   }
 
   getMoreInfo(id : string){

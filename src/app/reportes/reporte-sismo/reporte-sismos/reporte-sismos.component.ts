@@ -2,6 +2,8 @@ import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { ApiService } from '../api.service';
 import * as leaf from 'leaflet';
 import { FormControl, FormGroup } from '@angular/forms';
+import { traduccionPuntosCardinales } from 'src/app/helpers';
+import { GeneradorService } from '../generador.service';
 
 @Component({
   selector: 'app-reporte-sismos',
@@ -10,7 +12,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 })
 export class ReporteSismosComponent implements OnInit, AfterViewInit {
 
-  constructor(private api: ApiService) { }
+  constructor(private api: ApiService, private generador : GeneradorService) { }
 
   dataUltimosSismos: any[] = []
   map: any
@@ -103,9 +105,11 @@ export class ReporteSismosComponent implements OnInit, AfterViewInit {
             let props = element.properties
             this.dataUltimosSismos.push({
               id: element.id,
-              lugar: props.place,
+              lugar: traduccionPuntosCardinales(props.place),
               magnitud: props.mag,
+              magTipo: props.magType,
               tiempo: new Date(props.time).toLocaleString(),
+              tiempoUTC: new Date(props.time).toUTCString(),
               latitud: moreProps.latitude,
               longitud: moreProps.longitude,
               profundidad: moreProps.depth
@@ -117,6 +121,11 @@ export class ReporteSismosComponent implements OnInit, AfterViewInit {
         console.log('ERROR CON LA CONSULTA');
       }
     })
+  }
+
+
+  generarPDF(){
+    this.generador.descargarInforme()
   }
 
 }

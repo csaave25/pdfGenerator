@@ -1,7 +1,7 @@
 import { Injectable, Input } from '@angular/core';
 import { jsPDF } from 'jspdf'
 import autoTable from 'jspdf-autotable'
-import { font, latoRegular, montBold, montMedium, montSemi } from 'src/assets/fonts/fonts';
+import { latoBold, latoRegular, montBold, montMedium, montSemi } from 'src/assets/fonts/fonts';
 import { FormGroup } from '@angular/forms';
 import { dataInforme, formateadoraDeTexto } from './data';
 
@@ -55,7 +55,7 @@ export class InformeService {
 
 
   implementarFuentes() {
-    this.doc.addFileToVFS("Lato-Font-bold.ttf", font);
+    this.doc.addFileToVFS("Lato-Font-bold.ttf", latoBold);
     this.doc.addFont("Lato-Font-bold.ttf", "Lato", "bold");
     this.doc.addFileToVFS("Lato-Font-normal.ttf", latoRegular);
     this.doc.addFont("Lato-Font-normal.ttf", "Lato", "normal");
@@ -105,7 +105,7 @@ export class InformeService {
   implementarHeader() {
 
     // this.doc.addImage("assets/images/logo.png", 'PNG', this.marginLeft , 20, 222, 69, 'logo', 'SLOW'); LOGO CON PORTE IGUAL AL DE PORTADA
-    this.doc.addImage("assets/images/logo.png", 'PNG', this.marginLeft, this.startPage, 160, 50, 'logo' + this.contadorPagina, 'SLOW');
+    this.doc.addImage("assets/EMT/logo.png", 'PNG', this.marginLeft, this.startPage, 160, 50, 'logo' + this.contadorPagina, 'SLOW');
     this.doc.setFontSize(8)
     this.doc.setTextColor(this.colores.negro)
     this.doc.setFont('Lato', 'normal')

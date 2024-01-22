@@ -1,55 +1,95 @@
 <div class="d-flex justify-content-center" [formGroup]="inputs">
     <div class="col-9 mt-2 ">
-        <button type="button" class="btn btn-sm mb-5" style="background-color: #00838F; color: #eeefef" routerLink="/"
+        <button type="button" class="btn btn-sm mb-4" style="background-color: #00838F; color: #eeefef" routerLink="/"
             mdbRipple>Atras </button>
         <div class="d-flex flex-column align-items-center mt-5 ">
             <h3>REPORTE SISMOS</h3>
             <div class="gap-3 d-flex mt-5">
-                <button type="button" style="background-color: #00838F; color: #fbfbfb" class="btn " (click)="false"
+                <button type="button" style="background-color: #00838F; color: #fbfbfb" class="btn " (click)="generarPDF()"
                     mdbRipple>mostrar</button>
                 <button type="button" style="background-color: #00838F; color: #fbfbfb" class="btn " (click)="false"
                     mdbRipple>Subir</button>
             </div>
-            <div class="my-4 d-flex flex-column align-items-center">
-                <mdb-form-control style="width: 200px;">
-                    <input mdbInput type="date" id="fecha-inicio" [max]="fechaMaxima" class="form-control"
-                        (change)="false" formControlName="fecha" (change)="onSeleccionarFecha()" />
-                    <label mdbLabel class="form-label" for="fecha-inicio">Fecha Inicio</label>
-                </mdb-form-control>
+            <!-- <div class="my-4 d-flex flex-column align-items-center">
+                <div>
+                    <label>ID</label>
+                    <div>
+                        <input type="number" id="idInforme" class="form-control" />
+                    </div>
+                </div>
+            </div> -->
+            <div class="my-4 d-flex flex-column align-items-center ">
+                <div class="d-flex gap-3 align-items-end " style="width: 100%;">
+                    <div>
+                        <label>ID</label>
+                        <div>
+                            <input type="number" id="idInforme" class="form-control" value="0" min="0" style="width: 100px;" />
+                        </div>
+                    </div>
+                    <div>
+                        <label>Fecha Inicio</label>
+                        <mdb-form-control style="width: 185px;">
+                            <input mdbInput type="date" id="fecha-inicio" [max]="fechaMaxima" class="form-control"
+                                (change)="false" formControlName="fecha" (change)="onSeleccionarFecha()"/>
+                        </mdb-form-control>
+                    </div>
+                </div>
                 <div class="mt-4 d-flex flex-column align-items-center">
-                    <h4>Seleccione el sismo</h4>
-                    <div class="mt-4 d-flex flex-wrap gap-3">
-                        <div class="border rounded  d-flex flex-column align-items-center justify-content-center"
-                            *ngFor="let data of dataUltimosSismos">
-                            <a href="#" style="width: 300px; height: 150px; color: rgb(42, 125, 169);"
-                                (click)="seleccionarSismo(data.id,$event)"
-                                class=" d-flex flex-column align-items-center justify-content-center">
-                                <p class="m-0" style="text-align: center; font-size: 13px; font-weight: bold;">{{data.lugar}}</p>
-                                <div class="d-flex gap-1">
-                                    <p style="font-size: 11px;"><span style="font-weight: bold;">Fecha:</span> {{data.tiempo}}</p>
-                                    <p style="font-size: 11px;"><span style="font-weight: bold;">Magnitud:</span> {{data.magnitud}}</p>
+                    <div class="mt-4 d-flex gap-3">
+                        <!-- <ul class="border rounded  d-flex flex-column align-items-center justify-content-center ps-0"> -->
+                        <ul *ngIf="dataUltimosSismos.length > 0;  else elseBlock"
+                            class="list-group list-group-light border overflow-auto"
+                            style="width: 300px; height: 400px;">
+                            <li *ngFor="let data of dataUltimosSismos" class="list-group-item">
+                                <a href="#" style="color: rgb(42, 125, 169);" (click)="seleccionarSismo(data.id,$event)"
+                                    class=" d-flex flex-column align-items-center justify-content-center">
+                                    <p class="m-0" style="text-align: center; font-size: 13px; font-weight: bold;">
+                                        {{data.lugar}}</p>
+                                    <div class="d-flex gap-1">
+                                        <p style="font-size: 11px;"><span style="font-weight: bold;">Fecha:</span>
+                                            {{data.tiempo}}</p>
+                                        <p style="font-size: 11px;"><span style="font-weight: bold;">Magnitud:</span>
+                                            {{data.magnitud}}</p>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                        <ng-template #elseBlock>
+                            <div style="width: 300px; height: 400px;"
+                                class="border d-flex justify-content-center align-items-center">
+                                <p style="font-size: 20px; text-align: center;">NO SE ENCONTRARON SISMOS EN LA FECHA
+                                    SELECCIONADA</p>
+                            </div>
+                        </ng-template>
+                        <div class="map-container">
+                            <div class="map-frame">
+                                <div id="map"></div>
+                            </div>
+                            <div class="mt-2 d-flex flex-column gap-2">
+                                <div class="d-flex gap-2 align-items-center">
+                                    <img src="../../../../assets/Sismos/minaMarker.png" alt="minaMarker" width="15"
+                                        height="15">
+                                    <p style="font-size: 11px; text-align: center;" class="m-0">Referencia de Minera Los
+                                        Pelambres </p>
                                 </div>
-                                
-                            </a>
+                                <div class="d-flex gap-2 align-items-center">
+                                    <img src="../../../../assets/Sismos/sismoMarker.png" alt="minaMarker" width="15"
+                                        height="15">
+                                    <p style="font-size: 11px; text-align: center;" class="m-0">Referencia del Sismo</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="map-container">
-                <div class="map-frame">
-                    <div id="map"></div>
-                </div>
-                <div class="mt-2 d-flex flex-column gap-2">
-                    <div class="d-flex gap-2 align-items-center">
-                        <img src="../../../../assets/Sismos/minaMarker.png" alt="minaMarker" width="15" height="15">
-                        <p style="font-size: 11px; text-align: center;" class="m-0">Referencia de Minera Los Pelambres</p>  
-                    </div>
-                    <div class="d-flex gap-2 align-items-center">
-                        <img src="../../../../assets/Sismos/sismoMarker.png" alt="minaMarker" width="15" height="15">
-                        <p style="font-size: 11px; text-align: center;" class="m-0">Referencia del Sismo</p>  
-                    </div>
+                <div class="mt-4 w-100">
+                    <label>Comentarios</label>
+                    <mdb-form-control>
+                        <textarea mdbInput class="form-control" id="comentarios" rows="5"></textarea>
+                        <label mdbLabel class="form-label" for="comentarios">Comentarios</label>
+                    </mdb-form-control>
                 </div>
             </div>
+           
         </div>
     </div>
 </div>

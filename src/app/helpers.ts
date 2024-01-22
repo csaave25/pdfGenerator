@@ -3,32 +3,47 @@ const puntosCardinales = ['N', "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S",
 
 
 export function traduccionPuntosCardinales(punto: string) {
-    let puntoEspanol
-    switch (punto) {
+    punto = punto.replace('of', 'de')
+    let arr = punto.split(' ')
+    let puntoEspanol = arr[2]
+
+    switch (puntoEspanol) {
         case 'SSW':
-            punto = 'SSO'
+            puntoEspanol = 'SSO'
             break;
         case 'SW':
-            punto = 'SO'
+            puntoEspanol = 'SO'
             break;
         case 'WSW':
-            punto = 'OSO'
+            puntoEspanol = 'OSO'
             break;
         case 'W':
-            punto = 'O'
+            puntoEspanol = 'O'
             break;
         case 'WNW':
-            punto = 'ONO'
+            puntoEspanol = 'ONO'
             break;
         case 'NW':
-            punto = 'NO'
+            puntoEspanol = 'NO'
             break;
         case 'NNW':
-            punto = 'NNO'
-            break;
-
-        default:
-            puntoEspanol = punto
+            puntoEspanol = 'NNO'
             break;
     }
+
+    let newString = ''
+    arr.forEach((str, index) => {
+        if (newString.length == 0) {
+            newString = str
+        } else {
+            if (index == 2) {
+                newString += ' ' + puntoEspanol
+            } else {
+                newString += ' ' + str
+            }
+        }
+
+    })
+
+    return newString
 }

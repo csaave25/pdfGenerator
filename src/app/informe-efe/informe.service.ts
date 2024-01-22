@@ -1,7 +1,7 @@
 import { ElementRef, Injectable, QueryList } from '@angular/core';
 import { jsPDF } from 'jspdf'
 import autoTable from 'jspdf-autotable'
-import { font, latoRegular, montBold, montMedium, montSemi } from 'src/assets/fonts/fonts';
+import { latoBold, latoRegular, montBold, montMedium, montSemi } from 'src/assets/fonts/fonts';
 import { colores, data, formateadoraDeTexto, justify, obtenerAncho } from './data';
 import { AbstractControl, FormGroup } from '@angular/forms';
 import { ApiService } from './api.service';
@@ -725,7 +725,7 @@ export class InformeService {
 
   implementarHeader() {
     this.doc.setTextColor(colores.negro)
-    this.doc.addImage("assets/images/logo.png", 'PNG', this.margenDer - 60, this.comienzoPaginaY - 10, 90, 30, 'logo' + this.contadorPagina, 'FAST');
+    this.doc.addImage("assets/EMT/logo.png", 'PNG', this.margenDer - 60, this.comienzoPaginaY - 10, 90, 30, 'logo' + this.contadorPagina, 'FAST');
 
     this.doc.setFontSize(9)
     this.doc.setFont('Lato', 'normal')
@@ -742,7 +742,7 @@ export class InformeService {
   }
 
   implementarFuentes() {
-    this.doc.addFileToVFS("Lato-Font-bold.ttf", font);
+    this.doc.addFileToVFS("Lato-Font-bold.ttf", latoBold);
     this.doc.addFont("Lato-Font-bold.ttf", "Lato", "bold");
     this.doc.addFileToVFS("Lato-Font-normal.ttf", latoRegular);
     this.doc.addFont("Lato-Font-normal.ttf", "Lato", "normal");
