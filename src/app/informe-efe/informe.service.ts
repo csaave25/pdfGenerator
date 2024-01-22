@@ -207,7 +207,7 @@ export class InformeService {
       willDrawPage: (data) => {
         if (page != data.pageNumber) {
           this.usoPagina = this.cominezoContenidoY
-          this.doc.addImage("assets/images/marca.jpg", 'JPG', 0, 0, 612, 792, 'marca-x-20', 'FAST');
+          this.doc.addImage("assets/EMT/marcaAgua.jpg", 'JPG', 0, 0, 612, 792, 'marca-x-20', 'FAST');
           this.implementarHeader()
           this.implementarFooter()
 
@@ -623,8 +623,8 @@ export class InformeService {
   generarTablaResumen(inputs: AbstractControl<any, any>) {
     let gestores = inputs.get('gestores')
     this.doc.addPage()
-    this.doc.addImage("assets/images/marca.jpg", 'JPG', 0, 0, 612, 792, 'marca-x2', 'FAST');
-    this.doc.addImage("assets/images/logo.png", 'PNG', this.margenIzq, this.comienzoPaginaY, 160, 50, 'logo-x2', 'FAST');
+    this.doc.addImage("assets/EMT/marcaAgua.jpg", 'JPG', 0, 0, 612, 792, 'marca-x2', 'FAST');
+    this.doc.addImage("assets/EMT/logo.png", 'PNG', this.margenIzq, this.comienzoPaginaY, 160, 60, 'logo-x2', 'FAST');
 
     let altura = 246
     let margenIzq = this.margenIzq + 72
@@ -691,7 +691,7 @@ export class InformeService {
 
     let altura = 246
     let margenIzq = this.margenIzq + 72
-    this.doc.addImage("assets/images/image2.jpg", 'JPG', 0, 0, 612, 792, 'marca-1', 'FAST');
+    this.doc.addImage("assets/EMT/portada.jpg", 'JPG', 0, 0, 612, 792, 'marca-1', 'FAST');
     this.doc.setTextColor(colores.blanco)
     this.doc.setFont("Montserrat", "bold");
     this.doc.setFontSize(22)
@@ -725,20 +725,19 @@ export class InformeService {
 
   implementarHeader() {
     this.doc.setTextColor(colores.negro)
-    this.doc.addImage("assets/EMT/logo.png", 'PNG', this.margenDer - 60, this.comienzoPaginaY - 10, 90, 30, 'logo' + this.contadorPagina, 'FAST');
+    this.doc.addImage("assets/EMT/logo.png", 'PNG', this.margenDer - 60, this.comienzoPaginaY - 10, 90, 40, 'logo' + this.contadorPagina, 'FAST');
 
     this.doc.setFontSize(9)
     this.doc.setFont('Lato', 'normal')
-    this.doc.text('IYV-INF-VIG-EFE-02', this.margenDer + 28, this.comienzoPaginaY + 35, { align: 'right' })
-    this.doc.addImage("assets/EFE/logoefe.png", 'PNG', this.margenIzq, this.comienzoPaginaY - 18, 90, 50, 'logoEfe' + this.contadorPagina, 'FAST')
-    this.doc.text(this.anoMes, this.margenIzq + 25, this.comienzoPaginaY + 35, { align: 'left' })
+    this.doc.text('IYV-INF-VIG-EFE-02', this.margenDer + 28, this.comienzoPaginaY + 40, { align: 'right' })
+    this.doc.addImage("assets/EFE/logoefe.png", 'PNG', this.margenIzq, this.comienzoPaginaY - 15, 90, 50, 'logoEfe' + this.contadorPagina, 'FAST')
+    this.doc.text(this.anoMes, this.margenIzq + 25, this.comienzoPaginaY + 40, { align: 'left' })
 
     this.doc.setFontSize(13)
     this.doc.setFont('Lato', 'normal')
     this.doc.text('INFORME MENSUAL DE ANÁLISIS DE TENDENCIAS DE COMPORTAMIENTO DE LA INFRAESTRUCTURA', this.puntoMedio, this.comienzoPaginaY + 12, { align: 'center', maxWidth: this.puntoMedio + 20 })
-    let altura = obtenerAncho(this.doc, data.subTiutlo, this.maxMargen) + this.comienzoPaginaY;
     this.doc.setFontSize(11)
-    this.doc.text(this.date, this.puntoMedio, altura + 20, { align: 'center' })
+    this.doc.text(this.date, this.puntoMedio, this.comienzoPaginaY + 40, { align: 'center' })
   }
 
   implementarFuentes() {
@@ -757,7 +756,7 @@ export class InformeService {
   nuevaPagina() {
     this.usoPagina = this.cominezoContenidoY
     this.doc.addPage()
-    this.doc.addImage("assets/images/marca.jpg", 'JPG', 0, 0, 612, 792, 'marca-x3' + Math.random(), 'FAST');
+    this.doc.addImage("assets/EMT/marcaAgua.jpg", 'JPG', 0, 0, 612, 792, 'marca-x3' + Math.random(), 'FAST');
     this.implementarHeader()
     this.implementarFooter()
   }

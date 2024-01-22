@@ -191,7 +191,7 @@ export class InformeEfeComponent implements OnInit {
     if (this.geoElements.length) {
       this.geoElements.forEach(e => {
         let element = e.nativeElement
-        html2canvas(element, { scale: 3 }).then((canvas) => {
+        html2canvas(element, { scale: 3}).then((canvas) => {
           const base64image = canvas.toDataURL("image/png");
           const img = new Image()
           img.src = base64image
@@ -205,7 +205,7 @@ export class InformeEfeComponent implements OnInit {
   loadScreenshotGCD() {
     this.gcdElements.forEach(e => {
       let element = e.nativeElement
-      html2canvas(element, { scale: 3 }).then((canvas) => {
+      html2canvas(element, { scale: 2  }).then((canvas) => {
         const base64image = canvas.toDataURL("image/png");
         const img = new Image()
         img.src = base64image
@@ -253,11 +253,21 @@ export class InformeEfeComponent implements OnInit {
               if (cen.gid == element.geocentinela_id) {
                 dta.objects.forEach((elm: any) => {
                   if (elm.gid == cen.gid && elm.canal == element.canal) {
-                    geo.push({
-                      profundidad: Math.abs(element.profundidad),
-                      canal: element.canal,
-                      estado: elm.estado
-                    })
+             
+                    if (elm.nombre == "GCC08" || elm.nombre == "GCC10") {
+                      geo.push({
+                        profundidad: Math.abs(element.profundidad),
+                        canal: element.canal,
+                        estado: false
+                      })
+                    }else{
+                      geo.push({
+                        profundidad: Math.abs(element.profundidad),
+                        canal: element.canal,
+                        estado: elm.estado
+                      })
+                    }
+                    
                   }
                 })
               }
@@ -701,7 +711,7 @@ export class InformeEfeComponent implements OnInit {
 
     function loadData(dataGraph: any[]) {
       let dataset: any[] = []
-      dataGraph.forEach((elm ,index) => {
+      dataGraph.forEach((elm, index) => {
         let elemento: any[] = []
         for (let i = 0; i < elm.date.length; i++) {
 

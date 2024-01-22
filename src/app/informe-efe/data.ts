@@ -112,6 +112,7 @@ const dividirTexto = (text: string) => {
 const saltoDePagina = (str: string, doc: jsPDF, ancho: number, usopag: number, date: string, anoMes: string ) => {
     if (usopag + obtenerAncho(doc, str, ancho) > 745) {
         doc.addPage()
+        doc.addImage("assets/EMT/marcaAgua.jpg", 'JPG', 0, 0, 612, 792, 'marca-x3' + Math.random(), 'FAST');
         genradorDeHeaderYFooter(doc, date, anoMes)
         return 100
     }
@@ -172,7 +173,7 @@ export const genradorDeHeaderYFooter = (doc: jsPDF , date: string, anoMes: strin
 
     function implementarHeader() {
         doc.setTextColor(colores.negro)
-        doc.addImage("assets/images/logo.png", 'PNG', margenDer - 60, comienzoPaginaY - 10, 90, 30, 'logo' + contadorPagina, 'SLOW');
+        doc.addImage("assets/EMT/logo.png", 'PNG', margenDer - 60, comienzoPaginaY - 10, 90, 30, 'logo' + contadorPagina, 'SLOW');
 
         doc.setFontSize(9)
         doc.setFont('Lato', 'normal')

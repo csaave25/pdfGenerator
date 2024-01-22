@@ -72,7 +72,7 @@ export class InformeService {
 
     let altura = 246
     let margenIzq = this.marginLeft + 72
-    this.doc.addImage("assets/images/image2.jpg", 'JPG', 0, 0, 612, 792, 'marca-1', 'SLOW');
+    this.doc.addImage("assets/EMT/portada.png", 'PNG', 0, 0, 612, 792, 'marca-1', 'SLOW');
     this.doc.setTextColor(this.colores.blanco)
     this.doc.setFont("Montserrat", "bold");
     this.doc.setFontSize(25)
@@ -118,7 +118,7 @@ export class InformeService {
   generarTablaResumen(inputs: FormGroup) {
 
     this.doc.addPage()
-    this.doc.addImage("assets/images/marca.jpg", 'JPG', 0, 0, 612, 792, 'marca-x', 'SLOW');
+    this.doc.addImage("assets/EMT/marcaAgua.jpg", 'JPG', 0, 0, 612, 792, 'marca-x', 'SLOW');
 
     this.doc.addImage("assets/images/logo.png", 'PNG', this.marginLeft, this.startPage, 160, 50, 'logo-x', 'SLOW');
     let altura = 246
@@ -190,7 +190,7 @@ export class InformeService {
   implementarTablaContenido() {
 
     this.doc.insertPage(3)
-    this.doc.addImage("assets/images/marca.jpg", 'JPG', 0, 0, 612, 792, 'marca-x', 'SLOW');
+    this.doc.addImage("assets/EMT/marcaAgua.jpg", 'JPG', 0, 0, 612, 792, 'marca-x', 'SLOW');
 
     this.contadorPagina = 1
     this.implementarFooter()
@@ -656,7 +656,7 @@ export class InformeService {
         },
         willDrawPage: (data) => {
           if (!flag && data.pageNumber != 1) {
-            this.doc.addImage("assets/images/marca.jpg", 'JPG', 0, 0, 612, 792, 'marca-x', 'SLOW');
+            this.doc.addImage("assets/EMT/marcaAgua.jpg", 'JPG', 0, 0, 612, 792, 'marca-x', 'SLOW');
             flag = true
           }
         },
@@ -867,7 +867,7 @@ export class InformeService {
   nuevaPagina() {
     this.usoPagina = this.startcContent
     this.doc.addPage()
-    this.doc.addImage("assets/images/marca.jpg", 'JPG', 0, 0, 612, 792, 'marca-x', 'SLOW');
+    this.doc.addImage("assets/EMT/marcaAgua.jpg", 'JPG', 0, 0, 612, 792, 'marca-x', 'SLOW');
     this.implementarHeader()
     this.implementarFooter()
   }

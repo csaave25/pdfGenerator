@@ -162,7 +162,7 @@ function nuevaPagina(doc: jsPDF, fecha: string) {
     console.log(fecha);
 
 
-    doc.addImage("assets/images/marca.jpg", 'JPG', 0, 0, 612, 792, 'marca-x', 'SLOW');
+    doc.addImage("assets/EMT/marcaAgua.jpg", 'JPG', 0, 0, 612, 792, 'marca-x', 'SLOW');
     implementarHeader(doc, marginLeft, marginRight, startPage, fecha, contadorPagina)
     implementarFooter(doc, marginRight, marginContent, endPage, contadorPagina)
 }
