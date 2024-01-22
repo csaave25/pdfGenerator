@@ -30,9 +30,16 @@
                         <label>Fecha Inicio</label>
                         <mdb-form-control style="width: 185px;">
                             <input mdbInput type="date" id="fecha-inicio" [max]="fechaMaxima" class="form-control"
-                                (change)="false" formControlName="fecha" (change)="onSeleccionarFecha()"/>
+                                 formControlName="fecha" (change)="onSeleccionarFecha()"/>
                         </mdb-form-control>
                     </div>
+                    <!-- <div>
+                        <label>Nombre</label>
+                        <mdb-form-control style="width: 185px;">
+                            <input mdbInput type="text" id="nombreGenerador" class="form-control"
+                                 formControlName="fecha" (change)="onSeleccionarFecha()"/>
+                        </mdb-form-control>
+                    </div> -->
                 </div>
                 <div class="mt-4 d-flex flex-column align-items-center">
                     <div class="mt-4 d-flex gap-3">

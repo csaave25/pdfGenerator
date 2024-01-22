@@ -5,6 +5,7 @@ import { latoBold, latoRegular, montBold, montMedium, montSemi } from 'src/asset
 // import { colores, data, formateadoraDeTexto, justify, obtenerAncho } from './data';
 import { AbstractControl, FormGroup } from '@angular/forms';
 import { ApiService } from './api.service';
+import { locale } from 'moment';
 
 @Injectable({
   providedIn: 'root'
@@ -18,21 +19,51 @@ export class GeneradorService {
   private margenDer= 611-this.margenIzq
   private puntoMedio = (this.doc.internal.pageSize.width || this.doc.internal.pageSize.getWidth()) / 2
   private margenTexto = this.margenDer - this.margenIzq
-  private usoPagina = 40
+  private margenContenido = 115
+  private usoPagina = this.margenContenido
 
 
+
+
+  private generarObservaciones(){
+    this.doc.setFontSize(14)
+    this.doc.setFont("Lato", "normal");
+    this.doc.text('OBSERVACIONES MONITOREO POST-EVENTO SÍSMICO', this.margenIzq,this.usoPagina, {align: 'left'})
+  }
 
   private generarHeader(fecha: Date, id: number) {
     let ano = fecha.getFullYear().toString()
+    let diaNombre =  fecha.toLocaleDateString('es-ES', { weekday: 'long'}); 
+    diaNombre = diaNombre[0].toUpperCase() + diaNombre.slice(1)
+    let diaNumero =  fecha.toLocaleDateString().slice(0,2)
+    let mesNombre = fecha.toLocaleDateString('es-ES', { month: 'long'})
+    mesNombre = mesNombre[0].toUpperCase() + mesNombre.slice(1)
+    let hora = fecha.toLocaleTimeString();
+    let fechaSubTitulo = diaNombre + ' ' + diaNumero +' de ' + mesNombre + ' de ' + ano+ ', '+ hora +' hrs.'
+    
+    
     this.doc.setFontSize(16)
     this.doc.setFont("Lato", "normal");
     this.doc.text('REPORTE FLASH POST-EVENTO SÍSMICO', this.puntoMedio, 50, {align: 'center'})
     this.doc.setFontSize(12)
     this.doc.setFont("Lato", "normal");
-    this.doc.text(fecha.toLocaleString(),this.puntoMedio, 65, {align: 'center'})
+    this.doc.text(fechaSubTitulo,this.puntoMedio, 65, {align: 'center'})
     this.doc.text(ano +'.' + id,this.margenIzq, 80, {align: 'left'})
     this.doc.text('IYV-RP-VIG-MLP-02',this.margenDer, 80, {align: 'right'})
     this.doc.line(this.margenIzq,82,this.margenDer,82)
+
+    this.doc.addImage('assets/EMT/logo.png', 'PNG',486,20, 90,45, 'LOGO_EMT', 'FAST' )
+
+  }
+
+  private generarFooter(fecha : Date, nombre :string, id: number){
+    this.doc.setFontSize(12)
+    this.doc.setFont("Lato", "normal");
+    let ano = fecha.getFullYear()
+    let numPag = this.doc.getNumberOfPages()
+    this.doc.text(nombre,this.margenIzq,780,{align: 'left'})
+    this.doc.text(ano + '.' + id, this.margenDer, 780, {align: 'right'})
+    this.doc.text(numPag.toString(), this.puntoMedio, 780, {align: 'center'})
 
   }
 
@@ -52,6 +83,8 @@ export class GeneradorService {
   private implementarContenido(){
     this.implementarFuentes()
     this.generarHeader(new Date(),2)
+    this.generarFooter(new Date(),'josé vergara Fernández', 2)
+    this.generarObservaciones()
   }
 
   public descargarInforme() {
