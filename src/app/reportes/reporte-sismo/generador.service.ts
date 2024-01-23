@@ -3,6 +3,7 @@ import { jsPDF } from 'jspdf'
 import { latoBold, latoRegular, montBold, montMedium, montSemi } from 'src/assets/fonts/fonts';
 import { formateadoraDeTexto } from './data';
 import { FormGroup } from '@angular/forms';
+import autoTable from 'jspdf-autotable';
 
 @Injectable({
   providedIn: 'root'
@@ -77,7 +78,22 @@ export class GeneradorService {
   }
 
   generarInfoSismo(dataSismo: any, imagenMapa: HTMLImageElement) {
+
     this.doc.addImage(imagenMapa, 'PNG', this.puntoMedio - 100, this.usoPagina, 200, 300, 'imagenMapa', 'SLOW')
+    this.usoPagina += 320
+
+    autoTable(this.doc, {
+      theme: 'grid',
+      styles: { halign: 'left', font: 'Lato', fontStyle: 'normal', fontSize: 8, fillColor: undefined, lineColor: [1, 48, 51], textColor: [1, 48, 51] },
+      headStyles: { font: 'Lato', fontStyle: 'bold', fillColor: undefined, lineWidth: .1 },
+      body: [['Alarmas mes', 2], ['Alerta mes', 2], ['Modo Vigilancia', 2], ['Reporte post sismo ', 2], ['Reporte post sismo ', 2], ['Reporte post sismo ', 2] ,['Reporte post sismo ', 2]],
+      margin: { left: this.puntoMedio - (400) / 2 },
+      startY: this.usoPagina + 10,
+      columnStyles: { 0: { halign: 'left', cellWidth: 200 }, 1: { halign: 'center', cellWidth: 200 } },
+      alternateRowStyles: { fillColor: undefined },
+      rowPageBreak: 'avoid',
+    })
+
   }
 
   private generarHeader(fecha: Date, id: number) {
@@ -106,7 +122,7 @@ export class GeneradorService {
   }
 
   private generarFooter(fecha: Date, nombre: string, id: number) {
-    this.doc.setFontSize(12)
+    this.doc.setFontSize(10)
     this.doc.setFont("Lato", "normal");
     let ano = fecha.getFullYear()
     let numPag = this.doc.getNumberOfPages()

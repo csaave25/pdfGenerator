@@ -148,7 +148,6 @@ export class ReporteSismosComponent implements OnInit, AfterViewInit {
     })
       .then(function (dataUrl: any) {
         img.src = dataUrl;
-
       })
       .catch(function (error: any) {
         console.error('error', error);
