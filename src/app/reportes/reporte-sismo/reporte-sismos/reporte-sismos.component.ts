@@ -1,9 +1,11 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, QueryList, ViewChild } from '@angular/core';
 import { ApiService } from '../api.service';
 import * as leaf from 'leaflet';
 import { FormControl, FormGroup } from '@angular/forms';
 import { traduccionPuntosCardinales } from 'src/app/helpers';
 import { GeneradorService } from '../generador.service';
+import html2canvas from 'html2canvas';
+import domtoimage from 'dom-to-image';
 
 @Component({
   selector: 'app-reporte-sismos',
@@ -12,16 +14,24 @@ import { GeneradorService } from '../generador.service';
 })
 export class ReporteSismosComponent implements OnInit, AfterViewInit {
 
-  constructor(private api: ApiService, private generador : GeneradorService) { }
+  @ViewChild("mapaElement") mapa!: ElementRef
+
+  constructor(private api: ApiService, private generador: GeneradorService) { }
 
   dataUltimosSismos: any[] = []
   map: any
   idSismoSeleccionado: string = 'seleccione un sismo'
+  datoSeleccionado: any
   marker: any
   inputs = new FormGroup({
-    fecha: new FormControl('')
+    fecha: new FormControl(''),
+    id: new FormControl(0),
+    estacion: new FormControl(''),
+    radar: new FormControl(''),
+    otrasObs: new FormControl(''),
   })
   fechaMaxima = new Date().toISOString().slice(0, 10)
+  imagenMapa = new Image()
 
   ngOnInit(): void {
     // this.loadUltimosSismosChile()
@@ -51,6 +61,10 @@ export class ReporteSismosComponent implements OnInit, AfterViewInit {
     });
 
     let dato = this.dataUltimosSismos.filter((data: any) => data.id == id)[0]
+    this.datoSeleccionado = dato
+    console.log(dato);
+
+
     if (dato) {
       if (this.marker) {
         this.map.removeLayer(this.marker)
@@ -74,8 +88,6 @@ export class ReporteSismosComponent implements OnInit, AfterViewInit {
       popupAnchor: [-3, -76] // point from which the popup should open relative to the iconAnchor
     });
 
-
-
     leaf.marker([-31.7172237, -70.4905051], { icon: estrella }).addTo(this.map);
 
     const tiles = leaf.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -97,11 +109,8 @@ export class ReporteSismosComponent implements OnInit, AfterViewInit {
     this.api.getSismosUSGC(fecha, latitud, longitud).subscribe((data: any) => {
       try {
         data.features.forEach((element: any) => {
-
-
           this.api.getMoreInfo(element.id).subscribe((moreData: any) => {
             let moreProps = moreData.properties.products.origin[0].properties
-            console.log(moreData);
             let props = element.properties
             this.dataUltimosSismos.push({
               id: element.id,
@@ -124,9 +133,39 @@ export class ReporteSismosComponent implements OnInit, AfterViewInit {
   }
 
 
-  generarPDF(){
-    this.generador.descargarInforme()
-    
+  loadScreenshotMapa() {
+
+    var node = this.mapa.nativeElement
+    let img = new Image();
+    var scale = 2;
+    domtoimage.toPng(node, {
+      width: node.clientWidth * scale,
+      height: node.clientHeight * scale,
+      style: {
+        transform: 'scale(' + scale + ')',
+        transformOrigin: 'top left'
+      }
+    })
+      .then(function (dataUrl: any) {
+        img.src = dataUrl;
+
+      })
+      .catch(function (error: any) {
+        console.error('error', error);
+      });
+
+    this.imagenMapa = img
+  }
+
+
+
+  generarPDF() {
+    this.loadScreenshotMapa()
+    setTimeout(() => {
+      this.generador.descargarInforme(this.inputs, this.datoSeleccionado, this.imagenMapa)
+    }, 600);
+
+
   }
 
 }

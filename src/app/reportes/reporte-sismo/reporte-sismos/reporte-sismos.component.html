@@ -18,13 +18,13 @@
                     </div>
                 </div>
             </div> -->
-            <div class="my-4 d-flex flex-column align-items-center ">
+            <div class="my-4 d-flex flex-column align-items-center  " >
                 <div class="d-flex gap-3 align-items-end " style="width: 100%;">
                     <div>
                         <label>ID</label>
                         <div>
                             <input type="number" id="idInforme" class="form-control" value="0" min="0"
-                                style="width: 100px;" />
+                                style="width: 100px;" formControlName="id"/>
                         </div>
                     </div>
                     <div>
@@ -62,7 +62,7 @@
                                     SELECCIONADA</p>
                             </div>
                         </ng-template>
-                        <div class="map-container">
+                        <div class="map-container"  #mapaElement>
                             <div class="map-frame">
                                 <div id="map"></div>
                             </div>
@@ -86,25 +86,28 @@
                     <div >
                         <label>Estacion Total</label>
                         <mdb-form-control>
-                            <textarea mdbInput class="form-control" id="estacion" rows="4"></textarea>
+                            <textarea mdbInput class="form-control" id="estacion" rows="4" formControlName="estacion"></textarea>
                             <label mdbLabel class="form-label" for="estacion">Dejar en blanco si no presenta activaciones.</label>
                         </mdb-form-control>
                     </div>
                     <div>
                         <label>Radar</label>
                         <mdb-form-control>
-                            <textarea mdbInput class="form-control" id="Radar" rows="4"></textarea>
+                            <textarea mdbInput class="form-control" id="Radar" rows="4" formControlName="radar"></textarea>
                             <label mdbLabel class="form-label" for="Radar">Dejar en blanco si no presenta activaciones.</label>
                         </mdb-form-control>
                     </div>
                     <div>
-                        <label>Comentarios</label>
+                        <label>Otras observaciones</label>
                         <mdb-form-control>
-                            <textarea mdbInput class="form-control" id="comentarios" rows="4"></textarea>
-                            <label mdbLabel class="form-label" for="comentarios">comentarios.</label>
+                            <textarea mdbInput class="form-control" id="OBSERVACIONES" formControlName="otrasObs" rows="4"></textarea>
+                            <label mdbLabel class="form-label" for="OBSERVACIONES">Observaciones.</label>
                         </mdb-form-control>
                     </div>
                 </div>
+            </div>
+            <div id="intento">
+
             </div>
         </div>
     </div>

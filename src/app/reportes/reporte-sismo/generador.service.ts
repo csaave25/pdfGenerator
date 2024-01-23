@@ -1,12 +1,8 @@
-import { ElementRef, Injectable, QueryList } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { jsPDF } from 'jspdf'
-import autoTable from 'jspdf-autotable'
 import { latoBold, latoRegular, montBold, montMedium, montSemi } from 'src/assets/fonts/fonts';
-// import { colores, data, formateadoraDeTexto, justify, obtenerAncho } from './data';
-import { AbstractControl, FormGroup } from '@angular/forms';
-import { ApiService } from './api.service';
-import { locale } from 'moment';
 import { formateadoraDeTexto } from './data';
+import { FormGroup } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root'
@@ -24,32 +20,36 @@ export class GeneradorService {
   private usoPagina = this.margenContenido
 
 
-  private generarObservaciones() {
-    let estacion = 'Esta es una prueba de lo que se puede hacer. esta es una prueba de lo que se puede hacer. esta es una prueba de lo que se puede hacer. esta es una prueba de lo que se puede hacer. esta es una prueba de lo que se puede hacer.'
-    // let estacion = ''
-    let radar = ''
+  private generarObservaciones(inputs: FormGroup, dataSismo: any) {
+    let estacion = inputs.get('estacion')?.value
+    let radar = inputs.get('radar')?.value
+    let otrasObs = inputs.get('otrasObs')?.value
 
 
-    this.doc.setFontSize(10)
-    this.doc.setFont("Lato", "normal");
-    this.usoPagina = formateadoraDeTexto(this.doc, estacion.length < 3 ? '-*Estación Total:* No se presentan activaciones post sismo.' : '-*Estación Total:*  ' + estacion, this.usoPagina, this.margenIzq + 20 , this.margenDer - 20 - this.margenIzq) + 10
 
     this.doc.setFontSize(10)
     this.doc.setFont("Lato", "normal");
-    this.usoPagina = formateadoraDeTexto(this.doc, radar.length < 3 ? '-*Radar:* No se presentan activaciones post sismo.' : '-*Radar:*  ' + radar, this.usoPagina, this.margenIzq + 20 , this.margenDer - 20 - this.margenIzq) + 10
+    this.usoPagina = formateadoraDeTexto(this.doc, estacion.length < 3 ? '-*Estación Total:* No se presentan activaciones post sismo.' : '-*Estación Total:*  ' + estacion, this.usoPagina, this.margenIzq + 20, this.margenDer - 20 - this.margenIzq) + 10
+
+    this.doc.setFontSize(10)
+    this.doc.setFont("Lato", "normal");
+    this.usoPagina = formateadoraDeTexto(this.doc, radar.length < 3 ? '-*Radar:* No se presentan activaciones post sismo.' : '-*Radar:*  ' + radar, this.usoPagina, this.margenIzq + 20, this.margenDer - 20 - this.margenIzq) + 10
 
     this.doc.setFontSize(10)
     this.doc.setFont("Lato", "bold");
     this.doc.text('•  ', this.margenIzq + 20, this.usoPagina, { align: 'left' })
     this.doc.setFontSize(10)
     this.doc.setFont("Lato", "normal");
-    let frase = "Profundidad del sismo a 128 km, ubicado a a 64 KM al SE de Mina Los Pelambres (Observado en la Figura 1) y con intensidad de 5,1 MW GUC 1"
-    this.usoPagina = formateadoraDeTexto(this.doc, frase, this.usoPagina, this.margenIzq + 20 + this.doc.getTextWidth('•  '), this.margenDer - (this.margenIzq + 20 + this.doc.getTextWidth('•  '))) +  10
+
+    let lugar = dataSismo.lugar
+    let profundidad = (dataSismo.profundidad as string)
+
+    let frase = "Profundidad del sismo a " + dataSismo.profundidad + " km, ubicado a " + dataSismo.lugar + " (Observado en la Figura 1) y con intensidad de " + dataSismo.magnitud + " MW"
+    this.usoPagina = formateadoraDeTexto(this.doc, frase, this.usoPagina, this.margenIzq + 20 + this.doc.getTextWidth('•  '), this.margenDer - (this.margenIzq + 20 + this.doc.getTextWidth('•  '))) + 10
 
     this.doc.setFontSize(10)
     this.doc.setFont("Lato", "normal");
-    frase = '-Se observó polución en zonas colmatadas, rampa 3500W, rampa Este y 3080, Sin mayores novedades. Se observó polución en zonas colmatadas, rampa 3500W, rampa Este y 3080, Sin mayores novedades.'
-    this.usoPagina = formateadoraDeTexto(this.doc, frase, this.usoPagina, this.margenIzq + 20, this.margenDer - this.margenIzq -20) + 10
+    this.usoPagina = formateadoraDeTexto(this.doc, otrasObs, this.usoPagina, this.margenIzq + 20, this.margenDer - this.margenIzq - 20) + 10
 
 
   }
@@ -74,6 +74,10 @@ export class GeneradorService {
     let frase = "Informo que a las " + hora + " hrs. del " + diaNombre + " " + diaNumero + " de " + mesNombre + " de " + ano + ", se registra sismo en rajo mina:"
     this.doc.text(frase, this.margenIzq, this.usoPagina, { align: 'left' })
     this.usoPagina += 30
+  }
+
+  generarInfoSismo(dataSismo: any, imagenMapa: HTMLImageElement) {
+    this.doc.addImage(imagenMapa, 'PNG', this.puntoMedio - 100, this.usoPagina, 200, 300, 'imagenMapa', 'SLOW')
   }
 
   private generarHeader(fecha: Date, id: number) {
@@ -125,18 +129,20 @@ export class GeneradorService {
     this.doc.addFont("Montserrat-SemiBold.ttf", "Montserrat", "semibold")
   }
 
-  private implementarContenido() {
+  private implementarContenido(inputs: FormGroup, dataSismo: any, imagenMapa: HTMLImageElement) {
 
     let fecha = new Date()
     this.implementarFuentes()
     this.generarHeader(fecha, 2)
     this.generarFooter(fecha, 'josé vergara Fernández', 2)
     this.generarTitulosObservaciones(fecha)
-    this.generarObservaciones()
+    this.generarObservaciones(inputs, dataSismo)
+    this.generarInfoSismo(dataSismo, imagenMapa)
+
   }
 
-  public descargarInforme() {
-    this.implementarContenido()
+  public descargarInforme(inputs: FormGroup, dataSismo: any, imagenMapa: HTMLImageElement) {
+    this.implementarContenido(inputs, dataSismo, imagenMapa)
     this.doc.output('dataurlnewwindow')
     this.doc = new jsPDF('p', 'pt', 'letter', true)
     this.usoPagina = this.margenContenido
