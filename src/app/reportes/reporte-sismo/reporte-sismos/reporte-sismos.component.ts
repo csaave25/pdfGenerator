@@ -126,6 +126,7 @@ export class ReporteSismosComponent implements OnInit, AfterViewInit {
 
   generarPDF(){
     this.generador.descargarInforme()
+    
   }
 
 }

@@ -5,8 +5,8 @@
         <div class="d-flex flex-column align-items-center mt-5 ">
             <h3>REPORTE SISMOS</h3>
             <div class="gap-3 d-flex mt-5">
-                <button type="button" style="background-color: #00838F; color: #fbfbfb" class="btn " (click)="generarPDF()"
-                    mdbRipple>mostrar</button>
+                <button type="button" style="background-color: #00838F; color: #fbfbfb" class="btn "
+                    (click)="generarPDF()" mdbRipple>mostrar</button>
                 <button type="button" style="background-color: #00838F; color: #fbfbfb" class="btn " (click)="false"
                     mdbRipple>Subir</button>
             </div>
@@ -23,23 +23,17 @@
                     <div>
                         <label>ID</label>
                         <div>
-                            <input type="number" id="idInforme" class="form-control" value="0" min="0" style="width: 100px;" />
+                            <input type="number" id="idInforme" class="form-control" value="0" min="0"
+                                style="width: 100px;" />
                         </div>
                     </div>
                     <div>
                         <label>Fecha Inicio</label>
                         <mdb-form-control style="width: 185px;">
                             <input mdbInput type="date" id="fecha-inicio" [max]="fechaMaxima" class="form-control"
-                                 formControlName="fecha" (change)="onSeleccionarFecha()"/>
+                                formControlName="fecha" (change)="onSeleccionarFecha()" />
                         </mdb-form-control>
                     </div>
-                    <!-- <div>
-                        <label>Nombre</label>
-                        <mdb-form-control style="width: 185px;">
-                            <input mdbInput type="text" id="nombreGenerador" class="form-control"
-                                 formControlName="fecha" (change)="onSeleccionarFecha()"/>
-                        </mdb-form-control>
-                    </div> -->
                 </div>
                 <div class="mt-4 d-flex flex-column align-items-center">
                     <div class="mt-4 d-flex gap-3">
@@ -88,15 +82,30 @@
                         </div>
                     </div>
                 </div>
-                <div class="mt-4 w-100">
-                    <label>Comentarios</label>
-                    <mdb-form-control>
-                        <textarea mdbInput class="form-control" id="comentarios" rows="5"></textarea>
-                        <label mdbLabel class="form-label" for="comentarios">Comentarios</label>
-                    </mdb-form-control>
+                <div class="mt-4 w-100 d-flex flex-column gap-3">
+                    <div >
+                        <label>Estacion Total</label>
+                        <mdb-form-control>
+                            <textarea mdbInput class="form-control" id="estacion" rows="4"></textarea>
+                            <label mdbLabel class="form-label" for="estacion">Dejar en blanco si no presenta activaciones.</label>
+                        </mdb-form-control>
+                    </div>
+                    <div>
+                        <label>Radar</label>
+                        <mdb-form-control>
+                            <textarea mdbInput class="form-control" id="Radar" rows="4"></textarea>
+                            <label mdbLabel class="form-label" for="Radar">Dejar en blanco si no presenta activaciones.</label>
+                        </mdb-form-control>
+                    </div>
+                    <div>
+                        <label>Comentarios</label>
+                        <mdb-form-control>
+                            <textarea mdbInput class="form-control" id="comentarios" rows="4"></textarea>
+                            <label mdbLabel class="form-label" for="comentarios">comentarios.</label>
+                        </mdb-form-control>
+                    </div>
                 </div>
             </div>
-           
         </div>
     </div>
 </div>
