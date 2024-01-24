@@ -18,7 +18,7 @@ import { MdbTabsModule } from 'mdb-angular-ui-kit/tabs';
 import { MdbTooltipModule } from 'mdb-angular-ui-kit/tooltip';
 import { MdbValidationModule } from 'mdb-angular-ui-kit/validation';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { InformeEfeComponent } from './informe-efe/informe-efe/informe-efe.component';
 import { MenuComponent } from './menu/menu.component';
 import { RouterModule, RouterOutlet, Routes, provideRouter } from '@angular/router';
@@ -48,6 +48,7 @@ export const appConfig: ApplicationConfig = {
     ReporteSismosComponent
   ],
   imports: [
+    FormsModule,
     HttpClientModule,
     RouterModule.forRoot(routes),
     RouterOutlet,

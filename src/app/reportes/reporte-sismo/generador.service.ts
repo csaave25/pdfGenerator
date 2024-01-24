@@ -16,7 +16,6 @@ export class GeneradorService {
   private margenIzq = 40
   private margenDer = 611 - this.margenIzq
   private puntoMedio = (this.doc.internal.pageSize.width || this.doc.internal.pageSize.getWidth()) / 2
-  private margenTexto = this.margenDer - this.margenIzq
   private margenContenido = 115
   private usoPagina = this.margenContenido
 
@@ -30,16 +29,16 @@ export class GeneradorService {
 
     this.doc.setFontSize(10)
     this.doc.setFont("Lato", "normal");
-    this.usoPagina = formateadoraDeTexto(this.doc, estacion.length < 3 ? '-*Estación Total:* No se presentan activaciones post sismo.' : '-*Estación Total:*  ' + estacion, this.usoPagina, this.margenIzq + 20, this.margenDer - 20 - this.margenIzq)
+    this.usoPagina = formateadoraDeTexto(this.doc, estacion.length < 3 ? '-*Estación Total:* No se presentan activaciones post sismo.' : '-*Estación Total:*  ' + estacion, this.usoPagina, this.margenIzq + 20, this.margenDer- 10.5 - (this.margenIzq  + this.doc.getTextWidth('•  ')))
 
     this.doc.setFontSize(10)
     this.doc.setFont("Lato", "normal");
-    this.usoPagina = formateadoraDeTexto(this.doc, radar.length < 3 ? '-*Radar:* No se presentan activaciones post sismo.' : '-*Radar:*  ' + radar, this.usoPagina, this.margenIzq + 20, this.margenDer - 20 - this.margenIzq)
+    this.usoPagina = formateadoraDeTexto(this.doc, radar.length < 3 ? '-*Radar:* No se presentan activaciones post sismo.' : '-*Radar:*  ' + radar, this.usoPagina, this.margenIzq + 20, this.margenDer- 10.5 - (this.margenIzq  + this.doc.getTextWidth('•  ')))
 
     this.doc.setFontSize(10)
     this.doc.setFont("Lato", "normal");
     let frase = "-Profundidad del sismo a " + dataSismo.profundidad + " km, ubicado a " + dataSismo.lugar + " (Observado en la Figura 1) y con intensidad de " + dataSismo.magnitud + " MW"
-    this.usoPagina = formateadoraDeTexto(this.doc, frase, this.usoPagina, this.margenIzq + 20, this.margenDer - (this.margenIzq + 20 + this.doc.getTextWidth('•  ')))
+    this.usoPagina = formateadoraDeTexto(this.doc, frase, this.usoPagina, this.margenIzq + 20, this.margenDer- 10.5 - (this.margenIzq  + this.doc.getTextWidth('•  ')))
 
     this.doc.setFontSize(10)
     this.doc.setFont("Lato", "normal");
@@ -73,16 +72,16 @@ export class GeneradorService {
   generarInfoSismo(dataSismo: any, imagenMapa: HTMLImageElement) {
 
 
-    this.doc.addImage('./assets/Sismos/minaMarker.png', 'PNG', this.puntoMedio - 100, this.usoPagina+4, 12, 12, 'minaMarker', 'SLOW')
+    this.doc.addImage('./assets/Sismos/minaMarker.png', 'PNG', this.puntoMedio - 100, this.usoPagina + 4, 12, 12, 'minaMarker', 'SLOW')
     this.doc.setFontSize(8)
     this.doc.setFont("Lato", "normal");
     let text = 'Minera ' + 'Los Pelambres'
-    this.doc.text(text, this.puntoMedio - 84 , this.usoPagina+14, {align: 'left'})
+    this.doc.text(text, this.puntoMedio - 84, this.usoPagina + 14, { align: 'left' })
 
-    this.doc.addImage('./assets/Sismos/sismoMarker.png', 'PNG', this.puntoMedio - 75 + this.doc.getTextWidth(text), this.usoPagina+4, 12, 12, 'sismoMarker', 'SLOW')
+    this.doc.addImage('./assets/Sismos/sismoMarker.png', 'PNG', this.puntoMedio - 75 + this.doc.getTextWidth(text), this.usoPagina + 4, 12, 12, 'sismoMarker', 'SLOW')
     this.doc.setFontSize(8)
     this.doc.setFont("Lato", "normal");
-    this.doc.text('Sismo', this.puntoMedio - 60 + this.doc.getTextWidth(text) , this.usoPagina+14, {align: 'left'})
+    this.doc.text('Sismo', this.puntoMedio - 60 + this.doc.getTextWidth(text), this.usoPagina + 14, { align: 'left' })
 
 
     this.doc.addImage(imagenMapa, 'PNG', this.puntoMedio - 100, this.usoPagina + 18, 200, 282, 'imagenMapa', 'SLOW')

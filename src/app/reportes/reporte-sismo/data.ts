@@ -8,6 +8,7 @@ export function justify(pdfGen: jsPDF, text: string, xStart: number, yStart: num
     let lineNumber = 0;
     let wordsInfo: IWordInfo[] = [];
     let lineLength = 0;
+
     for (const word of words) {
         const wordLength = pdfGen.getTextWidth(word.replace('*', "").replace('*', "") + ' ');
         if (wordLength + lineLength > textWidth) {
@@ -92,7 +93,7 @@ export const formateadoraDeTexto = (doc: jsPDF, textos: string, margenTop: numbe
         let text = dividirTexto(textos)
         let init = inicio + doc.getTextWidth('•  ')
         let ancho = anchoMax - doc.getTextWidth('•  ')
-        text.forEach(texto => {
+        text.forEach((texto, index) => {
             let copytext = texto
             copytext = copytext.replace(' ', '')
             if (texto[0] == '-') {
@@ -102,14 +103,34 @@ export const formateadoraDeTexto = (doc: jsPDF, textos: string, margenTop: numbe
                 doc.text('•', inicio, margenTop, { align: 'left' })
                 doc.setFont("Lato", 'normal')
                 justify(doc, txt, init, margenTop, ancho)
-                margenTop = margenTop + obtenerAncho(doc, txt, ancho)+4
+                margenTop = margenTop + obtenerAncho(doc, txt, ancho) + 4
             } else {
                 if (copytext.length == 0) {
                     margenTop += 10
                 } else {
-                    margenTop = saltoDePagina(texto, doc, ancho, margenTop)
-                    justify(doc, texto, inicio, margenTop, anchoMax)
-                    margenTop = margenTop + obtenerAncho(doc, texto, anchoMax)
+                    if (texto.includes('•')) {
+                        texto = texto.replace('•', '')
+                        texto = texto.replace(' ', '').replace(' ', '').replace(' ', '')
+                        doc.setFont("Lato", 'bold')
+                        doc.text('•', inicio, margenTop, { align: 'left' })
+                        doc.setFont("Lato", 'normal')
+                        justify(doc, texto, init, margenTop, ancho)
+                        margenTop = margenTop + obtenerAncho(doc, texto, ancho) + 4
+                    } else {
+                        
+                        if (text[index+1] && text[index + 1].includes('•')) {
+                            margenTop = saltoDePagina(texto, doc, ancho, margenTop)
+                            justify(doc, texto, inicio, margenTop, anchoMax)
+                            margenTop = margenTop + obtenerAncho(doc, texto, anchoMax) +4
+                        } else {
+                            margenTop = saltoDePagina(texto, doc, ancho, margenTop)
+                            justify(doc, texto, inicio, margenTop, anchoMax)
+                            margenTop = margenTop + obtenerAncho(doc, texto, anchoMax)
+                        }
+
+                    }
+
+
                 }
             }
 
@@ -131,12 +152,12 @@ export function obtenerFechaEnPredefinido(fecha: Date, local: boolean) {
         return diaNombre + ' ' + diaNumero + ' de ' + mesNombre + ' de ' + ano + ', ' + hora + ' hrs.'
     } else {
         let ano = fecha.getFullYear().toString()
-        let diaNombre = fecha.toLocaleDateString('us-US', { weekday: 'long' , timeZone: 'UTC' });
+        let diaNombre = fecha.toLocaleDateString('us-US', { weekday: 'long', timeZone: 'UTC' });
         diaNombre = diaNombre[0].toUpperCase() + diaNombre.slice(1)
         let diaNumero = fecha.toLocaleDateString().slice(0, 2)
-        let mesNombre = fecha.toLocaleDateString('us-US', { month: 'long' ,timeZone: 'UTC' })
+        let mesNombre = fecha.toLocaleDateString('us-US', { month: 'long', timeZone: 'UTC' })
         mesNombre = mesNombre[0].toUpperCase() + mesNombre.slice(1)
-        let hora = ('0' + fecha.toLocaleTimeString('us-US',{timeZone: 'UTC' })).slice(-8).slice(0, 5)
+        let hora = ('0' + fecha.toLocaleTimeString('us-US', { timeZone: 'UTC' })).slice(-8).slice(0, 5)
         return diaNombre + ' ' + diaNumero + ' de ' + mesNombre + ' de ' + ano + ', ' + hora + ' hrs.'
     }
 

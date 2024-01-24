@@ -104,7 +104,7 @@
                         <label>Otras observaciones</label>
                         <mdb-form-control>
                             <textarea mdbInput class="form-control" id="OBSERVACIONES" formControlName="otrasObs"
-                                rows="4"></textarea>
+                                rows="4" (keypress)="formateador($event)" maxlength=""></textarea>
                             <label mdbLabel class="form-label" for="OBSERVACIONES">Observaciones.</label>
                         </mdb-form-control>
                     </div>

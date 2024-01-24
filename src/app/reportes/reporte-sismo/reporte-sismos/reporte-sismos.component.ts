@@ -19,6 +19,7 @@ export class ReporteSismosComponent implements OnInit, AfterViewInit {
   constructor(private api: ApiService, private generador: GeneradorService) { }
 
   dataUltimosSismos: any[] = []
+  texto1 = ''
   map: any
   idSismoSeleccionado: string = 'seleccione un sismo'
   datoSeleccionado: any
@@ -29,6 +30,7 @@ export class ReporteSismosComponent implements OnInit, AfterViewInit {
     estacion: new FormControl(''),
     radar: new FormControl(''),
     otrasObs: new FormControl(''),
+    otrasObs2: new FormControl(''),
   })
   fechaMaxima = new Date().toISOString().slice(0, 10)
   imagenMapa = new Image()
@@ -62,8 +64,6 @@ export class ReporteSismosComponent implements OnInit, AfterViewInit {
 
     let dato = this.dataUltimosSismos.filter((data: any) => data.id == id)[0]
     this.datoSeleccionado = dato
-    console.log(dato);
-
 
     if (dato) {
       if (this.marker) {
@@ -79,7 +79,7 @@ export class ReporteSismosComponent implements OnInit, AfterViewInit {
       zoom: 6,
       zoomControl: false,
       scrollWheelZoom: false,
-      
+
     });
 
 
@@ -93,7 +93,7 @@ export class ReporteSismosComponent implements OnInit, AfterViewInit {
 
     const tiles = leaf.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-      
+
     });
 
     tiles.addTo(this.map);
@@ -154,6 +154,30 @@ export class ReporteSismosComponent implements OnInit, AfterViewInit {
       });
 
     this.imagenMapa = img
+  }
+
+
+  formateador(e: Event) {
+    let str = (e.target as HTMLInputElement).value
+    // let str = e
+    let arrStr = str.split('\n')
+    let newString = ''
+
+    arrStr.forEach((str, index) => {
+
+      if (str[0]+ str[1] == '- ') {
+        str = str.replace('- ', '  • ')
+      }
+
+      if (index != 0) {
+        newString += '\n' + str
+      } else {
+        newString += str
+      }
+    })
+
+    str = newString
+    this.inputs.get('otrasObs')?.setValue(str)
   }
 
 
