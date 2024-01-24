@@ -18,13 +18,13 @@
                     </div>
                 </div>
             </div> -->
-            <div class="my-4 d-flex flex-column align-items-center  " >
+            <div class="my-4 d-flex flex-column align-items-center  ">
                 <div class="d-flex gap-3 align-items-end " style="width: 100%;">
                     <div>
                         <label>ID</label>
                         <div>
                             <input type="number" id="idInforme" class="form-control" value="0" min="0"
-                                style="width: 100px;" formControlName="id"/>
+                                style="width: 100px;" formControlName="id" />
                         </div>
                     </div>
                     <div>
@@ -36,7 +36,7 @@
                     </div>
                 </div>
                 <div class="mt-4 d-flex flex-column align-items-center">
-                    <div class="mt-4 d-flex gap-3">
+                    <div class="mt-4 d-flex gap-3 align-items-end">
                         <!-- <ul class="border rounded  d-flex flex-column align-items-center justify-content-center ps-0"> -->
                         <ul *ngIf="dataUltimosSismos.length > 0;  else elseBlock"
                             class="list-group list-group-light border overflow-auto"
@@ -62,52 +62,55 @@
                                     SELECCIONADA</p>
                             </div>
                         </ng-template>
-                        <div class="map-container"  #mapaElement>
-                            <div class="map-frame">
-                                <div id="map"></div>
-                            </div>
-                            <div class="mt-2 d-flex flex-column gap-2">
-                                <div class="d-flex gap-2 align-items-center">
+                        <div class="map-container">
+                            <div class="mt-2 d-flex gap-3 my-1">
+                                <div class="d-flex gap-1 align-items-center">
                                     <img src="../../../../assets/Sismos/minaMarker.png" alt="minaMarker" width="15"
                                         height="15">
-                                    <p style="font-size: 11px; text-align: center;" class="m-0">Referencia de Minera Los
-                                        Pelambres </p>
+                                    <p style="font-size: 11px; " class="m-0"><span>Minera Los Pelambres</span></p>
                                 </div>
-                                <div class="d-flex gap-2 align-items-center">
+                                <div class="d-flex gap-1 align-items-center">
                                     <img src="../../../../assets/Sismos/sismoMarker.png" alt="minaMarker" width="15"
                                         height="15">
-                                    <p style="font-size: 11px; text-align: center;" class="m-0">Referencia del Sismo</p>
+                                    <p style="font-size: 11px; " class="m-0">Sismo</p>
                                 </div>
+                            </div>
+                            <div class="map-frame" #mapaElement>
+                                <div id="map"></div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="mt-4 w-100 d-flex flex-column gap-3">
-                    <div >
+                    <div>
                         <label>Estacion Total</label>
                         <mdb-form-control>
-                            <textarea mdbInput class="form-control" id="estacion" rows="4" formControlName="estacion"></textarea>
-                            <label mdbLabel class="form-label" for="estacion">Dejar en blanco si no presenta activaciones.</label>
+                            <textarea mdbInput class="form-control" id="estacion" rows="4"
+                                formControlName="estacion"></textarea>
+                            <label mdbLabel class="form-label" for="estacion">Dejar en blanco si no presenta
+                                activaciones.</label>
                         </mdb-form-control>
                     </div>
                     <div>
                         <label>Radar</label>
                         <mdb-form-control>
-                            <textarea mdbInput class="form-control" id="Radar" rows="4" formControlName="radar"></textarea>
-                            <label mdbLabel class="form-label" for="Radar">Dejar en blanco si no presenta activaciones.</label>
+                            <textarea mdbInput class="form-control" id="Radar" rows="4"
+                                formControlName="radar"></textarea>
+                            <label mdbLabel class="form-label" for="Radar">Dejar en blanco si no presenta
+                                activaciones.</label>
                         </mdb-form-control>
                     </div>
                     <div>
                         <label>Otras observaciones</label>
                         <mdb-form-control>
-                            <textarea mdbInput class="form-control" id="OBSERVACIONES" formControlName="otrasObs" rows="4"></textarea>
+                            <textarea mdbInput class="form-control" id="OBSERVACIONES" formControlName="otrasObs"
+                                rows="4"></textarea>
                             <label mdbLabel class="form-label" for="OBSERVACIONES">Observaciones.</label>
                         </mdb-form-control>
                     </div>
                 </div>
             </div>
             <div id="intento">
-
             </div>
         </div>
     </div>

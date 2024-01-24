@@ -78,7 +78,8 @@ export class ReporteSismosComponent implements OnInit, AfterViewInit {
       center: [-31.7172237, -70.4905051],
       zoom: 6,
       zoomControl: false,
-      scrollWheelZoom: false
+      scrollWheelZoom: false,
+      
     });
 
 
@@ -91,9 +92,8 @@ export class ReporteSismosComponent implements OnInit, AfterViewInit {
     leaf.marker([-31.7172237, -70.4905051], { icon: estrella }).addTo(this.map);
 
     const tiles = leaf.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 18,
-      minZoom: 3,
-      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      
     });
 
     tiles.addTo(this.map);
@@ -117,7 +117,7 @@ export class ReporteSismosComponent implements OnInit, AfterViewInit {
               lugar: traduccionPuntosCardinales(props.place),
               magnitud: props.mag,
               magTipo: props.magType,
-              tiempo: new Date(props.time).toLocaleString(),
+              tiempo: new Date(props.time).toISOString(),
               tiempoUTC: new Date(props.time).toUTCString(),
               latitud: moreProps.latitude,
               longitud: moreProps.longitude,
@@ -137,7 +137,7 @@ export class ReporteSismosComponent implements OnInit, AfterViewInit {
 
     var node = this.mapa.nativeElement
     let img = new Image();
-    var scale = 2;
+    var scale = 4;
     domtoimage.toPng(node, {
       width: node.clientWidth * scale,
       height: node.clientHeight * scale,

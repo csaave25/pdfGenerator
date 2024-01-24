@@ -102,7 +102,7 @@ export const formateadoraDeTexto = (doc: jsPDF, textos: string, margenTop: numbe
                 doc.text('•', inicio, margenTop, { align: 'left' })
                 doc.setFont("Lato", 'normal')
                 justify(doc, txt, init, margenTop, ancho)
-                margenTop = margenTop + obtenerAncho(doc, txt, ancho)
+                margenTop = margenTop + obtenerAncho(doc, txt, ancho)+4
             } else {
                 if (copytext.length == 0) {
                     margenTop += 10
@@ -116,6 +116,30 @@ export const formateadoraDeTexto = (doc: jsPDF, textos: string, margenTop: numbe
         })
     }
     return margenTop
+}
+
+
+export function obtenerFechaEnPredefinido(fecha: Date, local: boolean) {
+    if (local) {
+        let ano = fecha.getFullYear().toString()
+        let diaNombre = fecha.toLocaleDateString('es-ES', { weekday: 'long' });
+        diaNombre = diaNombre[0].toUpperCase() + diaNombre.slice(1)
+        let diaNumero = fecha.toLocaleDateString().slice(0, 2)
+        let mesNombre = fecha.toLocaleDateString('es-ES', { month: 'long' })
+        mesNombre = mesNombre[0].toUpperCase() + mesNombre.slice(1)
+        let hora = ('0' + fecha.toLocaleTimeString('es-ES')).slice(-8).slice(0, 5)
+        return diaNombre + ' ' + diaNumero + ' de ' + mesNombre + ' de ' + ano + ', ' + hora + ' hrs.'
+    } else {
+        let ano = fecha.getFullYear().toString()
+        let diaNombre = fecha.toLocaleDateString('us-US', { weekday: 'long' , timeZone: 'UTC' });
+        diaNombre = diaNombre[0].toUpperCase() + diaNombre.slice(1)
+        let diaNumero = fecha.toLocaleDateString().slice(0, 2)
+        let mesNombre = fecha.toLocaleDateString('us-US', { month: 'long' ,timeZone: 'UTC' })
+        mesNombre = mesNombre[0].toUpperCase() + mesNombre.slice(1)
+        let hora = ('0' + fecha.toLocaleTimeString('us-US',{timeZone: 'UTC' })).slice(-8).slice(0, 5)
+        return diaNombre + ' ' + diaNumero + ' de ' + mesNombre + ' de ' + ano + ', ' + hora + ' hrs.'
+    }
+
 }
 
 
