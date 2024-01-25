@@ -24,6 +24,7 @@ import { MenuComponent } from './menu/menu.component';
 import { RouterModule, RouterOutlet, Routes, provideRouter } from '@angular/router';
 import { InformeA2mgComponent } from './informe-a2mg/informe-a2mg/informe-a2mg.component';
 import { ReporteSismosComponent } from './reportes/reporte-sismo/reporte-sismos/reporte-sismos.component';
+import { ReporteTronaduraComponent } from './reportes/reporte-tronadura/reporte-tronadura/reporte-tronadura.component';
 
 
 
@@ -31,7 +32,8 @@ const routes: Routes = [
   { path: '', component: MenuComponent },
   { path: 'efe', component: InformeEfeComponent },
   { path: 'a2mg', component: InformeA2mgComponent },
-  { path: 'sismos', component: ReporteSismosComponent }
+  { path: 'sismos', component: ReporteSismosComponent },
+  { path: 'tronadura', component: ReporteTronaduraComponent },
 ];
 
 export const appConfig: ApplicationConfig = {
@@ -45,7 +47,8 @@ export const appConfig: ApplicationConfig = {
     InformeEfeComponent,
     MenuComponent,
     InformeA2mgComponent,
-    ReporteSismosComponent
+    ReporteSismosComponent,
+    ReporteTronaduraComponent
   ],
   imports: [
     FormsModule,
