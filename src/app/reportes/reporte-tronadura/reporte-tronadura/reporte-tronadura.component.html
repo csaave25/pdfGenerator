@@ -6,7 +6,7 @@
             <div>
                 <h3 style="color: #00838F;">REPORTE TRONADURA</h3>
             </div>
-            <div class="mt-4 col-9 d-flex flex-column gap-3">
+            <div class="mt-4 col-9 d-flex flex-column gap-3" [formGroup]="inputs">
                 <div class="border rounded p-2">
                     <div class="d-flex">
                         <h4>General</h4>
@@ -15,14 +15,16 @@
                         <div>
                             <label mdbLabel id="fechaTronadura">Fecha</label>
                             <mdb-form-control class="col-3">
-                                <input mdbInput type="datetime-local" id="fechaTronadura" class="form-control" />
+                                <input mdbInput type="datetime-local" id="fechaTronadura" class="form-control"
+                                    formControlName="fecha" />
                             </mdb-form-control>
                         </div>
                         <div class="mt-2">
                             <label mdbLabel for="form1">Comentarios</label>
                             <mdb-form-control>
-                                <textarea mdbInput class="form-control" id="textAreaExample" rows="4"></textarea>
-                                <label mdbLabel class="form-label" for="textAreaExample">Comentarios</label>
+                                <textarea mdbInput class="form-control" id="comentario" rows="4"
+                                    formControlName="comentarios"></textarea>
+                                <label mdbLabel class="form-label" for="comentario">Comentarios</label>
                             </mdb-form-control>
                         </div>
                     </div>
@@ -34,7 +36,8 @@
                     <div class="d-flex gap-4">
                         <div class="d-flex flex-column">
                             <label for="select1">Zona de Monitoreo</label>
-                            <select id="select1" style="width: 170px; height: 35px;" class="rounded-2">
+                            <select id="select1" style="width: 170px; height: 35px;" class="rounded-2"
+                                formControlName="zonaMonitoreo">
                                 <option value="" hidden=""></option>
                                 <option value="1">Fase 10E</option>
                                 <option value="2">Fase 2E</option>
@@ -44,8 +47,9 @@
                             </select>
                         </div>
                         <div class="d-flex flex-column">
-                            <label>Pared</label>
-                            <select id="select1" style="width: 170px; height: 35px;" class="rounded-2">
+                            <label for="select2">Pared</label>
+                            <select id="select2" style="width: 170px; height: 35px;" class="rounded-2"
+                                formControlName="pared">
                                 <option value="" hidden=""></option>
                                 <option value="1">N</option>
                                 <option value="2">NE</option>
@@ -62,19 +66,19 @@
                         <div>
                             <label mdbLabel id="Este">Este</label>
                             <mdb-form-control>
-                                <input mdbInput type="number" id="Este" class="form-control" />
+                                <input mdbInput type="number" id="Este" class="form-control" formControlName="este" />
                             </mdb-form-control>
                         </div>
                         <div>
                             <label mdbLabel id="norte">Norte</label>
                             <mdb-form-control>
-                                <input mdbInput type="number" id="norte" class="form-control" />
+                                <input mdbInput type="number" id="norte" class="form-control" formControlName="norte" />
                             </mdb-form-control>
                         </div>
                         <div>
                             <label mdbLabel id="cota">Cota</label>
                             <mdb-form-control>
-                                <input mdbInput type="number" id="cota" class="form-control" />
+                                <input mdbInput type="number" id="cota" class="form-control" formControlName="cota" />
                             </mdb-form-control>
                         </div>
                     </div>
@@ -88,18 +92,18 @@
                             <!-- Default checkbox -->
                             <div class="form-check col-2">
                                 <input mdbCheckbox class="form-check-input" type="checkbox" value="" id="check-1"
-                                    [checked]="false" />
+                                    [checked]="false" formControlName="produccion" />
                                 <label class="form-check-label" for="check-1"> Producción</label>
                             </div>
                             <!-- Checked checkbox -->
                             <div class="form-check col-2">
                                 <input mdbCheckbox class="form-check-input" type="checkbox" value="" id="check-2"
-                                    [checked]="false" />
+                                    [checked]="false" formControlName="precorte" />
                                 <label class="form-check-label" for="check-2"> Precorte </label>
                             </div>
                             <div class="form-check col-2">
                                 <input mdbCheckbox class="form-check-input" type="checkbox" value="" id="check-3"
-                                    [checked]="false" />
+                                    [checked]="false" formControlName="destape" />
                                 <label class="form-check-label" for="check-3"> Despate </label>
                             </div>
                         </div>
@@ -107,18 +111,18 @@
                             <!-- Default checkbox -->
                             <div class="form-check col-2">
                                 <input mdbCheckbox class="form-check-input" type="checkbox" value="" id="check-1"
-                                    [checked]="false" />
+                                    [checked]="false" formControlName="bolones" />
                                 <label class="form-check-label" for="check-4"> Bolones </label>
                             </div>
                             <!-- Checked checkbox -->
                             <div class="form-check col-2">
                                 <input mdbCheckbox class="form-check-input" type="checkbox" value="" id="check-2"
-                                    [checked]="false" />
+                                    [checked]="false" formControlName="desquinche" />
                                 <label class="form-check-label" for="check-5"> Desquinche </label>
                             </div>
                             <div class="form-check col-2">
                                 <input mdbCheckbox class="form-check-input" type="checkbox" value="" id="check-3"
-                                    [checked]="false" />
+                                    [checked]="false" formControlName="contorno" />
                                 <label class="form-check-label" for="check-6"> Contorno </label>
                             </div>
                         </div>
@@ -126,13 +130,15 @@
                             <div>
                                 <label mdbLabel id="pozos">N° Pozos producción</label>
                                 <mdb-form-control>
-                                    <input mdbInput type="number" id="pozos" class="form-control" />
+                                    <input mdbInput type="number" id="pozos" class="form-control"
+                                        formControlName="pozosProduccion" />
                                 </mdb-form-control>
                             </div>
                             <div>
                                 <label mdbLabel id="precorte">N° Pozos precorte</label>
                                 <mdb-form-control>
-                                    <input mdbInput type="number" id="precorte" class="form-control" />
+                                    <input mdbInput type="number" id="precorte" class="form-control"
+                                        formControlName="pozosPrecorte" />
                                 </mdb-form-control>
                             </div>
                         </div>
@@ -140,13 +146,15 @@
                             <div>
                                 <label mdbLabel id="Volumen">Volumen</label>
                                 <mdb-form-control>
-                                    <input mdbInput type="number" id="Volumen" class="form-control" />
+                                    <input mdbInput type="number" id="Volumen" class="form-control"
+                                        formControlName="volumen" />
                                 </mdb-form-control>
                             </div>
                             <div>
-                                <label mdbLabel id="Este">Este</label>
+                                <label mdbLabel id="Este">Factor de carga general</label>
                                 <mdb-form-control>
-                                    <input mdbInput type="number" id="Este" class="form-control" />
+                                    <input mdbInput type="number" id="Este" class="form-control"
+                                        formControlName="factorCarga" />
                                 </mdb-form-control>
                             </div>
                         </div>
@@ -159,9 +167,87 @@
                     <div #punto></div>
                     <div class="d-flex justify-content-end">
                         <button type="button" class="btn btn-sm mt-4" style="background-color: #00838F; color: #eeefef"
-                            mdbRipple (click)="agregarPuntoDeControl()">Agregar Puntos de control Sector Tronadura </button>
+                            mdbRipple (click)="agregarPuntoDeControl()">Agregar Puntos de control Sector Tronadura
+                        </button>
                     </div>
                 </div>
+                <div class="border rounded p-2">
+                    <div class="d-flex">
+                        <h4>Imágenes</h4>
+                    </div>
+                    <div>
+                        <div class="d-flex gap-4">
+                            <div style="width: 375px;">
+                                <label mdbLabel id="">Antes Panorámica</label>
+                                <input type="file" class="form-control form-control-sm" id="antes-panoramica" (change)="visualizarImagenCargada('aPanoramica', $event)" />
+                                <div class=" mt-2" style="height: 240px;">
+                                    <img src="#" alt="" width="100%" height="100%">
+                                </div>
+                            </div>
+                            <div style="width: 375px;">
+                                <label mdbLabel id="">Después Panorámica </label>
+                                <input type="file" class="form-control form-control-sm" id="customFile2" (change)="visualizarImagenCargada('dPanoramica', $event)"/>
+                                <div class=" mt-2" style="height: 240px;">
+                                    <img src="#" alt="" width="100%" height="100%">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-4">
+                            <div style="width: 375px;">
+                                <label mdbLabel id="">Antes Zoom</label>
+                                <input type="file" class="form-control form-control-sm" id="antes-panoramica" (change)="visualizarImagenCargada('aZoom', $event)" />
+                                <div class=" mt-2" style="height: 240px;">
+                                    <img src="#" alt="" width="100%" height="100%">
+                                </div>
+                            </div>
+                            <div style="width: 375px;">
+                                <label mdbLabel id="">Después Zoom</label>
+                                <input type="file" class="form-control form-control-sm" id="customFile2" (change)="visualizarImagenCargada('dZoom', $event)"/>
+                                <div class=" mt-2" style="height: 240px;">
+                                    <img src="#" alt="" width="100%" height="100%">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-4">
+                            <div style="width: 375px;">
+                                <label mdbLabel id="">Antes Superior</label>
+                                <input type="file" class="form-control form-control-sm" id="antes-panoramica" (change)="visualizarImagenCargada('aSuperior', $event)"/>
+                                <div class=" mt-2" style="height: 240px;">
+                                    <img src="#" alt="" width="100%" height="100%">
+                                </div>
+                            </div>
+                            <div style="width: 375px;">
+                                <label mdbLabel id="">Después Superior</label>
+                                <input type="file" class="form-control form-control-sm" id="customFile2" (change)="visualizarImagenCargada('dSuperior', $event)"/>
+                                <div class=" mt-2" style="height: 240px;">
+                                    <img src="#" alt="" width="100%" height="100%">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-4">
+                            <div style="width: 375px;">
+                                <label mdbLabel id="">Antes Inferior</label>
+                                <input type="file" class="form-control form-control-sm" id="antes-panoramica" (change)="visualizarImagenCargada('aInferior', $event)"/>
+                                <div class=" mt-2" style="height: 240px;">
+                                    <img src="#" alt="" width="100%" height="100%">
+                                </div>
+                            </div>
+                            <div style="width: 375px;">
+                                <label mdbLabel id="">Después Inferior</label>
+                                <input type="file" class="form-control form-control-sm" id="customFile2" (change)="visualizarImagenCargada('dInferior', $event)"/>
+                                <div class=" mt-2" style="height: 240px;">
+                                    <img src="#" alt="" width="100%" height="100%">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-3 d-flex justify-content-end gap-2 col-9">
+                <button style="background-color: #00838F; color: #eeefef" type="button" class="btn"
+                    (click)="previsualizar()" mdbRipple>Preview</button>
+                <button style="background-color: #00838F; color: #eeefef" type="button" class="btn" (click)="false"
+                    mdbRipple>Descargar</button>
             </div>
         </div>
     </div>

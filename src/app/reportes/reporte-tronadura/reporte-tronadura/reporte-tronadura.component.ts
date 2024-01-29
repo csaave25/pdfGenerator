@@ -1,22 +1,75 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
+import { GeneradorService } from '../generador.service';
+import { FormControl, FormGroup } from '@angular/forms';
+
 
 @Component({
-  selector: 'app-reporte-tronadura',
-  templateUrl: './reporte-tronadura.component.html',
-  styleUrls: ['./reporte-tronadura.component.scss']
+    selector: 'app-reporte-tronadura',
+    templateUrl: './reporte-tronadura.component.html',
+    styleUrls: ['./reporte-tronadura.component.scss']
 })
 export class ReporteTronaduraComponent {
 
-  @ViewChild('punto') puntoElemento!: ElementRef
+    @ViewChild('punto') puntoElemento!: ElementRef
+
+    constructor(private servicio: GeneradorService) {
+
+    }
+
+    contadorPunto = 1
+    contadorRadar = 1
+
+    inputs = new FormGroup({
+        fecha: new FormControl(''),
+        comentarios: new FormControl(''),
+        zonaMonitoreo: new FormControl(''),
+        pared: new FormControl(''),
+        este: new FormControl(0),
+        norte: new FormControl(0),
+        cota: new FormControl(0),
+        produccion: new FormControl(false),
+        precorte: new FormControl(false),
+        destape: new FormControl(false),
+        bolones: new FormControl(false),
+        desquinche: new FormControl(false),
+        contorno: new FormControl(false),
+        pozosProduccion: new FormControl(0),
+        pozosPrecorte: new FormControl(0),
+        volumen: new FormControl(0),
+        factorCarga: new FormControl(0),
+        graficosDVT: new FormControl(),
+        aPanoramica: new FormControl(''),
+        dPanoramica: new FormControl(''),
+        aZoom: new FormControl(''),
+        dZoom: new FormControl(''),
+        aSuperior: new FormControl(''),
+        dSuperior: new FormControl(''),
+        aInferior: new FormControl(''),
+        dInferior: new FormControl(''),
+    })
+
+    imagenesDVT: any[] = []
 
 
-  contadorPunto = 0
-  contadorRadar = 0
+    visualizarImagenCargada(name: string, event: Event) {
+        let element = (event.target as HTMLInputElement)
+        let reader = new FileReader();
 
-  agregarPuntoDeControl() {
+        if (element.files) {
+            reader.readAsDataURL(element.files[0]);
+            reader.onload = (_event) => {
+                if (typeof (reader.result) == 'string') {
+                    (element.nextElementSibling?.children[0] as HTMLImageElement).src = reader.result
+                    this.inputs.get(name)?.setValue(reader.result)
+                }
+            }
+        }
+    }
 
-    let id = this.contadorPunto
-    let template = `<div id="punto-${id}" style="background-color: #e0e3e3cf;" class="px-2 pt-2 my-4">
+    agregarPuntoDeControl() {
+
+        let id = this.contadorPunto
+        let template = `<div id="punto-${id}" style="background-color: #e0e3e3cf;" class="px-2 pt-2 my-4">
     <div class="d-flex justify-content-between ">
         <h5>Imagen</h5>
         <button id="eliminarPunto-${id}" type="button" class="btn btn-danger btn-floating btn-sm" mdbRipple>
@@ -25,12 +78,12 @@ export class ReporteTronaduraComponent {
     </div>
     <div class="col-5">
         <label class="form-label" for="customFile">Gráfico de desplazamientos Vs. tiempo</label>
-        <input type="file" class="form-control form-control-sm" id="customFile" />
+        <input id="inputImg-${id}" type="file" class="form-control form-control-sm" id="customFile" />
+        <div class="mt-2" style="width: 330px; height: 220px;">
+            <img id="img-${id}" style="width: 330px; height: 220px;" src="#" alt="Gráfico de desplazamientos Vs. tiempo">
+        </div>
     </div>
-    <div class="mt-2" style="width: 330px; height: 220px;">
-        <img *ngIf="false" src="#" alt="Gráfico de desplazamientos Vs. tiempo">
-    </div>
-    <div class="d-flex justify-content-between ">
+    <div class="d-flex justify-content-between mt-2">
         <h5>Lecturas Radares</h5>
     </div>
     <div id="radares-${id}"></div>
@@ -42,22 +95,51 @@ export class ReporteTronaduraComponent {
     </div>
     </div>`
 
-    let elemento: HTMLElement = this.puntoElemento.nativeElement
-    let newElement = document.createElement('div')
-    newElement.innerHTML = template
-    elemento.appendChild(newElement)
-    elemento.querySelector("#btn-" + id)?.addEventListener('click', () => this.agregarRadar(id))
-    elemento.querySelector("#eliminarPunto-" + id)?.addEventListener('click', () => this.eliminarElemento(newElement))
-    this.contadorPunto++
+        let elemento: HTMLElement = this.puntoElemento.nativeElement
+        let newElement = document.createElement('div')
+        newElement.innerHTML = template
+        elemento.appendChild(newElement)
+        elemento.querySelector("#btn-" + id)?.addEventListener('click', () => this.agregarRadar(id))
+        elemento.querySelector("#eliminarPunto-" + id)?.addEventListener('click', () => this.eliminarElemento(newElement))
+        elemento.querySelector(`#inputImg-${id}`)?.addEventListener('change', (event) => this.visualizarImganesArr(event, id))
+        this.contadorPunto++
 
-  }
+    }
+
+    visualizarImganesArr(event: Event, id: number) {
+        let element = (event.target as HTMLInputElement)
+        let imgElement = (element.nextElementSibling?.children[0] as HTMLImageElement)
+        let reader = new FileReader();
+        let file = element.files![0]
+
+        if (file) {
+            reader.readAsDataURL(file);
+            reader.onload = (_event) => {
+                if (typeof (reader.result) == 'string')
+                    imgElement.src = reader.result
+                let validator = this.imagenesDVT.findIndex(dato => dato.id == id)
+
+                if (validator == -1) {
+                    this.imagenesDVT.push({
+                        id,
+                        img: reader.result,
+                        radares: [] as any[],
+                    })
+                } else {
+                    this.imagenesDVT[validator].img = reader.result
+                }
+            }
+        }
 
 
-  agregarRadar(idPunto : number) {
+    }
 
-    let id = this.contadorRadar
-    let elemento = document.querySelector("#radares-" + idPunto)
-    let template = `<div id="radar-${id}" style="background-color: #f9f9f9;" class="mt-2 p-2 rounded-2">
+
+    agregarRadar(idPunto: number) {
+        let idP= idPunto
+        let id = this.contadorRadar
+        let elemento = document.querySelector("#radares-" + idP)
+        let template = `<div id="radar-${id}" style="background-color: #f9f9f9;" class="mt-2 p-2 rounded-2">
       <div class="d-flex flex-column">
           <div class="d-flex justify-content-between">
               <label>Radar</label>
@@ -65,69 +147,170 @@ export class ReporteTronaduraComponent {
                   <i class="fas fa-trash"></i>
               </button>
           </div>
-          <select id="select1" style="width: 174px; height: 30px;" class="rounded-2">
+          <select id="radarOption-${id}" style="width: 174px; height: 30px;" class="rounded-2">
               <option value="" hidden=""></option>
-              <option value="1">Radar IBIS-2</option>
-              <option value="2">Radar IBIS-3</option>
-              <option value="3">Radar IBIS-4</option>
-              <option value="4">Radar IBIS-5</option>
-              <option value="5">Radar IBIS-6</option>
-              <option value="6">Radar IBIS-7</option>
-              <option value="7">Radar IBIS-8</option>
-              <option value="8">Radar IBIS-9</option>
+              <option value="Radar IBIS-2">Radar IBIS-2</option>
+              <option value="Radar IBIS-3">Radar IBIS-3</option>
+              <option value="Radar IBIS-4">Radar IBIS-4</option>
+              <option value="Radar IBIS-5">Radar IBIS-5</option>
+              <option value="Radar IBIS-6">Radar IBIS-6</option>
+              <option value="Radar IBIS-7">Radar IBIS-7</option>
+              <option value="Radar IBIS-8">Radar IBIS-8</option>
+              <option value="Radar IBIS-9">Radar IBIS-9</option>
           </select>
       </div>
       <div class="d-flex gap-4 mt-2">
           <div class="d-flex flex-column">
               <label mdbLabel id="Este">Este</label>
               <mdb-form-control>
-                  <input mdbInput type="number" id="Este" class="form-control-sm"
+                  <input  mdbInput type="number" id="este-${id}" class="form-control-sm"
                       style="background-color: #ffffff;" />
               </mdb-form-control>
           </div>
           <div class="d-flex flex-column">
               <label mdbLabel id="norte">Norte</label>
               <mdb-form-control>
-                  <input mdbInput type="number" id="norte" class="form-control-sm"
+                  <input mdbInput type="number" id="norte-${id}" class="form-control-sm"
                       style="background-color: #ffffff;" />
               </mdb-form-control>
           </div>
           <div class="d-flex flex-column">
               <label mdbLabel id="cota">Cota</label>
               <mdb-form-control>
-                  <input mdbInput type="number" id="cota" class="form-control-sm"
+                  <input mdbInput type="number" id="cota-${id}" class="form-control-sm"
                       style="background-color: #ffffff;" />
               </mdb-form-control>
           </div>
       </div>
       <div class="d-flex gap-4 mt-2">
           <div style="width: 276px;">
-              <label mdbLabel id="desplazamiento">Desplazamiento Últimas 12 hrs.</label>
+              <label mdbLabel >Desplazamiento Últimas 12 hrs.</label>
               <mdb-form-control>
-                  <input mdbInput type="number" id="desplazamiento"
+                  <input mdbInput type="number" id="desplazamiento-${id}"
                       class="form-control-sm col-12" style="background-color: #ffffff;" />
               </mdb-form-control>
           </div>
           <div style="width: 276px;">
-              <label mdbLabel id="velocidad">Velocidad Promedio Últimas 12 hrs.</label>
+              <label mdbLabel >Velocidad Promedio Últimas 12 hrs.</label>
               <mdb-form-control>
-                  <input mdbInput type="number" id="velocidad" class="form-control-sm  col-12"
+                  <input mdbInput type="number" id="velocidad-${id}"class="form-control-sm  col-12"
                       style="background-color: #ffffff;" />
               </mdb-form-control>
           </div>
       </div>
     </div>`
 
-    let newElement = document.createElement('div')
-    newElement.innerHTML = template
-    elemento?.appendChild(newElement)
-    elemento?.querySelector("#eliminarRadar-" + id)?.addEventListener('click', () => this.eliminarElemento(newElement))
+        let newElement = document.createElement('div')
+        newElement.innerHTML = template
+        elemento?.appendChild(newElement)
+        elemento?.querySelector("#eliminarRadar-" + id)?.addEventListener('click', () => this.eliminarElemento(newElement))
+        elemento?.querySelector("#radarOption-" + id)?.addEventListener('change', (e) => this.guardarRadar(idP, id, 1, e))
+        elemento?.querySelector("#este-" + id)?.addEventListener('change', (e) => this.guardarRadar(idP, id, 2, e))
+        elemento?.querySelector("#norte-" + id)?.addEventListener('change', (e) => this.guardarRadar(idP, id, 3, e))
+        elemento?.querySelector("#cota-" + id)?.addEventListener('change', (e) => this.guardarRadar(idP, id, 4, e))
+        elemento?.querySelector("#desplazamiento-" + id)?.addEventListener('change', (e) => this.guardarRadar(idP, id, 5, e))
+        elemento?.querySelector("#velocidad-" + id)?.addEventListener('change', (e) => this.guardarRadar(idP, id, 6, e))
 
-    this.contadorRadar++
-  }
 
-  eliminarElemento(elemento: HTMLElement){
-    elemento.remove()
-  }
+
+        this.contadorRadar++
+    }
+
+    guardarRadar(id: number, idRadar: number, n: number, evt: Event) {
+
+        let valor = (evt.target as HTMLInputElement).value
+        let validator = this.imagenesDVT.findIndex(dato => dato.id == id)
+        
+        
+
+        if (validator == -1) {
+            switch (n) {
+                case 1: this.imagenesDVT.push({
+                    id,
+                    img: '',
+                    radares: [{ id: idRadar, radar: valor }] as any[],
+                })
+                    break;
+                case 2: this.imagenesDVT.push({
+                    id,
+                    img: '',
+                    radares: [{ id: idRadar, este: valor }] as any[],
+                })
+                    break;
+                case 3: this.imagenesDVT.push({
+                    id,
+                    img: '',
+                    radares: [{ id: idRadar, norte: valor }] as any[],
+                })
+                    break;
+                case 4: this.imagenesDVT.push({
+                    id,
+                    img: '',
+                    radares: [{ id: idRadar, cota: valor }] as any[],
+                })
+                    break;
+                case 5: this.imagenesDVT.push({
+                    id,
+                    img: '',
+                    radares: [{ id: idRadar, desplazamiento: valor }] as any[],
+                })
+                    break;
+                case 6: this.imagenesDVT.push({
+                    id,
+                    img: '',
+                    radares: [{ id: idRadar, velocidad: valor }] as any[],
+                })
+                    break;
+            }
+
+        } else {
+
+            let validador = this.imagenesDVT[validator].radares.findIndex((dato: any) => dato.id == idRadar)
+
+
+            if (validator == -1) {
+                switch (n) {
+                    case 1: this.imagenesDVT[validator].radares.push({ id: idRadar, radar: valor })
+                        break;
+                    case 2: this.imagenesDVT[validator].radares.push({ id: idRadar, este: valor })
+                        break;
+                    case 3: this.imagenesDVT[validator].radares.push({ id: idRadar, norte: valor })
+                        break;
+                    case 4: this.imagenesDVT[validator].radares.push({ id: idRadar, cota: valor })
+                        break;
+                    case 5: this.imagenesDVT[validator].radares.push({ id: idRadar, desplazamiento: valor })
+                        break;
+                    case 6: this.imagenesDVT[validator].radares.push({ id: idRadar, velocidad: valor })
+                        break;
+                }
+            } else {
+
+                switch (n) {
+                    case 1: this.imagenesDVT[validator].radares[validador] = { ...this.imagenesDVT[validator].radares[validador], radar: valor }
+                        break;
+                    case 2: this.imagenesDVT[validator].radares[validador] = { ...this.imagenesDVT[validator].radares[validador], este: valor }
+                        break;
+                    case 3: this.imagenesDVT[validator].radares[validador] = { ...this.imagenesDVT[validator].radares[validador], norte: valor }
+                        break;
+                    case 4: this.imagenesDVT[validator].radares[validador] = { ...this.imagenesDVT[validator].radares[validador], cota: valor }
+                        break;
+                    case 5: this.imagenesDVT[validator].radares[validador] = { ...this.imagenesDVT[validator].radares[validador], desplazamiento: valor }
+                        break;
+                    case 6: this.imagenesDVT[validator].radares[validador] = { ...this.imagenesDVT[validator].radares[validador], velocidad: valor }
+                        break;
+                }
+            }
+        }
+        console.log(this.imagenesDVT);
+
+    }
+
+    eliminarElemento(elemento: HTMLElement) {
+        elemento.remove()
+    }
+
+    previsualizar() {
+        this.servicio.previzualizarPDF()
+    }
 
 }
