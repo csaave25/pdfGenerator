@@ -801,6 +801,8 @@ export class InformeService {
     this.doc.setProperties({ title: 'INFORME_EFE' })
     // this.doc.output('pdfobjectnewwindow', { filename: 'REPORTE_MENSUAL_' + this.mes.toUpperCase() + '_' + data.ano })
     this.doc.save('TESTING_REPORTE_MENSUAL_' + data.numReporte + '_' + this.date)
+    this.doc = new jsPDF('p', 'pt', 'letter')
+
   }
 
   subirInforme(inputs: FormGroup, arrGCC: any[], arrGCD: any[], gcdElements: QueryList<ElementRef>, arrPrismas: any[], arrPiezometro: any[]) {
@@ -812,6 +814,7 @@ export class InformeService {
     dataForm.append('fecha', this.date)
     // this.api.sendPDF(dataForm)
     //descomentar cuando este todo claro
+    this.doc = new jsPDF('p', 'pt', 'letter')
   }
 
 

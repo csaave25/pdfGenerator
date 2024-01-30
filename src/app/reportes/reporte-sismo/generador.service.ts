@@ -150,9 +150,9 @@ export class GeneradorService {
     this.doc.setFont("Lato", "normal");
     let ano = fecha.getFullYear()
     let numPag = this.doc.getNumberOfPages()
-    this.doc.text(nombre, this.margenIzq, 780, { align: 'left' })
-    this.doc.text(ano + '.' + id, this.margenDer, 780, { align: 'right' })
-    this.doc.text(numPag.toString(), this.puntoMedio, 780, { align: 'center' })
+    this.doc.text(nombre, this.margenIzq, 772, { align: 'left' })
+    this.doc.text(ano + '.' + id, this.margenDer, 772, { align: 'right' })
+    this.doc.text(numPag.toString(), this.puntoMedio, 772, { align: 'center' })
 
   }
 
@@ -170,7 +170,7 @@ export class GeneradorService {
   }
 
   private implementarContenido(inputs: FormGroup, dataSismo: any, imagenMapa: HTMLImageElement) {
-
+    // this.doc.addImage("assets/EMT/marcaAgua.jpg", 'JPG', 0, 0, 612, 792, 'marca-x', 'SLOW');
     let fecha = new Date()
     this.implementarFuentes()
     this.generarHeader(fecha, 2)

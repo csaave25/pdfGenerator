@@ -880,6 +880,7 @@ export class InformeService {
     this.doc.save('INFORME_MENSUAL_A2MG_' + (this.mesNum + 1) + '_' + this.anoNum)
 
     // this.doc.output("pdfobjectnewwindow");
+    this.doc = new jsPDF('p', 'pt', 'letter')
   }
 
   cargarDatos(inputs: FormGroup) {
@@ -906,6 +907,7 @@ export class InformeService {
     // this.implementarConclusion(inputs)
     // this.implementarTablaContenido()
     this.previsualizar()
+    this.doc = new jsPDF('p', 'pt', 'letter')
 
   }
 

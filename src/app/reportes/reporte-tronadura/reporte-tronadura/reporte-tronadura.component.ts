@@ -64,6 +64,7 @@ export class ReporteTronaduraComponent {
                 }
             }
         }
+
     }
 
     agregarPuntoDeControl() {
@@ -100,7 +101,7 @@ export class ReporteTronaduraComponent {
         newElement.innerHTML = template
         elemento.appendChild(newElement)
         elemento.querySelector("#btn-" + id)?.addEventListener('click', () => this.agregarRadar(id))
-        elemento.querySelector("#eliminarPunto-" + id)?.addEventListener('click', () => this.eliminarElemento(newElement))
+        elemento.querySelector("#eliminarPunto-" + id)?.addEventListener('click', () => this.eliminarElemento(newElement, true, id))
         elemento.querySelector(`#inputImg-${id}`)?.addEventListener('change', (event) => this.visualizarImganesArr(event, id))
         this.contadorPunto++
 
@@ -117,26 +118,25 @@ export class ReporteTronaduraComponent {
             reader.onload = (_event) => {
                 if (typeof (reader.result) == 'string')
                     imgElement.src = reader.result
-                let validator = this.imagenesDVT.findIndex(dato => dato.id == id)
+                let valGrafico = this.imagenesDVT.findIndex(dato => dato.id == id)
 
-                if (validator == -1) {
+                if (valGrafico == -1) {
                     this.imagenesDVT.push({
                         id,
                         img: reader.result,
                         radares: [] as any[],
                     })
                 } else {
-                    this.imagenesDVT[validator].img = reader.result
+                    this.imagenesDVT[valGrafico].img = reader.result
                 }
             }
         }
-
 
     }
 
 
     agregarRadar(idPunto: number) {
-        let idP= idPunto
+        let idP = idPunto
         let id = this.contadorRadar
         let elemento = document.querySelector("#radares-" + idP)
         let template = `<div id="radar-${id}" style="background-color: #f9f9f9;" class="mt-2 p-2 rounded-2">
@@ -203,7 +203,7 @@ export class ReporteTronaduraComponent {
         let newElement = document.createElement('div')
         newElement.innerHTML = template
         elemento?.appendChild(newElement)
-        elemento?.querySelector("#eliminarRadar-" + id)?.addEventListener('click', () => this.eliminarElemento(newElement))
+        elemento?.querySelector("#eliminarRadar-" + id)?.addEventListener('click', () => this.eliminarElemento(newElement, false, idP, id))
         elemento?.querySelector("#radarOption-" + id)?.addEventListener('change', (e) => this.guardarRadar(idP, id, 1, e))
         elemento?.querySelector("#este-" + id)?.addEventListener('change', (e) => this.guardarRadar(idP, id, 2, e))
         elemento?.querySelector("#norte-" + id)?.addEventListener('change', (e) => this.guardarRadar(idP, id, 3, e))
@@ -211,19 +211,15 @@ export class ReporteTronaduraComponent {
         elemento?.querySelector("#desplazamiento-" + id)?.addEventListener('change', (e) => this.guardarRadar(idP, id, 5, e))
         elemento?.querySelector("#velocidad-" + id)?.addEventListener('change', (e) => this.guardarRadar(idP, id, 6, e))
 
-
-
         this.contadorRadar++
     }
 
     guardarRadar(id: number, idRadar: number, n: number, evt: Event) {
 
         let valor = (evt.target as HTMLInputElement).value
-        let validator = this.imagenesDVT.findIndex(dato => dato.id == id)
-        
-        
+        let valGrafico = this.imagenesDVT.findIndex(dato => dato.id == id)
 
-        if (validator == -1) {
+        if (valGrafico == -1) {
             switch (n) {
                 case 1: this.imagenesDVT.push({
                     id,
@@ -265,52 +261,61 @@ export class ReporteTronaduraComponent {
 
         } else {
 
-            let validador = this.imagenesDVT[validator].radares.findIndex((dato: any) => dato.id == idRadar)
+            let valRadar = this.imagenesDVT[valGrafico].radares.findIndex((dato: any) => dato.id == idRadar)
 
 
-            if (validator == -1) {
+            if (valRadar == -1) {
+
                 switch (n) {
-                    case 1: this.imagenesDVT[validator].radares.push({ id: idRadar, radar: valor })
+                    case 1: this.imagenesDVT[valGrafico].radares.push({ id: idRadar, radar: valor })
                         break;
-                    case 2: this.imagenesDVT[validator].radares.push({ id: idRadar, este: valor })
+                    case 2: this.imagenesDVT[valGrafico].radares.push({ id: idRadar, este: valor })
                         break;
-                    case 3: this.imagenesDVT[validator].radares.push({ id: idRadar, norte: valor })
+                    case 3: this.imagenesDVT[valGrafico].radares.push({ id: idRadar, norte: valor })
                         break;
-                    case 4: this.imagenesDVT[validator].radares.push({ id: idRadar, cota: valor })
+                    case 4: this.imagenesDVT[valGrafico].radares.push({ id: idRadar, cota: valor })
                         break;
-                    case 5: this.imagenesDVT[validator].radares.push({ id: idRadar, desplazamiento: valor })
+                    case 5: this.imagenesDVT[valGrafico].radares.push({ id: idRadar, desplazamiento: valor })
                         break;
-                    case 6: this.imagenesDVT[validator].radares.push({ id: idRadar, velocidad: valor })
+                    case 6: this.imagenesDVT[valGrafico].radares.push({ id: idRadar, velocidad: valor })
                         break;
                 }
             } else {
 
                 switch (n) {
-                    case 1: this.imagenesDVT[validator].radares[validador] = { ...this.imagenesDVT[validator].radares[validador], radar: valor }
+                    case 1: this.imagenesDVT[valGrafico].radares[valRadar] = { ...this.imagenesDVT[valGrafico].radares[valRadar], radar: valor }
                         break;
-                    case 2: this.imagenesDVT[validator].radares[validador] = { ...this.imagenesDVT[validator].radares[validador], este: valor }
+                    case 2: this.imagenesDVT[valGrafico].radares[valRadar] = { ...this.imagenesDVT[valGrafico].radares[valRadar], este: valor }
                         break;
-                    case 3: this.imagenesDVT[validator].radares[validador] = { ...this.imagenesDVT[validator].radares[validador], norte: valor }
+                    case 3: this.imagenesDVT[valGrafico].radares[valRadar] = { ...this.imagenesDVT[valGrafico].radares[valRadar], norte: valor }
                         break;
-                    case 4: this.imagenesDVT[validator].radares[validador] = { ...this.imagenesDVT[validator].radares[validador], cota: valor }
+                    case 4: this.imagenesDVT[valGrafico].radares[valRadar] = { ...this.imagenesDVT[valGrafico].radares[valRadar], cota: valor }
                         break;
-                    case 5: this.imagenesDVT[validator].radares[validador] = { ...this.imagenesDVT[validator].radares[validador], desplazamiento: valor }
+                    case 5: this.imagenesDVT[valGrafico].radares[valRadar] = { ...this.imagenesDVT[valGrafico].radares[valRadar], desplazamiento: valor }
                         break;
-                    case 6: this.imagenesDVT[validator].radares[validador] = { ...this.imagenesDVT[validator].radares[validador], velocidad: valor }
+                    case 6: this.imagenesDVT[valGrafico].radares[valRadar] = { ...this.imagenesDVT[valGrafico].radares[valRadar], velocidad: valor }
                         break;
                 }
             }
         }
-        console.log(this.imagenesDVT);
 
     }
 
-    eliminarElemento(elemento: HTMLElement) {
+    eliminarElemento(elemento: HTMLElement, operacion: boolean, idGrafo: number, idRadar?: number) {
+        if (operacion) {
+            this.imagenesDVT = this.imagenesDVT.filter(dato => dato.id != idGrafo)
+        } else {
+            let valGrafico = this.imagenesDVT.findIndex(dato => dato.id == idGrafo)
+            let valRadar = this.imagenesDVT[valGrafico].radares.findIndex((dato: any) => dato.id == idRadar)
+            this.imagenesDVT[valGrafico].radares = this.imagenesDVT[valGrafico].radares.filter((dato: any) => dato.id != idRadar)
+        }
+
         elemento.remove()
     }
 
     previsualizar() {
-        this.servicio.previzualizarPDF()
+        this.inputs.get('graficosDVT')?.setValue(this.imagenesDVT)
+        this.servicio.previzualizarPDF(this.inputs)
     }
 
 }
