@@ -815,6 +815,7 @@ export class InformeService {
     // this.api.sendPDF(dataForm)
     //descomentar cuando este todo claro
     this.doc = new jsPDF('p', 'pt', 'letter')
+    this.usoPagina = this.cominezoContenidoY
   }
 
 

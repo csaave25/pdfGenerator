@@ -406,10 +406,15 @@ export class GeneradorService {
     this.implementarContenidoPDF(inputs)
     setTimeout(() => {
       // this.doc.output('dataurlnewwindow')
+      // this.doc.save('prueba')
+
+
       var blob = this.doc.output("blob");
       window.open(URL.createObjectURL(blob));
+      this.usoPagina = this.margenContenido
       this.doc = new jsPDF('p', 'pt', 'letter')
-      // this.doc.save('prueba')
+
+
 
     }, 500);
 

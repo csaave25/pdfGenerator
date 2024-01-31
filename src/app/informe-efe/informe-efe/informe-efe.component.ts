@@ -1,6 +1,6 @@
-import { Component, ElementRef, OnInit, QueryList, ViewChildren, AfterViewInit, AfterContentChecked, afterRender } from '@angular/core';
+import { Component, ElementRef, OnInit, QueryList, ViewChildren, AfterContentInit } from '@angular/core';
 import { InformeService } from '../informe.service';
-import { AbstractControl, FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import Chart from 'chart.js/auto';
 import { ApiService } from '../api.service';
 import html2canvas from 'html2canvas';
@@ -14,7 +14,7 @@ import moment from 'moment';
   templateUrl: './informe-efe.component.html',
   styleUrls: ['./informe-efe.component.scss']
 })
-export class InformeEfeComponent implements OnInit {
+export class InformeEfeComponent implements OnInit, AfterContentInit {
 
   constructor(private servicio: InformeService, private api: ApiService) { }
 
@@ -85,7 +85,7 @@ export class InformeEfeComponent implements OnInit {
         obsGCD: new FormControl(''),
         obsEspecificas: new FormControl(''),
         piezometro: new FormGroup({
-          imgAguaAcumulada: new FormControl(null),
+          imgAguaAcumulada: new FormControl(''),
           observaciones: new FormControl('')
         })
       }),
@@ -95,7 +95,7 @@ export class InformeEfeComponent implements OnInit {
         obsGCD: new FormControl(''),
         obsEspecificas: new FormControl(''),
         piezometro: new FormGroup({
-          imgAguaAcumulada: new FormControl(null),
+          imgAguaAcumulada: new FormControl(''),
           observaciones: new FormControl('')
         })
       }),
@@ -105,20 +105,20 @@ export class InformeEfeComponent implements OnInit {
         obsGCD: new FormControl(''),
         obsEspecificas: new FormControl(''),
         piezometro: new FormGroup({
-          imgAguaAcumulada: new FormControl(null),
+          imgAguaAcumulada: new FormControl(''),
           observaciones: new FormControl('')
         })
       })
     }),
     prismas: new FormGroup({
-      imagenGeneral: new FormControl(null),
+      imagenGeneral: new FormControl(''),
       obsGeneral: new FormControl(''),
       prismas1: new FormGroup({
-        imagen: new FormControl(null),
+        imagen: new FormControl(''),
         obsGeneral: new FormControl('')
       }),
       prismas2: new FormGroup({
-        imagen: new FormControl(null),
+        imagen: new FormControl(''),
         obsGeneral: new FormControl('')
       })
     }),
@@ -126,15 +126,163 @@ export class InformeEfeComponent implements OnInit {
   })
 
 
-  ngOnInit() {
 
+
+  ngOnInit() {
     this.setFechas()
     this.loadGCC()
     this.loadPrismas()
     this.loadGCCDeformacion()
     this.LoadPiezometro()
 
+
+
   }
+
+  ngAfterContentInit(): void {
+      this.cargarLocalStorage()  
+  }
+
+
+
+  cargarLocalStorage() {
+
+    let data = localStorage.getItem('dataEFE')
+    if (data) {
+      let datos = JSON.parse(data)
+
+      // this.inputs.get('fechaInicio')?.setValue(datos.fechaFinal)
+      // this.inputs.get('fechaFinal')?.setValue(datos.fechaFinal)
+      this.inputs.get('numeroInforme')?.setValue(datos.numeroInforme)
+      this.inputs.get('gestores.elaborado')?.setValue(datos.gestores.revisado)
+      this.inputs.get('gestores.revisado')?.setValue(datos.gestores.revisado)
+      this.inputs.get('gestores.aprobado')?.setValue(datos.gestores.aprobado)
+      this.inputs.get('gestores.cargo1')?.setValue(datos.gestores.cargo1)
+      this.inputs.get('gestores.cargo2')?.setValue(datos.gestores.cargo2)
+      this.inputs.get('gestores.cargo3')?.setValue(datos.gestores.cargo3)
+      this.inputs.get('estaciones.estados.piezometro')?.setValue(datos.estaciones.estados.piezometro)
+      this.inputs.get('estaciones.estados.gcd')?.setValue(datos.estaciones.estados.gcd)
+      this.inputs.get('estaciones.estados.gcc')?.setValue(datos.estaciones.estados.gcc)
+      this.inputs.get('estaciones.estados.prismas')?.setValue(datos.estaciones.estados.prismas)
+      this.inputs.get('estaciones.estadoGeneral')?.setValue(datos.estaciones.estadoGeneral)
+      this.inputs.get('estaciones.observaciones.piezometro')?.setValue(datos.estaciones.observaciones.piezometro)
+      this.inputs.get('estaciones.observaciones.gcd')?.setValue(datos.estaciones.observaciones.gcd)
+      this.inputs.get('estaciones.observaciones.gcc')?.setValue(datos.estaciones.observaciones.gcc)
+      this.inputs.get('estaciones.observaciones.prismas')?.setValue(datos.estaciones.observaciones.prismas)
+      this.inputs.get('estaciones.monitoreo.alarmas')?.setValue(datos.estaciones.monitoreo.alarmas)
+      this.inputs.get('estaciones.monitoreo.alertas')?.setValue(datos.estaciones.monitoreo.alertas)
+      this.inputs.get('estaciones.monitoreo.vigilancia')?.setValue(datos.estaciones.monitoreo.vigilancia)
+      this.inputs.get('estaciones.monitoreo.sismo')?.setValue(datos.estaciones.monitoreo.sismo)
+      this.inputs.get('estaciones.estacion6.obsGenerales')?.setValue(datos.estaciones.estacion6.obsGenerales)
+      this.inputs.get('estaciones.estacion6.obsGCC')?.setValue(datos.estaciones.estacion6.obsGCC)
+      this.inputs.get('estaciones.estacion6.obsGCD')?.setValue(datos.estaciones.estacion6.obsGCD)
+      this.inputs.get('estaciones.estacion6.obsEspecificas')?.setValue(datos.estaciones.estacion6.obsEspecificas)
+      this.inputs.get('estaciones.estacion6.piezometro.observaciones')?.setValue(datos.estaciones.estacion6.piezometro.observaciones)
+      this.inputs.get('estaciones.estacion7.obsGenerales')?.setValue(datos.estaciones.estacion7.obsGenerales)
+      this.inputs.get('estaciones.estacion7.obsGCC')?.setValue(datos.estaciones.estacion7.obsGCC)
+      this.inputs.get('estaciones.estacion7.obsGCD')?.setValue(datos.estaciones.estacion7.obsGCD)
+      this.inputs.get('estaciones.estacion7.obsEspecificas')?.setValue(datos.estaciones.estacion7.obsEspecificas)
+      this.inputs.get('estaciones.estacion7.piezometro.observaciones')?.setValue(datos.estaciones.estacion7.piezometro.observaciones)
+      this.inputs.get('estaciones.estacion8.obsGenerales')?.setValue(datos.estaciones.estacion8.obsGenerales)
+      this.inputs.get('estaciones.estacion8.obsGCC')?.setValue(datos.estaciones.estacion8.obsGCC)
+      this.inputs.get('estaciones.estacion8.obsGCD')?.setValue(datos.estaciones.estacion8.obsGCD)
+      this.inputs.get('estaciones.estacion8.obsEspecificas')?.setValue(datos.estaciones.estacion8.obsEspecificas)
+      this.inputs.get('estaciones.estacion8.piezometro.observaciones')?.setValue(datos.estaciones.estacion8.piezometro.observaciones)
+      this.inputs.get('prismas.obsGeneral')?.setValue(datos.prismas.obsGeneral)
+      this.inputs.get('prismas.prismas1.obsGeneral')?.setValue(datos.prismas.prismas1.obsGeneral)
+      this.inputs.get('prismas.prismas2.obsGeneral')?.setValue(datos.prismas.prismas2.obsGeneral)
+      this.inputs.get('conclusion')?.setValue(datos.conclusion)
+    }
+  }
+
+  guardarEnLocalStorage() {
+    let datos = {
+      // fechaInicio: this.inputs.get('fechaInicio')?.value,
+      // fechaFinal: this.inputs.get('fechaFinal')?.value,
+      numeroInforme: this.inputs.get('numeroInforme')?.value,
+      gestores: {
+        elaborado: this.inputs.get('gestores.elaborado')?.value,
+        revisado: this.inputs.get('gestores.revisado')?.value,
+        aprobado: this.inputs.get('gestores.aprobado')?.value,
+        cargo1: this.inputs.get('gestores.cargo1')?.value,
+        cargo2: this.inputs.get('gestores.cargo2')?.value,
+        cargo3: this.inputs.get('gestores.cargo3')?.value
+      },
+      estaciones: {
+        estados: {
+          piezometro: this.inputs.get('estaciones.estados.piezometro')?.value,
+          gcd: this.inputs.get('estaciones.estados.gcd')?.value,
+          gcc: this.inputs.get('estaciones.estados.gcc')?.value,
+          prismas: this.inputs.get('estaciones.estados.prismas')?.value
+        },
+        estadoGeneral: this.inputs.get('estaciones.estadoGeneral')?.value,
+        observaciones: {
+          piezometro: this.inputs.get('estaciones.observaciones.piezometro')?.value,
+          gcd: this.inputs.get('estaciones.observaciones.gcd')?.value,
+          gcc: this.inputs.get('estaciones.observaciones.gcc')?.value,
+          prismas: this.inputs.get('estaciones.observaciones.prismas')?.value
+        },
+        monitoreo: {
+          alarmas: this.inputs.get('estaciones.monitoreo.alarmas')?.value,
+          alertas: this.inputs.get('estaciones.monitoreo.alertas')?.value,
+          vigilancia: this.inputs.get('estaciones.monitoreo.vigilancia')?.value,
+          sismo: this.inputs.get('estaciones.monitoreo.sismo')?.value
+
+        },
+        estacion6: {
+          obsGenerales: this.inputs.get('estaciones.estacion6.obsGenerales')?.value,
+          obsGCC: this.inputs.get('estaciones.estacion6.obsGCC')?.value,
+          obsGCD: this.inputs.get('estaciones.estacion6.obsGCD')?.value,
+          obsEspecificas: this.inputs.get('estaciones.estacion6.obsEspecificas')?.value,
+          piezometro: {
+            imgAguaAcumulada: null,
+            observaciones: this.inputs.get('estaciones.estacion6.piezometro.observaciones')?.value
+          }
+        },
+        estacion7: {
+          obsGenerales: this.inputs.get('estaciones.estacion7.obsGenerales')?.value,
+          obsGCC: this.inputs.get('estaciones.estacion7.obsGCC')?.value,
+          obsGCD: this.inputs.get('estaciones.estacion7.obsGCD')?.value,
+          obsEspecificas: this.inputs.get('estaciones.estacion7.obsEspecificas')?.value,
+          piezometro: {
+            imgAguaAcumulada: null,
+            observaciones: this.inputs.get('estaciones.estacion7.piezometro.observaciones')?.value
+          }
+        },
+        estacion8: {
+          obsGenerales: this.inputs.get('estaciones.estacion8.obsGenerales')?.value,
+          obsGCC: this.inputs.get('estaciones.estacion8.obsGCC')?.value,
+          obsGCD: this.inputs.get('estaciones.estacion8.obsGCD')?.value,
+          obsEspecificas: this.inputs.get('estaciones.estacion8.obsEspecificas')?.value,
+          piezometro: {
+            imgAguaAcumulada: null,
+            observaciones: this.inputs.get('estaciones.estacion8.piezometro.observaciones')?.value
+          }
+        },
+
+      },
+      prismas: {
+        imagenGeneral: null,
+        obsGeneral: this.inputs.get('prismas.obsGeneral')?.value,
+        prismas1: {
+          imagen: null,
+          obsGeneral: this.inputs.get('prismas.prismas1.obsGeneral')?.value
+        },
+        prismas2: {
+          imagen: null,
+          obsGeneral: this.inputs.get('prismas.prismas2.obsGeneral')?.value
+        },
+      },
+      conclusion: this.inputs.get('conclusion')?.value
+    }
+
+
+    let data = JSON.stringify(datos)
+    localStorage.setItem('dataEFE', data)
+
+  }
+
+
 
   setFechas() {
     let fechaHoy = new Date()
@@ -191,7 +339,7 @@ export class InformeEfeComponent implements OnInit {
     if (this.geoElements.length) {
       this.geoElements.forEach(e => {
         let element = e.nativeElement
-        html2canvas(element, { scale: 3}).then((canvas) => {
+        html2canvas(element, { scale: 3 }).then((canvas) => {
           const base64image = canvas.toDataURL("image/png");
           const img = new Image()
           img.src = base64image
@@ -205,7 +353,7 @@ export class InformeEfeComponent implements OnInit {
   loadScreenshotGCD() {
     this.gcdElements.forEach(e => {
       let element = e.nativeElement
-      html2canvas(element, { scale: 2  }).then((canvas) => {
+      html2canvas(element, { scale: 2 }).then((canvas) => {
         const base64image = canvas.toDataURL("image/png");
         const img = new Image()
         img.src = base64image
@@ -253,21 +401,21 @@ export class InformeEfeComponent implements OnInit {
               if (cen.gid == element.geocentinela_id) {
                 dta.objects.forEach((elm: any) => {
                   if (elm.gid == cen.gid && elm.canal == element.canal) {
-             
+
                     if (elm.nombre == "GCC08" || elm.nombre == "GCC10") {
                       geo.push({
                         profundidad: Math.abs(element.profundidad),
                         canal: element.canal,
                         estado: false
                       })
-                    }else{
+                    } else {
                       geo.push({
                         profundidad: Math.abs(element.profundidad),
                         canal: element.canal,
                         estado: elm.estado
                       })
                     }
-                    
+
                   }
                 })
               }
@@ -953,6 +1101,8 @@ export class InformeEfeComponent implements OnInit {
 
     setTimeout(() => {
       this.service.generarInforme(this.inputs, this.arrGCC, this.arrGCD, this.gcdElements, this.arrPrismas, this.arrPiezometro)
+      this.guardarEnLocalStorage()
+
     }, 2000);
   }
 
