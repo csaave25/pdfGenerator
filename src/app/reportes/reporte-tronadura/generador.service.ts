@@ -4,6 +4,7 @@ import { jsPDF } from 'jspdf'
 import { latoBold, latoRegular, montBold, montMedium, montSemi } from 'src/assets/fonts/fonts';
 import autoTable, { Column, Table } from 'jspdf-autotable';
 import { formateadoraDeTexto } from './data';
+import { image } from 'html2canvas/dist/types/css/types/image';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +18,8 @@ export class GeneradorService {
   private puntoMedio = (this.doc.internal.pageSize.width || this.doc.internal.pageSize.getWidth()) / 2
   private margenContenido = 115
   private usoPagina = this.margenContenido
+  private contadorFig = 1
+  private contadorTabla = 1
 
   //campos globales
   private fecha: string = ''
@@ -68,31 +71,43 @@ export class GeneradorService {
     this.doc.setFontSize(14)
     this.doc.setFont("Lato", "bold");
     this.doc.text('INFORMACIÓN TRONADURA', this.margenIzq, this.usoPagina, { align: 'left' })
-    this.usoPagina += 20
+    this.usoPagina += 25
 
 
-    let guia: any[] = []
-    autoTable(this.doc, {
-      theme: 'grid',
-      styles: { halign: 'center', font: 'Lato', fontStyle: 'normal', fontSize: 8, fillColor: undefined, lineColor: [1, 48, 51], textColor: [1, 48, 51], cellWidth: 80, lineWidth: .1 },
-      headStyles: { font: 'Lato', fontStyle: 'bold', fillColor: undefined },
-      head: [header],
-      body: [body],
-      margin: { left: (this.puntoMedio - (header.length * 80) / 2) },
-      startY: this.usoPagina,
-      alternateRowStyles: { fillColor: undefined },
-      rowPageBreak: 'avoid',
 
-      willDrawCell: (data) => {
-        // if(data.cell.text[0] == "Destape")
-        if (data.cell.text[0] == '') {
-          this.doc.addImage('./assets/Tronadura/check.png', 'PNG', data.cell.x + 35, data.cell.y + (data.cell.height / 2) - 5, 10, 10, 'check-mark', 'FAST')
+
+
+    if (header.length > 1) {
+
+      this.doc.setFontSize(8)
+      this.doc.setFont("Lato", "normal");
+      this.doc.text(`Tabla ${this.contadorTabla}: Tipo de Tronadura`, this.puntoMedio, this.usoPagina, { align: 'center' })
+      this.contadorTabla++
+      this.usoPagina += 5
+
+      autoTable(this.doc, {
+        theme: 'grid',
+        styles: { halign: 'center', font: 'Lato', fontStyle: 'normal', fontSize: 8, fillColor: undefined, lineColor: [1, 48, 51], textColor: [1, 48, 51], cellWidth: 80, lineWidth: .1 },
+        headStyles: { font: 'Lato', fontStyle: 'bold', fillColor: undefined },
+        head: [header],
+        body: [body],
+        margin: { left: (this.puntoMedio - (header.length * 80) / 2) },
+        startY: this.usoPagina,
+        alternateRowStyles: { fillColor: undefined },
+        rowPageBreak: 'avoid',
+
+        willDrawCell: (data) => {
+          // if(data.cell.text[0] == "Destape")
+          if (data.cell.text[0] == '') {
+            this.doc.addImage('./assets/Tronadura/check.png', 'PNG', data.cell.x + 35, data.cell.y + (data.cell.height / 2) - 5, 10, 10, 'check-mark', 'FAST')
+          }
         }
-      }
-    })
+      })
 
-    this.usoPagina += 70
-
+      this.usoPagina += 70
+    } else {
+      this.usoPagina += 20
+    }
 
   }
 
@@ -115,16 +130,30 @@ export class GeneradorService {
     this.doc.setFontSize(14)
     this.doc.setFont("Lato", "bold");
     this.doc.text('PUNTOS DE CONTROL SECTOR TRONADURA', this.margenIzq, this.usoPagina, { align: 'left' })
-    this.usoPagina += 20
+    this.usoPagina += 25
+
     if (arr.length == 0) {
-      this.nuevaPagina(300)
+      this.nuevaPagina(40)
       this.doc.setFontSize(10)
       this.doc.setFont("Lato", "normal");
       this.doc.text('Sin puntos de control registrados.', this.margenIzq, this.usoPagina, { align: 'left' })
+      this.usoPagina += 30
     } else {
+
       arr.forEach(data => {
-        this.doc.addImage(data.img, 'PNG', this.puntoMedio - 150, this.usoPagina, 300, 260, `imagen-${data.id}`, 'SLOW')
-        this.usoPagina += 300
+        this.nuevaPagina(300)
+        this.doc.addImage(data.img, 'PNG', this.puntoMedio - 165, this.usoPagina, 320, 260, `imagen-${data.id}`, 'FAST')
+
+
+        this.contadorFig++
+        this.usoPagina += 270
+        this.doc.setFontSize(8)
+        this.doc.setFont("Lato", "normal");
+        this.doc.text(`Figura ${this.contadorFig}: Gráfico de desplazamientos Vs. tiempo`, this.puntoMedio, this.usoPagina, { align: 'center' })
+        this.doc.setFontSize(10)
+        this.doc.setFont("Lato", "normal");
+        this.usoPagina += 30
+        // this.nuevaPagina(300)
 
         if (data.radares.length > 0) {
           let body: any[] = []
@@ -133,6 +162,14 @@ export class GeneradorService {
             body.push(arr)
           });
 
+          this.doc.setFontSize(8)
+          this.doc.setFont("Lato", "normal");
+          this.doc.text(`Tabla ${this.contadorTabla}: Puntos de Control Sector Tronadura`, this.puntoMedio, this.usoPagina, { align: 'center' })
+          this.doc.setFontSize(10)
+          this.doc.setFont("Lato", "normal");
+          this.usoPagina += 5
+          this.contadorTabla++
+
           autoTable(this.doc, {
             theme: 'grid',
             styles: { halign: 'center', font: 'Lato', fontStyle: 'normal', fontSize: 8, fillColor: undefined, lineColor: [1, 48, 51], textColor: [1, 48, 51], lineWidth: .1 },
@@ -140,27 +177,67 @@ export class GeneradorService {
             head: [['Radar', 'Este', 'Norte', 'Cota', 'Desplazamiento [12 hrs.]', 'Velocidad [12 hrs.]']],
             bodyStyles: { cellPadding: 1 },
             body: body,
-            margin: { left: this.puntoMedio - 260 },
-            tableWidth: 520,
+            // margin: { left: this.puntoMedio - 265 },
+            // tableWidth: 530,
             startY: this.usoPagina,
             alternateRowStyles: { fillColor: undefined },
             rowPageBreak: 'avoid',
-            didDrawPage: () => {
-              this.usoPagina = this.margenContenido
+            didDrawPage: (data) => {
+              if (data.table.pageCount != 1)
+                this.usoPagina = this.margenContenido
             },
             didDrawCell: (data) => {
-              console.log(data);
-
               if (data.column.index == 0) {
                 this.usoPagina += data.row.height
               }
             }
           })
+          this.usoPagina += 30
 
         }
       })
       this.usoPagina += 30
     }
+  }
+
+  private implementearImagenes(imagenes: any[]) {
+
+    this.nuevaPagina(250)
+    this.doc.setFontSize(14)
+    this.doc.setFont("Lato", "bold");
+    this.doc.text('IMÁGENES', this.margenIzq, this.usoPagina, { align: 'left' })
+    this.usoPagina += 20
+    imagenes.forEach((data, index) => {
+      this.nuevaPagina(200)
+      if (data.img && index % 2 == 0) {
+
+        this.doc.addImage(data.img, 'PNG', this.margenIzq, this.usoPagina, 250, 200, 'img' + index, 'FAST')
+
+        this.doc.setFontSize(8)
+        this.doc.setFont("Lato", "normal");
+        this.doc.text(`Figura ${this.contadorFig}: ${data.nombre}`, this.margenIzq + 125, this.usoPagina + 210, { align: 'center' })
+        this.doc.setFontSize(10)
+        this.doc.setFont("Lato", "normal");
+        this.contadorFig++
+        if (!imagenes[index + 1].img) {
+          this.usoPagina += 235
+        }
+      } else {
+
+        if (data.img && index % 2 != 0) {
+          this.doc.addImage(data.img, 'PNG', this.margenDer - 250, this.usoPagina, 250, 200, 'img' + index, 'FAST')
+          this.doc.setFontSize(8)
+          this.doc.setFont("Lato", "normal");
+          this.doc.text(`Figura ${this.contadorFig}: ${data.nombre}`, this.margenDer - 125, this.usoPagina + 210, { align: 'center' })
+          this.doc.setFontSize(10)
+          this.doc.setFont("Lato", "normal");
+          this.contadorFig++
+          this.usoPagina += 235
+        }
+      }
+    })
+
+
   }
 
   private generarHeader(fecha: string, subTitulo: string, codigoInforme: string) {
@@ -241,11 +318,27 @@ export class GeneradorService {
 
     //---------------------------
 
+    // Formateo de fecha 
     let fecha = fechaCompleta.toLocaleString('es-ES', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }) + ' hrs.'
-    const arr = [...fecha];
+    let str = fecha.split(' ')
+    let arr = [...str[0]];
     arr[0] = arr[0].toUpperCase();
-    arr[14] = arr[14].toUpperCase();
-    fecha = arr.join('')
+    str[0] = arr.join('')
+
+    arr = [...str[3]];
+    arr[0] = arr[0].toUpperCase();
+    str[3] = arr.join('')
+
+    let format: string = ''
+    str.forEach((s, index) => {
+      if (index == 0) {
+        format = s
+      } else {
+        format += ' ' + s
+      }
+    })
+    fecha = format
+    //---------------------
 
     let subTitulo
     if (pared == '') {
@@ -257,10 +350,21 @@ export class GeneradorService {
     let codigoInforme = fechaCompleta.getFullYear() + '.2'
     let tablaTipoTronadura = { produccion, precorte, destape, bolones, desquinche, contorno, pozosPrecorte, pozosProduccion, volumen, factorCarga }
 
+    let imagenes: any[] = []
+    imagenes.push({ nombre: 'Antes Panorámica', img: aPanoramica })
+    imagenes.push({ nombre: 'Después Panorámica', img: dPanoramica })
+    imagenes.push({ nombre: 'Antes Zoom', img: aZoom })
+    imagenes.push({ nombre: 'Después Zoom', img: dZoom })
+    imagenes.push({ nombre: 'Antes Superior', img: aSuperior })
+    imagenes.push({ nombre: 'Después Superior', img: dSuperior })
+    imagenes.push({ nombre: 'Antes Inferior', img: aInferior })
+    imagenes.push({ nombre: 'Después Inferior', img: dInferior })
+
+
     //---Set de var globales
 
     this.fecha = fecha
-    this.nombre = this.nombre
+    this.nombre = 'Daniel Z.'
     this.codigoInforme = codigoInforme
     this.subtitulo = subTitulo
 
@@ -273,6 +377,7 @@ export class GeneradorService {
       tablaTipoTronadura,
       obs,
       graficosDVT,
+      imagenes
     }
   }
 
@@ -283,7 +388,8 @@ export class GeneradorService {
       codigoInforme,
       tablaTipoTronadura,
       obs,
-      graficosDVT
+      graficosDVT,
+      imagenes
     } = this.formateoDeDatos(inputs)
 
     this.implementarFuentes()
@@ -292,12 +398,22 @@ export class GeneradorService {
     this.informacionTronadura(tablaTipoTronadura)
     this.implementarObs(obs)
     this.implementarPuntosDeControl(graficosDVT)
+    this.implementearImagenes(imagenes)
 
   }
 
-  public previzualizarPDF(inputs: FormGroup) {
+  public previsualizarPDF(inputs: FormGroup) {
     this.implementarContenidoPDF(inputs)
-    this.doc.output('dataurlnewwindow')
+    setTimeout(() => {
+      // this.doc.output('dataurlnewwindow')
+      var blob = this.doc.output("blob");
+      window.open(URL.createObjectURL(blob));
+      this.doc = new jsPDF('p', 'pt', 'letter')
+
+    }, 500);
+
+
+
   }
 
 

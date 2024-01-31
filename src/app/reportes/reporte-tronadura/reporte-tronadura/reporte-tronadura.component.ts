@@ -59,9 +59,12 @@ export class ReporteTronaduraComponent {
             reader.readAsDataURL(element.files[0]);
             reader.onload = (_event) => {
                 if (typeof (reader.result) == 'string') {
+                    (element.nextElementSibling?.children[0] as HTMLImageElement).classList.remove('d-none');
+                    (element.nextElementSibling?.children[0] as HTMLImageElement).classList.add('d-inline');
                     (element.nextElementSibling?.children[0] as HTMLImageElement).src = reader.result
-                    this.inputs.get(name)?.setValue(reader.result)
                 }
+                this.inputs.get(name)?.setValue(reader.result);
+
             }
         }
 
@@ -79,9 +82,9 @@ export class ReporteTronaduraComponent {
     </div>
     <div class="col-5">
         <label class="form-label" for="customFile">Gráfico de desplazamientos Vs. tiempo</label>
-        <input id="inputImg-${id}" type="file" class="form-control form-control-sm" id="customFile" />
+        <input id="inputImg-${id}" type="file" class="form-control form-control-sm " id="customFile" />
         <div class="mt-2" style="width: 330px; height: 220px;">
-            <img id="img-${id}" style="width: 330px; height: 220px;" src="#" alt="Gráfico de desplazamientos Vs. tiempo">
+            <img class="d-none" id="img-${id}" style="width: 330px; height: 220px;" src="#" alt="Gráfico de desplazamientos Vs. tiempo">
         </div>
     </div>
     <div class="d-flex justify-content-between mt-2">
@@ -110,6 +113,8 @@ export class ReporteTronaduraComponent {
     visualizarImganesArr(event: Event, id: number) {
         let element = (event.target as HTMLInputElement)
         let imgElement = (element.nextElementSibling?.children[0] as HTMLImageElement)
+        imgElement.classList.remove('d-none')
+        imgElement.classList.remove('d-inline')
         let reader = new FileReader();
         let file = element.files![0]
 
@@ -306,8 +311,13 @@ export class ReporteTronaduraComponent {
             this.imagenesDVT = this.imagenesDVT.filter(dato => dato.id != idGrafo)
         } else {
             let valGrafico = this.imagenesDVT.findIndex(dato => dato.id == idGrafo)
-            let valRadar = this.imagenesDVT[valGrafico].radares.findIndex((dato: any) => dato.id == idRadar)
-            this.imagenesDVT[valGrafico].radares = this.imagenesDVT[valGrafico].radares.filter((dato: any) => dato.id != idRadar)
+            if (this.imagenesDVT[valGrafico]) {
+                let valRadar = this.imagenesDVT[valGrafico].radares.findIndex((dato: any) => dato.id == idRadar)
+                if (valRadar != -1) {
+                    this.imagenesDVT[valGrafico].radares = this.imagenesDVT[valGrafico].radares.filter((dato: any) => dato.id != idRadar)
+                }
+            }
+
         }
 
         elemento.remove()
@@ -315,7 +325,7 @@ export class ReporteTronaduraComponent {
 
     previsualizar() {
         this.inputs.get('graficosDVT')?.setValue(this.imagenesDVT)
-        this.servicio.previzualizarPDF(this.inputs)
+        this.servicio.previsualizarPDF(this.inputs)
     }
 
 }
