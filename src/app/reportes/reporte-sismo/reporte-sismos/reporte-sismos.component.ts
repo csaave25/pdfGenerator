@@ -4,6 +4,7 @@ import * as leaf from 'leaflet';
 import { FormControl, FormGroup } from '@angular/forms';
 import { traduccionPuntosCardinales } from 'src/app/helpers';
 import { GeneradorService } from '../generador.service';
+import { prevenirSaltosDeLinea } from 'src/app/helpers';
 import html2canvas from 'html2canvas';
 import domtoimage from 'dom-to-image';
 
@@ -41,6 +42,12 @@ export class ReporteSismosComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     this.loadMapa()
   }
+
+  prevenir(numSaltosPermitidos: number, evt: Event){
+    prevenirSaltosDeLinea(numSaltosPermitidos,evt)
+  }
+
+
 
   onSeleccionarFecha() {
     this.dataUltimosSismos = []
@@ -165,7 +172,7 @@ export class ReporteSismosComponent implements OnInit, AfterViewInit {
 
     arrStr.forEach((str, index) => {
 
-      if (str[0]+ str[1] == '- ') {
+      if (str[0] + str[1] == '- ') {
         str = str.replace('- ', '  • ')
       }
 

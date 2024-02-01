@@ -32,7 +32,7 @@
                         <label>Fecha Inicio</label>
                         <mdb-form-control style="width: 185px;">
                             <input mdbInput type="date" id="fecha-inicio" [max]="fechaMaxima" class="form-control"
-                                formControlName="fecha" (change)="onSeleccionarFecha()" />
+                                formControlName="fecha" (change)="onSeleccionarFecha()"/>
                         </mdb-form-control>
                     </div>
                 </div>
@@ -87,7 +87,7 @@
                         <label>Estacion Total</label>
                         <mdb-form-control>
                             <textarea mdbInput class="form-control" id="estacion" rows="4"
-                                formControlName="estacion"></textarea>
+                                formControlName="estacion" maxlength="200" (keydown)="prevenir(0,$event)"></textarea>
                             <label mdbLabel class="form-label" for="estacion">Dejar en blanco si no presenta
                                 activaciones.</label>
                         </mdb-form-control>
@@ -96,8 +96,8 @@
                         <label>Radar</label>
                         <mdb-form-control>
                             <textarea mdbInput class="form-control" id="Radar" rows="4"
-                                formControlName="radar"></textarea>
-                            <label mdbLabel class="form-label" for="Radar">Dejar en blanco si no presenta
+                                formControlName="radar"  maxlength="200" (keydown)="prevenir(0,$event)"></textarea>
+                            <label mdbLabel class="form-label"  for="Radar">Dejar en blanco si no presenta
                                 activaciones.</label>
                         </mdb-form-control>
                     </div>
@@ -105,7 +105,7 @@
                         <label>Otras observaciones</label>
                         <mdb-form-control>
                             <textarea mdbInput class="form-control" id="OBSERVACIONES" formControlName="otrasObs"
-                                rows="4" (keypress)="formateador($event)" maxlength=""></textarea>
+                                rows="4" (keypress)="formateador($event)" maxlength="300"  (keydown)="prevenir(2,$event)"></textarea>
                             <label mdbLabel class="form-label" for="OBSERVACIONES">Observaciones.</label>
                         </mdb-form-control>
                     </div>

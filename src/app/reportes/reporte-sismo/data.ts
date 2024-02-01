@@ -145,19 +145,19 @@ export function obtenerFechaEnPredefinido(fecha: Date, local: boolean) {
         let ano = fecha.getFullYear().toString()
         let diaNombre = fecha.toLocaleDateString('es-ES', { weekday: 'long' });
         diaNombre = diaNombre[0].toUpperCase() + diaNombre.slice(1)
-        let diaNumero = fecha.toLocaleDateString().slice(0, 2)
+        let diaNumero = fecha.toLocaleDateString('es-ES', {day: '2-digit'})
         let mesNombre = fecha.toLocaleDateString('es-ES', { month: 'long' })
         mesNombre = mesNombre[0].toUpperCase() + mesNombre.slice(1)
-        let hora = ('0' + fecha.toLocaleTimeString('es-ES')).slice(-8).slice(0, 5)
+        let hora = fecha.toLocaleDateString('es-ES', { hour: '2-digit', minute:'2-digit' })
         return diaNombre + ' ' + diaNumero + ' de ' + mesNombre + ' de ' + ano + ', ' + hora + ' hrs.'
     } else {
         let ano = fecha.getFullYear().toString()
         let diaNombre = fecha.toLocaleDateString('us-US', { weekday: 'long', timeZone: 'UTC' });
         diaNombre = diaNombre[0].toUpperCase() + diaNombre.slice(1)
-        let diaNumero = fecha.toLocaleDateString().slice(0, 2)
+        let diaNumero = fecha.toLocaleDateString('es-ES', {day: '2-digit'})
         let mesNombre = fecha.toLocaleDateString('us-US', { month: 'long', timeZone: 'UTC' })
         mesNombre = mesNombre[0].toUpperCase() + mesNombre.slice(1)
-        let hora = ('0' + fecha.toLocaleTimeString('us-US', { timeZone: 'UTC' })).slice(-8).slice(0, 5)
+        let hora = fecha.toLocaleDateString('es-ES', { hour: '2-digit', minute:'2-digit' , timeZone: 'UTC'})
         return diaNombre + ' ' + diaNumero + ' de ' + mesNombre + ' de ' + ano + ', ' + hora + ' hrs.'
     }
 

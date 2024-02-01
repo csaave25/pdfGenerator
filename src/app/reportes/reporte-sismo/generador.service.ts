@@ -51,7 +51,7 @@ export class GeneradorService {
     let ano = fecha.getFullYear().toString()
     let diaNombre = fecha.toLocaleDateString('es-ES', { weekday: 'long' });
     diaNombre = diaNombre[0].toUpperCase() + diaNombre.slice(1)
-    let diaNumero = fecha.toLocaleDateString().slice(0, 2)
+    let diaNumero = fecha.toLocaleDateString('es-ES', {day: '2-digit'})
     let mesNombre = fecha.toLocaleDateString('es-ES', { month: 'long' })
     mesNombre = mesNombre[0].toUpperCase() + mesNombre.slice(1)
     let hora = ('0' + fecha.toLocaleTimeString('es-ES')).slice(-8).slice(0, 5)
@@ -171,7 +171,7 @@ export class GeneradorService {
 
   private implementarContenido(inputs: FormGroup, dataSismo: any, imagenMapa: HTMLImageElement) {
     // this.doc.addImage("assets/EMT/marcaAgua.jpg", 'JPG', 0, 0, 612, 792, 'marca-x', 'SLOW');
-    let fecha = new Date()
+    let fecha = new Date(dataSismo.tiempo)
     this.implementarFuentes()
     this.generarHeader(fecha, 2)
     this.generarFooter(fecha, 'josé vergara Fernández', 2)

@@ -237,7 +237,7 @@
                 <div>
                     <mdb-form-control class="mt-3">
                         <textarea mdbInput class="form-control" id="obs-estacion-6" rows="4"
-                            formControlName="obsGenerales"></textarea>
+                            formControlName="obsGenerales" (keydown)="prevenir(0,$event)" maxlength="320"></textarea>
                         <label mdbLabel class="form-label" for="obs-estacion-6">Observaciones generales</label>
                     </mdb-form-control>
                 </div>
@@ -249,12 +249,12 @@
                 <div class="d-flex gap-3">
                     <mdb-form-control class="mt-3" style="width: 400px;">
                         <textarea mdbInput class="form-control" id="obs-gcc-6" rows="4"
-                            formControlName="obsGCC"></textarea>
+                            formControlName="obsGCC" (keydown)="prevenir(0,$event)" maxlength="320"></textarea>
                         <label mdbLabel class="form-label" for="obs-gcc-6">Observaciones GCC</label>
                     </mdb-form-control>
                     <mdb-form-control class="mt-3" style="width: 400px;">
                         <textarea mdbInput class="form-control" id="obs-gcd-6" rows="4"
-                            formControlName="obsGCD"></textarea>
+                            formControlName="obsGCD" (keydown)="prevenir(0,$event)" maxlength="320"></textarea>
                         <label mdbLabel class="form-label" for="obs-gcd-6">Observaciones GCD</label>
                     </mdb-form-control>
                 </div>
@@ -359,7 +359,7 @@
                 <div>
                     <mdb-form-control class="mt-3">
                         <textarea mdbInput class="form-control" id="obs-estacion-7" rows="4"
-                            formControlName="obsGenerales"></textarea>
+                            formControlName="obsGenerales" (keydown)="prevenir(0,$event)" maxlength="320"></textarea>
                         <label mdbLabel class="form-label" for="obs-estacion-7">Observaciones generales</label>
                     </mdb-form-control>
                 </div>
@@ -371,12 +371,12 @@
                 <div class="d-flex gap-3">
                     <mdb-form-control class="mt-3" style="width: 400px;">
                         <textarea mdbInput class="form-control" id="obs-gcc-7" rows="4"
-                            formControlName="obsGCC"></textarea>
+                            formControlName="obsGCC" (keydown)="prevenir(0,$event)" maxlength="320"></textarea>
                         <label mdbLabel class="form-label" for="obs-gcc-7">Observaciones GCC</label>
                     </mdb-form-control>
                     <mdb-form-control class="mt-3" style="width: 400px;">
                         <textarea mdbInput class="form-control" id="obs-gcd-7" rows="4"
-                            formControlName="obsGCD"></textarea>
+                            formControlName="obsGCD" (keydown)="prevenir(0,$event)" maxlength="320"></textarea>
                         <label mdbLabel class="form-label" for="obs-gcd-7">Observaciones GCD</label>
                     </mdb-form-control>
                 </div>
@@ -481,7 +481,7 @@
                 <div>
                     <mdb-form-control class="mt-3">
                         <textarea mdbInput class="form-control" id="obs-estacion-8" rows="4"
-                            formControlName="obsGenerales"></textarea>
+                            formControlName="obsGenerales" (keydown)="prevenir(0,$event)" maxlength="320"></textarea>
                         <label mdbLabel class="form-label" for="obs-estacion-8">Observaciones generales</label>
                     </mdb-form-control>
                 </div>
@@ -493,12 +493,12 @@
                 <div class="d-flex gap-3">
                     <mdb-form-control class="mt-3" style="width: 400px;">
                         <textarea mdbInput class="form-control" id="obs-gcc-8" rows="4"
-                            formControlName="obsGCC"></textarea>
+                            formControlName="obsGCC" (keydown)="prevenir(0,$event)" maxlength="320"></textarea>
                         <label mdbLabel class="form-label" for="obs-gcc-8">Observaciones GCC</label>
                     </mdb-form-control>
                     <mdb-form-control class="mt-3" style="width: 400px;">
                         <textarea mdbInput class="form-control" id="obs-gcd-8" rows="4"
-                            formControlName="obsGCD"></textarea>
+                            formControlName="obsGCD" (keydown)="prevenir(0,$event)" maxlength="320"></textarea>
                         <label mdbLabel class="form-label" for="obs-gcd-8">Observaciones GCD</label>
                     </mdb-form-control>
                 </div>
@@ -547,7 +547,7 @@
     </div>
     <!-- --------------------->
     <!-- ---------PRISMAS------------>
-    <!-- --------------------->
+    <!---- ------------------------>
     <!-- ---------Conclucíon------------>
     <div class="mt-5" formGroupName="prismas">
         <div style="width: 800px;">

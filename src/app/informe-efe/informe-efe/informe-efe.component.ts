@@ -6,6 +6,7 @@ import { ApiService } from '../api.service';
 import html2canvas from 'html2canvas';
 import 'chartjs-adapter-moment';
 import moment from 'moment';
+import { prevenirSaltosDeLinea } from 'src/app/helpers';
 
 // ng build --output-path docs --base-href /pdfGenerator/
 
@@ -126,17 +127,12 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
   })
 
 
-
-
   ngOnInit() {
     this.setFechas()
     this.loadGCC()
     this.loadPrismas()
     this.loadGCCDeformacion()
     this.LoadPiezometro()
-
-
-
   }
 
   ngAfterContentInit(): void {
@@ -144,7 +140,10 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
   }
 
 
-
+  prevenir(numSaltosPermitidos: number, evt: Event){
+    prevenirSaltosDeLinea(numSaltosPermitidos,evt)
+  }
+  
   cargarLocalStorage() {
 
     let data = localStorage.getItem('dataEFE')
@@ -154,7 +153,7 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
       // this.inputs.get('fechaInicio')?.setValue(datos.fechaFinal)
       // this.inputs.get('fechaFinal')?.setValue(datos.fechaFinal)
       this.inputs.get('numeroInforme')?.setValue(datos.numeroInforme)
-      this.inputs.get('gestores.elaborado')?.setValue(datos.gestores.revisado)
+      this.inputs.get('gestores.elaborado')?.setValue(datos.gestores.elaborado)
       this.inputs.get('gestores.revisado')?.setValue(datos.gestores.revisado)
       this.inputs.get('gestores.aprobado')?.setValue(datos.gestores.aprobado)
       this.inputs.get('gestores.cargo1')?.setValue(datos.gestores.cargo1)

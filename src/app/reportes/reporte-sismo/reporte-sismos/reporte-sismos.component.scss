@@ -1,19 +1,19 @@
 .map-container {
-    position: relative  ;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-  }
-  
-  .map-frame {
-    // border: 2px solid black;
-    height: 400px;
-    width: 300px;
-  }
-  
-  #map {
-    border: 2px solid black;
-    height: 400px;
-    width: 300px;
-  }
+  position: relative;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.map-frame {
+  // border: 2px solid black;
+  height: 400px;
+  width: 300px;
+}
+
+#map {
+  border: 2px solid black;
+  height: 400px;
+  width: 300px;
+}

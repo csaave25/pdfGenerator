@@ -25,6 +25,7 @@ import { RouterModule, RouterOutlet, Routes, provideRouter } from '@angular/rout
 import { InformeA2mgComponent } from './informe-a2mg/informe-a2mg/informe-a2mg.component';
 import { ReporteSismosComponent } from './reportes/reporte-sismo/reporte-sismos/reporte-sismos.component';
 import { ReporteTronaduraComponent } from './reportes/reporte-tronadura/reporte-tronadura/reporte-tronadura.component';
+import { ReporteCMDICComponent } from './reportes/reporte-CMDIC/reporte-cmdic/reporte-cmdic.component';
 
 
 
@@ -34,6 +35,8 @@ const routes: Routes = [
   { path: 'a2mg', component: InformeA2mgComponent },
   { path: 'sismos', component: ReporteSismosComponent },
   { path: 'tronadura', component: ReporteTronaduraComponent },
+  { path: 'cmdic', component: ReporteCMDICComponent },
+
 ];
 
 export const appConfig: ApplicationConfig = {
@@ -48,7 +51,8 @@ export const appConfig: ApplicationConfig = {
     MenuComponent,
     InformeA2mgComponent,
     ReporteSismosComponent,
-    ReporteTronaduraComponent
+    ReporteTronaduraComponent,
+    ReporteCMDICComponent
   ],
   imports: [
     FormsModule,

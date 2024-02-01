@@ -47,3 +47,16 @@ export function traduccionPuntosCardinales(punto: string) {
 
     return newString
 }
+
+
+
+export function prevenirSaltosDeLinea(numSaltosPermitidos: number, evt: Event) {
+
+    let event = (evt as KeyboardEvent)
+    let valor = (evt.target as HTMLInputElement).value
+    if (valor.split('\n').length > numSaltosPermitidos) {
+        if (event.key == "Enter") {
+            event.preventDefault();
+        }
+    }
+}
