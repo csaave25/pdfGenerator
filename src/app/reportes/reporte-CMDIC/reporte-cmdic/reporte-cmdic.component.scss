@@ -17,11 +17,22 @@
   width: 400px;
 }
 
-.div-span {
-  position: relative;
-  left: 10;
-  top: 10;
-  margin-left: 20px;
-  font-weight: bold;
+
+
+.pTag{
+  white-space: normal;
+}
+
+
+.leaflet-popup-content-wrapper {
+  background: #e92f2f;
  
+}
+
+.leaflet-popup-content-wrapper .leaflet-popup-content {
+  background: #e93434;
+}
+
+.leaflet-popup-tip-container {
+  background: #e93434;
 }
