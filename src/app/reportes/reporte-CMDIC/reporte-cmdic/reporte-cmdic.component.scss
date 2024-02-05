@@ -1,19 +1,27 @@
 .map-container {
-    position: relative;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-  }
-  
-  .map-frame {
-    // border: 2px solid black;
-    height: 600px;
-    width: 600px;
-  }
-  
-  #map {
-    border: 2px solid black;
-    height: 600px;
-    width: 600px;
-  }
+  position: relative;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.map-frame {
+  height: 250px;
+  width: 400px;
+}
+
+#map {
+  border: 1px solid black;
+  height: 250px;
+  width: 400px;
+}
+
+.div-span {
+  position: relative;
+  left: 10;
+  top: 10;
+  margin-left: 20px;
+  font-weight: bold;
+ 
+}
