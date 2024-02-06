@@ -21,6 +21,7 @@ export class ReporteCMDICComponent implements AfterViewInit {
     this.loadMapa()
     this.loadDataTopo()
     this.loadDataPozos()
+    this.loadDataBasePozo()
 
   }
 
@@ -74,15 +75,15 @@ export class ReporteCMDICComponent implements AfterViewInit {
                     color = '#7EC0E3'
                     width = '.9rem'
                     height = '.9rem'
-                    mt = '11px'
-                    ml = '11px'
+                    mt = '8px'
+                    ml = '12px'
                   } else {
                     if (feature.properties.Caudal <= 1.2) {
                       color = '#B3D7ED'
                       width = '.8rem'
                       height = '.8rem'
-                      mt = '10px'
-                      ml = '10px'
+                      mt = '4px'
+                      ml = '12px'
                     }
 
                   }
@@ -134,6 +135,13 @@ export class ReporteCMDICComponent implements AfterViewInit {
         },
       }).addTo(this.map);
     })
+  }
+
+  loadDataBasePozo() {
+    // this.api.getBaseDatosPozos().subscribe((data : any) => {
+    //   console.log(data);
+      
+    // })
   }
 
 

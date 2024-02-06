@@ -26,6 +26,11 @@ import { InformeA2mgComponent } from './informe-a2mg/informe-a2mg/informe-a2mg.c
 import { ReporteSismosComponent } from './reportes/reporte-sismo/reporte-sismos/reporte-sismos.component';
 import { ReporteTronaduraComponent } from './reportes/reporte-tronadura/reporte-tronadura/reporte-tronadura.component';
 import { ReporteCMDICComponent } from './reportes/reporte-CMDIC/reporte-cmdic/reporte-cmdic.component';
+import { EventoComponent } from './reportes/reporte-evento/evento/evento.component';
+import { TurnosDiariosComponent } from './reportes/reporte-turnos/turnos-diarios/turnos-diarios.component';
+import { ChecklistComponent } from './reportes/reporte-checklist/checklist/checklist.component';
+import { EstadosDelServicioComponent } from './reportes/reporte-estado/estados-del-servicio/estados-del-servicio.component';
+import { AlertasDeSeguridadComponent } from './reportes/reporte-alertas/alertas-de-seguridad/alertas-de-seguridad.component';
 
 
 
@@ -36,6 +41,12 @@ const routes: Routes = [
   { path: 'sismos', component: ReporteSismosComponent },
   { path: 'tronadura', component: ReporteTronaduraComponent },
   { path: 'cmdic', component: ReporteCMDICComponent },
+  { path: 'alertas', component: AlertasDeSeguridadComponent },
+  { path: 'eventos', component: EventoComponent },
+  { path: 'turnos', component: TurnosDiariosComponent },
+  { path: 'checklist', component: ChecklistComponent },
+  { path: 'estados', component: EstadosDelServicioComponent },
+
 
 ];
 
@@ -52,7 +63,11 @@ export const appConfig: ApplicationConfig = {
     InformeA2mgComponent,
     ReporteSismosComponent,
     ReporteTronaduraComponent,
-    ReporteCMDICComponent
+    ReporteCMDICComponent,
+    EventoComponent,
+    TurnosDiariosComponent,
+    ChecklistComponent,
+    EstadosDelServicioComponent
   ],
   imports: [
     FormsModule,
