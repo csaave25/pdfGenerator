@@ -1,1 +1,31 @@
-<p>checklist works!</p>
+<div class="d-flex justify-content-end" >
+    <div class="col-10 mt-2 border">
+        <button type="button" class="btn btn-sm mb-4" style="background-color: #00838F; color: #eeefef" routerLink="/"
+            mdbRipple>Atras </button>
+        <div class="d-flex flex-column  mt-4 ">
+            <h3 style="color: #00838F;">ALERTAS DE SEGURIDAD</h3>
+        </div>
+
+        <div class="mt-4 border col-6">
+            <div class="border-2 p-2">
+                <div>
+                    <label>id</label>
+                    <div>
+                        <input type="number" id="idInforme" class="form-control-sm" value="0" min="0"
+                            style="width: 100px;" formControlName="id" />
+                    </div>
+                </div>
+                <div>
+                    <label>Fecha Inicio</label>
+                    <mdb-form-control style="width: 185px;">
+                        <input mdbInput type="date" id="fecha-inicio"  class="form-control"
+                            formControlName="fecha" />
+                    </mdb-form-control>
+                </div>
+
+            </div>
+
+
+        </div>
+    </div>
+</div>

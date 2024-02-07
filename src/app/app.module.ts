@@ -30,7 +30,6 @@ import { EventoComponent } from './reportes/reporte-evento/evento/evento.compone
 import { TurnosDiariosComponent } from './reportes/reporte-turnos/turnos-diarios/turnos-diarios.component';
 import { ChecklistComponent } from './reportes/reporte-checklist/checklist/checklist.component';
 import { EstadosDelServicioComponent } from './reportes/reporte-estado/estados-del-servicio/estados-del-servicio.component';
-import { AlertasDeSeguridadComponent } from './reportes/reporte-alertas/alertas-de-seguridad/alertas-de-seguridad.component';
 
 
 
@@ -41,7 +40,7 @@ const routes: Routes = [
   { path: 'sismos', component: ReporteSismosComponent },
   { path: 'tronadura', component: ReporteTronaduraComponent },
   { path: 'cmdic', component: ReporteCMDICComponent },
-  { path: 'alertas', component: AlertasDeSeguridadComponent },
+  // { path: 'alertas', component: AlertasDeSeguridadComponent },
   { path: 'eventos', component: EventoComponent },
   { path: 'turnos', component: TurnosDiariosComponent },
   { path: 'checklist', component: ChecklistComponent },
@@ -92,7 +91,7 @@ export const appConfig: ApplicationConfig = {
     MdbTooltipModule,
     MdbValidationModule,
     NoopAnimationsModule,
-
+    
   ],
   providers: [],
   bootstrap: [AppComponent]

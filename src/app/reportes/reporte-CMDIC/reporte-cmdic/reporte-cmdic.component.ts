@@ -138,10 +138,10 @@ export class ReporteCMDICComponent implements AfterViewInit {
   }
 
   loadDataBasePozo() {
-    // this.api.getBaseDatosPozos().subscribe((data : any) => {
-    //   console.log(data);
+    this.api.getBaseDatosPozos().subscribe((data : any) => {
+      console.log(data);
       
-    // })
+    })
   }
 
 

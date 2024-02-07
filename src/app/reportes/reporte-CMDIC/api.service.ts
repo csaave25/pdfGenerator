@@ -20,7 +20,7 @@ export class ApiService {
   }
 
   getBaseDatosPozos() {
-    // return this.http.get('https://api.sheety.co/a70d9550db28a0d8f07825d33db0f130/pruebaApi/hoja1')
+    return this.http.get('https://sheet.best/api/sheets/83afce1f-9319-40a2-910f-a376800b56bc')
   }
 
 
