@@ -120,7 +120,7 @@ export class InformeService {
     this.doc.addPage()
     this.doc.addImage("assets/EMT/marcaAgua.jpg", 'JPG', 0, 0, 612, 792, 'marca-x', 'SLOW');
 
-    this.doc.addImage("assets/images/logo.png", 'PNG', this.marginLeft, this.startPage, 160, 50, 'logo-x', 'SLOW');
+    this.doc.addImage("assets/EMT/logo.png", 'PNG', this.marginLeft, this.startPage, 160, 50, 'logo-x', 'SLOW');
     let altura = 246
     let margenIzq = this.marginLeft + 72
     this.doc.setFont("Montserrat", "bold");
@@ -722,12 +722,17 @@ export class InformeService {
 
       let fecha
       let hora
+      // elm.initDate = elm.initDate.replaceAll('T',' ')
+      console.log(elm.initDate);
+      console.log(new Date(elm.initDate));
+      
+      
       if (new Date(elm.initDate).getTime() < inicioMes.getTime()) {
-        fecha = inicioMes.toLocaleDateString('en-GB');
+        fecha = inicioMes.toLocaleDateString('es-ES');
         hora = '00:00:00'
       } else {
-        fecha = new Date(elm.initDate).toLocaleDateString('en-GB');
-        hora = ('0' + new Date(elm.initDate).getUTCHours()).slice(-2) + ':' + ('0' + new Date(elm.initDate).getUTCMinutes()).slice(-2) + ':' + ('0' + new Date(elm.initDate).getUTCSeconds()).slice(-2)
+        fecha = new Date(elm.initDate).toLocaleDateString('es-ES');
+        hora = (('0' + new Date(elm.initDate).getUTCHours()).slice(-2)) + ':' + ('0' + new Date(elm.initDate).getUTCMinutes()).slice(-2) + ':' + ('0' + new Date(elm.initDate).getUTCSeconds()).slice(-2)
       }
 
       tablaMatrix.push({
@@ -878,14 +883,22 @@ export class InformeService {
     // var blob = this.doc.output("blob");
     // window.open(URL.createObjectURL(blob));
     this.doc.save('INFORME_MENSUAL_A2MG_' + (this.mesNum + 1) + '_' + this.anoNum)
-
-    // this.doc.output("pdfobjectnewwindow");
     this.doc = new jsPDF('p', 'pt', 'letter')
+  }
+
+
+  descargaEMT(){
+
+  }
+
+  DescargaCliente(){
+
   }
 
   cargarDatos(inputs: FormGroup) {
 
     let fecha = inputs.get('fecha')?.value.replace("-", "/") + '/01'
+    
     let mes = new Date(fecha).toLocaleString('default', { month: 'long' })
     let ano = new Date(fecha).getFullYear()
     mes = mes.charAt(0).toUpperCase() + mes.slice(1);
@@ -898,14 +911,14 @@ export class InformeService {
 
     this.cargarDatos(inputs)
     this.implementarFuentes()
-    // this.implementarPortada()
-    // this.generarTablaResumen(inputs)
-    // this.implementarIndicadoresDeServicio(tablaDispo, inputs)
+    this.implementarPortada()
+    this.generarTablaResumen(inputs)
+    this.implementarIndicadoresDeServicio(tablaDispo, inputs)
     this.implmentarConfiabilidad(inputs, comentariosImagenes)
-    // this.implementarAnalisis(dataCriticisdad, imgCriticidad, comentariosCriticidad, inputs)
-    // this.implementarParametroA2MG(dataMatrix)
-    // this.implementarConclusion(inputs)
-    // this.implementarTablaContenido()
+    this.implementarAnalisis(dataCriticisdad, imgCriticidad, comentariosCriticidad, inputs)
+    this.implementarParametroA2MG(dataMatrix)
+    this.implementarConclusion(inputs)
+    this.implementarTablaContenido()
     this.previsualizar()
     this.doc = new jsPDF('p', 'pt', 'letter')
 

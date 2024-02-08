@@ -133,7 +133,6 @@ export const formateadoraDeTexto = (doc: jsPDF, textos: string, margenTop: numbe
                 doc.setFont("Lato", 'normal')
                 justify(doc, txt, init, margenTop, ancho)
                 margenTop = margenTop + obtenerAncho(doc, txt, ancho)
-                console.log('entro aca');
             } else {
                 if (copytext.length == 0) {
                     margenTop += 10
@@ -159,7 +158,6 @@ function nuevaPagina(doc: jsPDF, fecha: string) {
     let contadorPagina = doc.getCurrentPageInfo().pageNumber - 1
     let endPage = 760
     let marginContent = marginLeft + 50
-    console.log(fecha);
 
 
     doc.addImage("assets/EMT/marcaAgua.jpg", 'JPG', 0, 0, 612, 792, 'marca-x', 'SLOW');
@@ -187,7 +185,7 @@ function implementarHeader(doc: jsPDF, marginLeft: number, marginRight: number, 
 
 
     // this.doc.addImage("assets/images/logo.png", 'PNG', this.marginLeft , 20, 222, 69, 'logo', 'SLOW'); LOGO CON PORTE IGUAL AL DE PORTADA
-    doc.addImage("assets/images/logo.png", 'PNG', marginLeft, startPage, 160, 50, 'logo' + contadorPagina, 'SLOW');
+    doc.addImage("assets/EMT/logo.png", 'PNG', marginLeft, startPage, 160, 50, 'logo' + contadorPagina, 'SLOW');
     doc.setFontSize(8)
     doc.setTextColor(colores.negro)
     doc.setFont('Lato', 'normal')
