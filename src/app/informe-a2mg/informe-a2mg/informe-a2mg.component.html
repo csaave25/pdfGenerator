@@ -7,22 +7,24 @@
         <h3>INFORME MENSUAL A2MG</h3>
     </div>
     <div class="mt-2 d-flex gap-2">
+        <!-- <button style="background-color: #00838F; color: #eeefef" type="button" class="btn" (click)="activarInforme()"
+            mdbRipple>Exportar</button> -->
         <button style="background-color: #00838F; color: #eeefef" type="button" class="btn" (click)="activarInforme()"
-            mdbRipple>Exportar</button>
-        <button style="background-color: #00838F; color: #eeefef" type="button" class="btn" (click)="activarInforme()"
-            mdbRipple>Descargar</button>
+            mdbRipple>Descargar EMT</button>
+        <button style="background-color: #00838F; color: #eeefef" type="button" class="btn" (click)="descargaCliente()"
+            mdbRipple>Descargar Cliente</button>
     </div>
     <div class="mt-4">
         <div>
             <label mdbLabel class="form-label" for="mes">Mes y año</label>
-            <input mdbInput type="month" id="mes" class="form-control" formControlName="fecha"
-                (change)="loadTablas()" [max]="hoy"/>
+            <input mdbInput type="month" id="mes" class="form-control" formControlName="fecha" (change)="loadTablas()"
+                [max]="hoy" />
         </div>
     </div>
     <div class="mt-4 d-flex col-8 justify-content-between">
         <div [formGroup]="inputs.controls.usrs">
             <label mdbLabel class="form-label" for="elaborado">Elaborado</label>
-            <input mdbInput type="text" id="elaborado" class="form-control" formControlName="elaborado" />
+            <input mdbInput type="text" id="elaborado" class="form-control" formControlName="elaborado" autocomplete="true"/>
             <label mdbLabel class="form-label" for="cargos">Cargo</label>
             <input mdbInput type="text" id="cargos" class="form-control" formControlName="cargo1" />
         </div>

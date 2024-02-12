@@ -12,6 +12,7 @@ export class ApiService {
   urlMatrixUltimosCambios = 'https://a2mggestion.emt.cl/api/matrixLogs/logs/resumeAll'
   urlDisponibilidad = 'http://10.10.10.238:8766/reportabilidad/metricas/'
 
+  token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI2M2FjM2FiYjA0MDc4YjI5NWRmMzU1NDMiLCJpYXQiOjE3MDc3NDkyMTUsImV4cCI6MTcwNzgwOTIxNX0.UiorBeYkp5Il-QOR6gXybuU_HPu1FdMKXAwmAYNjyHA'
 
   constructor(private http: HttpClient) { }
 
@@ -21,7 +22,7 @@ export class ApiService {
 
   getMatrix(): Observable<any> {
     const headerDict = {
-      'x-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI2M2MwMzE3OGU3OTg0NWEzN2QwZjEyNWEiLCJpYXQiOjE2OTc0NzAxODQsImV4cCI6NDIwMDAwMTY5NzQ3MDE4NH0.wM_IyCuLdbNZF_doUKecx1tHX8PQ9-SKxEMtb1OkFDo',
+      'x-token': this.token,
     }
 
     const requestOptions = {
@@ -46,7 +47,7 @@ export class ApiService {
     this.getAlerta().subscribe(dato => {
       dato.objects.alerts.forEach((element: any) => {
         let fechaElm = (element.date as string).slice(0, 10).replaceAll("-", "/")
-        let date = new Date(fechaElm).getMonth() +1
+        let date = new Date(fechaElm).getMonth() + 1
         if (!element.fake && fecha == date) {
           tabla.push({ ...element, comentario: null })
         }
@@ -57,8 +58,17 @@ export class ApiService {
   }
 
   getTablaMatrix(mes: string, ano: number) {
+
+    const headerDict = {
+      'x-token': this.token,
+    }
+
+    const requestOptions = {
+      headers: new HttpHeaders(headerDict),
+    };
+
     let url = 'https://m2d.emt.cl/api3/matrixLogs/logs/matrixChanges?month=' + mes + '&year=' + ano
-    return this.http.get<any>(url);
+    return this.http.get<any>(url,requestOptions);
   }
 
   getTablaDispo(mes: string): any {
@@ -67,6 +77,20 @@ export class ApiService {
       return dato
     })
 
+  }
+
+  getConfiabilidad(mes: string, ano: number) {
+
+    const headerDict = {
+      'x-token': this.token,
+    }
+
+    const requestOptions = {
+      headers: new HttpHeaders(headerDict),
+    };
+
+    let url = 'https://m2d.emt.cl/api3/reliability/date/value?month=' + mes + '&year=' + ano
+    return this.http.get<any>(url,requestOptions);
   }
 
 

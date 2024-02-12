@@ -148,6 +148,7 @@ export class InformeA2mgComponent implements OnInit {
   loadTablas() {
     this.loadGrietasCriticidad()
     this.loadDisponibilidad()
+    this.loadConfiabilidad()
     this.loadMatriz()
   }
 
@@ -158,6 +159,19 @@ export class InformeA2mgComponent implements OnInit {
     this.dataCriticisadad = this.rq.getTablaAlertas(mes)
     this.imgCriticidad = new Array(this.dataCriticisadad.length)
 
+  }
+
+  loadConfiabilidad() {
+    let fecha = this.inputs.get('fecha')?.value.replace("-", "/")
+    let mes = new Date(fecha).toLocaleString('default', { month: 'long' })
+    let ano = new Date(fecha).getFullYear()
+    this.rq.getConfiabilidad(mes, ano).subscribe(data => {
+      this.inputs.get('confiabilidad.identificacion')?.setValue(data.objects[0].identification)
+      this.inputs.get('confiabilidad.clasificacion')?.setValue(data.objects[0].classification)
+      this.inputs.get('confiabilidad.comunicacion')?.setValue(data.objects[0].communication)
+      this.calcularPromedioConfiabilidad()
+
+    })
   }
 
   loadDisponibilidad() {
@@ -183,7 +197,7 @@ export class InformeA2mgComponent implements OnInit {
 
   loadMatriz() {
     let str: string = this.inputs.get('fecha')?.value
-    str = str.replace("-", "/")
+    str = str.replaceAll("-", "/")
     let fecha = new Date(str)
     let ano = fecha.getFullYear()
     let mes = ('0' + (fecha.getMonth() + 1)).slice(-2)
@@ -247,8 +261,8 @@ export class InformeA2mgComponent implements OnInit {
     } else {
       this.comentariosImagenes[validator].comentario = elemento.value
     }
-    
-    
+
+
 
 
   }
@@ -388,6 +402,11 @@ export class InformeA2mgComponent implements OnInit {
 
   activarInforme() {
     this.informeService.onPrevizualizar(this.dataCriticisadad, this.dataMatrix, this.tablaDispo, this.imgCriticidad, this.comentariosCriticidad, this.inputs, this.comentariosImagenes)
+    this.saveOnLocalStorage()
+  }
+
+  descargaCliente() {
+    this.informeService.descargaCliente(this.dataCriticisadad, this.dataMatrix, this.tablaDispo, this.imgCriticidad, this.comentariosCriticidad, this.inputs, this.comentariosImagenes)
     this.saveOnLocalStorage()
   }
 
