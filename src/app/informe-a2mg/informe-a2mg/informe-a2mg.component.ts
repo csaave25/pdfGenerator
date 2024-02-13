@@ -421,8 +421,6 @@ export class InformeA2mgComponent implements OnInit {
   descargaCliente() {
     this.informeService.descargaCliente(this.dataCriticisadad, this.dataMatrix, this.tablaDispo, this.imgCriticidad, this.comentariosCriticidad, this.inputs, this.comentariosImagenes)
     this.saveOnLocalStorage()
- 
-
   }
 
 

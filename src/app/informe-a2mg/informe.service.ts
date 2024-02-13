@@ -1010,33 +1010,35 @@ export class InformeService {
 
       let fecha
       let hora
-
-      if (!elm.initDate.includes('Z')) {
-        elm.initDate = elm.initDate.replaceAll('T', ' ')
-        let copy = elm.initDate.slice(0, 10).split('-')
+      
+      let copyInit = elm.initDate
+      let copyEnde = elm.endDate
+      if (!copyInit.includes('Z')) {
+        copyInit = copyInit.replaceAll('T', ' ')
+        let copy = copyInit.slice(0, 10).split('-')
         let nuevo = copy[2] + '-' + copy[1] + '-' + copy[0]
-        elm.initDate = nuevo + elm.initDate.slice(-9)
+        copyInit = nuevo + copyInit.slice(-9)
 
-        copy = elm.endDate.slice(0, 10).split('-')
+        copyEnde = copyEnde.replaceAll('T', ' ')
+        copy = copyEnde.slice(0, 10).split('-')
         nuevo = copy[2] + '-' + copy[1] + '-' + copy[0]
-        elm.endDate = nuevo + elm.endDate.slice(-9)
+        copyEnde = nuevo + copyEnde.slice(-9)
       }
 
 
 
 
-      if (new Date(elm.initDate).getTime() < inicioMes.getTime()) {
+      if (new Date(copyInit).getTime() < inicioMes.getTime()) {
         fecha = inicioMes.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' });
         hora = '00:00:00'
       } else {
-        fecha = new Date(elm.initDate).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' });
-
+        fecha = new Date(copyInit).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' });
       }
 
       tablaMatrix.push({
         matrix,
         fechaInicio: fecha,
-        fechaFinal: new Date(elm.endDate).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+        fechaFinal: new Date(copyEnde).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' }),
 
       })
     });
