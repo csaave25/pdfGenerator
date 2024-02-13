@@ -37,22 +37,36 @@ export class InformeService {
   startPage = 20
   startcContent = this.startPage + 90
   marginContent = this.marginLeft + 50
-  contadorPagina = 2
   usoPagina = this.startcContent
   totalUso = this.endPage - this.startcContent
-  contadorItem = 1
-  listaContenido: Data[] = []
-  tablaCriticidades = []
-  mesNum = 10
-  anoNum = 2023
+  mesNum = ''
+  anoNum = ''
   contadorTabla = 1
   contadorFigura = 1
   fecha: string = ''
   fechaNum: string = ''
+  contadorItem = 1
+  listaContenido: Data[] = []
+  tablaCriticidades = []
+  contadorPagina = 2
+
 
 
   doc = new jsPDF('p', 'pt', 'letter')
 
+
+  iniciarValores() {
+    this.mesNum = ''
+    this.anoNum = ''
+    this.contadorTabla = 1
+    this.contadorFigura = 1
+    this.fecha = ''
+    this.fechaNum = ''
+    this.contadorItem = 1
+    this.listaContenido = []
+    this.tablaCriticidades = []
+    this.contadorPagina = 2
+  }
 
   implementarFuentes() {
     this.doc.addFileToVFS("Lato-Font-bold.ttf", latoBold);
@@ -974,6 +988,7 @@ export class InformeService {
 
 
     dataMatrix.forEach((elm: any) => {
+
       let matrix: any = {
         matrixNombre: [] as any[],
         matrixLongitud: [] as any[],
@@ -995,19 +1010,23 @@ export class InformeService {
 
       let fecha
       let hora
-      // elm.initDate = elm.initDate.replaceAll('T',' ')
-      let copy = elm.initDate.slice(0, 10).split('-')
-      let nuevo = copy[2] + '-' + copy[1] + '-' + copy[0]
-      elm.initDate = nuevo + elm.initDate.slice(-9)
 
-      copy = elm.endDate.slice(0, 10).split('-')
-      nuevo = copy[2] + '-' + copy[1] + '-' + copy[0]
-      elm.endDate = nuevo + elm.endDate.slice(-9)
+      if (!elm.initDate.includes('Z')) {
+        elm.initDate = elm.initDate.replaceAll('T', ' ')
+        let copy = elm.initDate.slice(0, 10).split('-')
+        let nuevo = copy[2] + '-' + copy[1] + '-' + copy[0]
+        elm.initDate = nuevo + elm.initDate.slice(-9)
+
+        copy = elm.endDate.slice(0, 10).split('-')
+        nuevo = copy[2] + '-' + copy[1] + '-' + copy[0]
+        elm.endDate = nuevo + elm.endDate.slice(-9)
+      }
+
 
 
 
       if (new Date(elm.initDate).getTime() < inicioMes.getTime()) {
-        fecha = inicioMes.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric',hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        fecha = inicioMes.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' });
         hora = '00:00:00'
       } else {
         fecha = new Date(elm.initDate).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' });
@@ -1045,16 +1064,20 @@ export class InformeService {
     this.doc.text('Registro de matrices utilizadas en el periodo: ', this.marginContent, this.usoPagina + 30, { align: 'left', maxWidth: this.marginRight - this.marginContent })
 
 
-    tablaMatrix.forEach(mtx => {
+    this.usoPagina += 60
+    tablaMatrix.forEach((mtx, index) => {
+
+      if (this.usoPagina + 170 > this.totalUso)
+        this.nuevaPagina()
+
 
       let doc = this.doc
       this.doc.setFontSize(8)
       this.doc.setFont('Lato', 'normal')
-      // this.doc.text('TABLA ' + this.contadorTabla + ': DESDE ' + mtx.fechaInicio + ' ' + mtx.horaInicio + ' HASTA 31/12/2023 23:59:59', ((this.marginRight - this.marginContent) / 2 + this.marginContent), this.usoPagina + 55, { align: 'center', maxWidth: this.marginRight - this.marginContent })
 
-      this.doc.text('TABLA ' + this.contadorTabla + ': DESDE ' + mtx.fechaInicio  + ' HASTA ' + mtx.fechaFinal, ((this.marginRight - this.marginContent) / 2 + this.marginContent), this.usoPagina + 55, { align: 'center', maxWidth: this.marginRight - this.marginContent })
+      this.doc.text('TABLA ' + this.contadorTabla + ': DESDE ' + mtx.fechaInicio + ' HASTA ' + mtx.fechaFinal, ((this.marginRight - this.marginContent) / 2 + this.marginContent), this.usoPagina, { align: 'center', maxWidth: this.marginRight - this.marginContent })
 
-
+      this.usoPagina += 5
       autoTable(doc, {
         margin: { left: this.marginContent },
         styles: { halign: 'center', lineWidth: .1, fillColor: undefined, lineColor: [1, 48, 51], textColor: [1, 48, 51] },
@@ -1064,7 +1087,7 @@ export class InformeService {
         head: [[{ content: 'Probabilidad de daño al esparcidor', styles: { cellWidth: 125, cellPadding: { top: 15, bottom: 15 } } }, { content: 'Longitud' }, { content: 'Apertura' }, { content: 'Áreas de criticidad' }]],
         columnStyles: { 0: { fillColor: [217, 217, 217] } },
         body: mtx.matrix.matrixNombre,
-        startY: this.usoPagina + 60,
+        startY: this.usoPagina,
         didDrawCell: function (data) {
 
           if (data.cell.text[0].includes('Longitud')) {
@@ -1106,11 +1129,22 @@ export class InformeService {
 
             })
           }
-        }
+        },
+
+
+        // didDrawPage: (data) => {
+        //   this.usoPagina = this.marginContent
+        // }
+
       })
 
+      this.contadorTabla++
 
-      this.usoPagina += 230
+      if (index - 1 != tablaMatrix.length) {
+        this.usoPagina += 180
+      } else {
+        this.usoPagina += 220
+      }
     })
 
 
@@ -1160,7 +1194,16 @@ export class InformeService {
     // var blob = this.doc.output("dataurlnewwindow", { filename: 'data.pdf' });
     // var blob = this.doc.output("blob");
     // window.open(URL.createObjectURL(blob));
-    this.doc.save('INFORME_MENSUAL_A2MG_' + (this.mesNum + 1) + '_' + this.anoNum)
+    this.doc.save('INFORME_MENSUAL_A2MG_' + this.mesNum + '_' + this.anoNum)
+    this.doc = new jsPDF('p', 'pt', 'letter')
+  }
+
+  previsualizarCliente() {
+    // this.doc.setProperties({ title: 'Titulo de l PDF' })
+    // var blob = this.doc.output("dataurlnewwindow", { filename: 'data.pdf' });
+    // var blob = this.doc.output("blob");
+    // window.open(URL.createObjectURL(blob));
+    this.doc.save('INFORME_MENSUAL_A2MG_CLIENTE_' + this.mesNum + '_' + this.anoNum)
     this.doc = new jsPDF('p', 'pt', 'letter')
   }
 
@@ -1178,6 +1221,8 @@ export class InformeService {
     mes = mes.charAt(0).toUpperCase() + mes.slice(1);
     this.fecha = mes + ' ' + ano
     this.fechaNum = fecha
+    this.mesNum = new Date(fecha).toLocaleString('default', { month: '2-digit' })
+    this.anoNum = new Date(fecha).getFullYear().toString()
 
   }
 
@@ -1194,6 +1239,8 @@ export class InformeService {
     this.implementarConclusion(inputs)
     this.implementarTablaContenido()
     this.previsualizar()
+    this.iniciarValores()
+
     this.doc = new jsPDF('p', 'pt', 'letter')
 
   }
@@ -1210,7 +1257,8 @@ export class InformeService {
     this.implementarParametroA2MG(dataMatrix)
     this.implementarConclusion(inputs)
     this.implementarTablaContenido()
-    this.previsualizar()
+    this.previsualizarCliente()
+    this.iniciarValores()
     this.doc = new jsPDF('p', 'pt', 'letter')
 
   }

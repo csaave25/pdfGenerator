@@ -47,13 +47,14 @@ export class InformeA2mgComponent implements OnInit {
   })
 
   dataCriticisadad: any
-  dataMatrix: any[] = []
+  
   tablaDispo: any
-  imgCriticidad: any = []
   comentariosCriticidad: any = []
   promedioTablaDispo: number = 0
   numTemplate = 0
   numImagen = 0
+  dataMatrix: any[] = []
+  imgCriticidad: any = []
   comentariosImagenes: any[] = []
   hoy: any = ""
 
@@ -146,6 +147,8 @@ export class InformeA2mgComponent implements OnInit {
   }
 
   loadTablas() {
+    this.limpiarVariables()
+
     this.loadGrietasCriticidad()
     this.loadDisponibilidad()
     this.loadConfiabilidad()
@@ -400,14 +403,26 @@ export class InformeA2mgComponent implements OnInit {
     })
   }
 
+  limpiarVariables(){
+    this.dataMatrix = []
+    
+  }
+
   activarInforme() {
     this.informeService.onPrevizualizar(this.dataCriticisadad, this.dataMatrix, this.tablaDispo, this.imgCriticidad, this.comentariosCriticidad, this.inputs, this.comentariosImagenes)
     this.saveOnLocalStorage()
+
+  
+  
+   
+    
   }
 
   descargaCliente() {
     this.informeService.descargaCliente(this.dataCriticisadad, this.dataMatrix, this.tablaDispo, this.imgCriticidad, this.comentariosCriticidad, this.inputs, this.comentariosImagenes)
     this.saveOnLocalStorage()
+ 
+
   }
 
 
