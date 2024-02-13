@@ -119,7 +119,7 @@ export class InformeService {
   implementarHeader() {
 
     // this.doc.addImage("assets/images/logo.png", 'PNG', this.marginLeft , 20, 222, 69, 'logo', 'SLOW'); LOGO CON PORTE IGUAL AL DE PORTADA
-    this.doc.addImage("assets/EMT/logo.png", 'PNG', this.marginLeft, this.startPage, 160, 50, 'logo' + this.contadorPagina, 'SLOW');
+    this.doc.addImage("assets/EMT/logo.png", 'PNG', this.marginLeft, this.startPage, 130, 50, 'logo' + this.contadorPagina, 'SLOW');
     this.doc.setFontSize(8)
     this.doc.setTextColor(this.colores.negro)
     this.doc.setFont('Lato', 'normal')
@@ -134,7 +134,7 @@ export class InformeService {
     this.doc.addPage()
     this.doc.addImage("assets/EMT/marcaAgua.jpg", 'JPG', 0, 0, 612, 792, 'marca-x', 'SLOW');
 
-    this.doc.addImage("assets/EMT/logo.png", 'PNG', this.marginLeft, this.startPage, 160, 50, 'logo-x', 'SLOW');
+    this.doc.addImage("assets/EMT/logo.png", 'PNG', this.marginLeft, this.startPage, 130, 50, 'logo-x', 'SLOW');
     let altura = 246
     let margenIzq = this.marginLeft + 72
     this.doc.setFont("Montserrat", "bold");
@@ -718,38 +718,38 @@ export class InformeService {
     if (this.usoPagina + 7 > this.totalUso)
       this.nuevaPagina()
 
-    let text = 'La confiabilidad del servicio durante el periodo fue del *' + promedio + '%*, el cual se desglosa en la *TABLA ' + this.contadorTabla + '* a continuación.'
+    let text = 'La confiabilidad del servicio durante el periodo fue del *' + promedio + '%*.'
     // this.doc.text(text, this.marginContent, this.usoPagina + 230, { align: 'left', maxWidth: this.marginRight - this.marginContent })
     this.usoPagina = formateadoraDeTexto(this.doc, text, this.usoPagina, this.marginContent, this.marginRight - this.marginContent, this.fecha, '', this.finalContenido) + 25
 
     if (this.usoPagina + 120 > this.totalUso)
       this.nuevaPagina()
 
-    this.doc.setFontSize(8)
-    this.doc.setFont('Lato', 'normal')
-    this.doc.text('TABLA ' + this.contadorTabla + ': CONFIABILIDAD', ((this.marginRight - this.marginContent) / 2 + this.marginContent), this.usoPagina, { align: 'center', maxWidth: this.marginRight - this.marginContent })
-    this.contadorTabla++
-    this.usoPagina += 5
+    // this.doc.setFontSize(8)
+    // this.doc.setFont('Lato', 'normal')
+    // this.doc.text('TABLA ' + this.contadorTabla + ': CONFIABILIDAD', ((this.marginRight - this.marginContent) / 2 + this.marginContent), this.usoPagina, { align: 'center', maxWidth: this.marginRight - this.marginContent })
+    // this.contadorTabla++
+    // this.usoPagina += 5
 
 
-    autoTable(this.doc, {
-      styles: { lineWidth: .1, halign: 'center', fontSize: 10, cellWidth: 100, fillColor: undefined, lineColor: [1, 48, 51], textColor: [1, 48, 51] },
-      headStyles: { font: 'Lato', fontStyle: 'bold', fillColor: [217, 217, 217] },
-      head: [['Parámetro', 'Valor [%]']],
-      bodyStyles: { font: 'Lato', fontStyle: 'normal', fontSize: 9, fillColor: undefined },
-      body: [
-        ['Identificación', valor1?.toFixed(2)],
-        ['Clasificación', valor2?.toFixed(2)],
-        ['Comunicación', valor3?.toFixed(2)],
-      ],
-      margin: { top: this.marginContent, left: (((this.marginRight - (100 * 2) + this.marginContent) / 2)) },
-      startY: this.usoPagina,
-      alternateRowStyles: { fillColor: undefined },
-      footStyles: { fillColor: [217, 217, 217] },
-      foot: [['Confiabilidad', promedio]]
-    })
+    // autoTable(this.doc, {
+    //   styles: { lineWidth: .1, halign: 'center', fontSize: 10, cellWidth: 100, fillColor: undefined, lineColor: [1, 48, 51], textColor: [1, 48, 51] },
+    //   headStyles: { font: 'Lato', fontStyle: 'bold', fillColor: [217, 217, 217] },
+    //   head: [['Parámetro', 'Valor [%]']],
+    //   bodyStyles: { font: 'Lato', fontStyle: 'normal', fontSize: 9, fillColor: undefined },
+    //   body: [
+    //     ['Identificación', valor1?.toFixed(2)],
+    //     ['Clasificación', valor2?.toFixed(2)],
+    //     ['Comunicación', valor3?.toFixed(2)],
+    //   ],
+    //   margin: { top: this.marginContent, left: (((this.marginRight - (100 * 2) + this.marginContent) / 2)) },
+    //   startY: this.usoPagina,
+    //   alternateRowStyles: { fillColor: undefined },
+    //   footStyles: { fillColor: [217, 217, 217] },
+    //   foot: [['Confiabilidad', promedio]]
+    // })
 
-    this.usoPagina += 150
+    this.usoPagina += 10
 
 
 
