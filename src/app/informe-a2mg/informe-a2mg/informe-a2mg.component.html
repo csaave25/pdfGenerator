@@ -24,7 +24,8 @@
     <div class="mt-4 d-flex col-8 justify-content-between">
         <div [formGroup]="inputs.controls.usrs">
             <label mdbLabel class="form-label" for="elaborado">Elaborado</label>
-            <input mdbInput type="text" id="elaborado" class="form-control" formControlName="elaborado" autocomplete="true"/>
+            <input mdbInput type="text" id="elaborado" class="form-control" formControlName="elaborado"
+                autocomplete="true" />
             <label mdbLabel class="form-label" for="cargos">Cargo</label>
             <input mdbInput type="text" id="cargos" class="form-control" formControlName="cargo1" />
         </div>
@@ -45,55 +46,206 @@
     <div class="col-8 mt-4" *ngIf="tablaDispo">
         <div [formGroup]="inputs.controls.disponibilidadComentario">
             <h4>Disponibilidad del Sistema</h4>
-            <ul class="mt-3 d-flex flex-column gap-3">
-                <li class="d-flex gap-4 ">
-                    <p class="col-4">Servicio Web: {{tablaDispo.servicio_web}}</p>
+            <table class="table">
+                <thead>
+                    <tr style="background-color: #f2f3f3;">
+                        <th scope="col">Indicador</th>
+                        <th scope="col">Disponibilidad</th>
+                        <th scope="col">Observaciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style="background-color: #f2f3f3;">
+                        <th scope="row">Infraestructura EMT</th>
+                        <td>{{tablaDispo.infraestructura}}</td>
+                        <td>
+                            <mdb-form-control class="">
+                                <textarea mdbInput class="form-control" id="infraEMT" rows="1"
+                                    formControlName="infraEMT" style="background-color: #ffffff;"></textarea>
+                                <label mdbLabel class="form-label" for="infraEMT">Añadir comentario</label>
+                            </mdb-form-control>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row" class="ps-5">Servicio web</th>
+                        <td>{{tablaDispo.servicio_web}}</td>
+                        <td>
+                            <mdb-form-control class="">
+                                <textarea mdbInput class="form-control" id="servicioWeb" rows="1"
+                                    formControlName="web"></textarea>
+                                <label mdbLabel class="form-label" for="servicioWeb">Añadir comentario</label>
+                            </mdb-form-control>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row" class="ps-5">Servicio imágenes</th>
+                        <td>{{tablaDispo.servicio_imagenes}}</td>
+                        <td>
+                            <mdb-form-control class="">
+                                <textarea mdbInput class="form-control" id="imagenes" rows="1"
+                                    formControlName="img"></textarea>
+                                <label mdbLabel class="form-label" for="imagenes">Añadir comentario</label>
+                            </mdb-form-control>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row" class="ps-5">Servicio base de datos</th>
+                        <td>{{tablaDispo.servicio_db}}</td>
+                        <td>
+                            <mdb-form-control class="">
+                                <textarea mdbInput class="form-control" id="bd" rows="1"
+                                    formControlName="bd"></textarea>
+                                <label mdbLabel class="form-label" for="bd">Añadir comentario</label>
+                            </mdb-form-control>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row" class="ps-5">Servicio API</th>
+                        <td>{{tablaDispo.servicio_api}}</td>
+                        <td>
+                            <mdb-form-control class="">
+                                <textarea mdbInput class="form-control" id="api" rows="1"
+                                    formControlName="api"></textarea>
+                                <label mdbLabel class="form-label" for="api">Añadir comentario</label>
+                            </mdb-form-control>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row" class="ps-5">Servicio de computo</th>
+                        <td>{{tablaDispo.servicio_computo}}</td>
+                        <td>
+                            <mdb-form-control class="">
+                                <textarea mdbInput class="form-control" id="computo" rows="1"
+                                    formControlName="computo"></textarea>
+                                <label mdbLabel class="form-label" for="computo">Añadir comentario</label>
+                            </mdb-form-control>
+                        </td>
+                    </tr>
+                    <tr style="background-color: #f2f3f3;">
+                        <th scope="row" >Infraestructura ANT</th>
+                        <td>{{tablaDispo.sistema_adquisicion_imagenes}}</td>
+                        <td>
+                            <mdb-form-control class="">
+                                <textarea mdbInput class="form-control" id="ant" rows="1"
+                                    formControlName="infraANT" style="background-color: #ffffff;"></textarea>
+                                <label mdbLabel class="form-label" for="ant">Añadir comentario</label>
+                            </mdb-form-control>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row" class="ps-5" >Sistema de adquisición de imágenes</th>
+                        <td>{{tablaDispo.sistema_adquisicion_imagenes}}</td>
+                        <td>
+                            <mdb-form-control class="">
+                                <textarea mdbInput class="form-control" id="adquisicion" rows="1"
+                                    formControlName="sistema"></textarea>
+                                <label mdbLabel class="form-label" for="adquisicion">Añadir comentario</label>
+                            </mdb-form-control>
+                        </td>
+                    </tr>
+                    <tr style="background-color: #f2f3f3;">
+                        <th scope="row" >Enlaces</th>
+                        <td>{{tablaDispo.enlace_dedicado}}</td>
+                        <td>
+                            <mdb-form-control class="">
+                                <textarea mdbInput class="form-control" id="enlaces" rows="1"
+                                    formControlName="enlaceObs" style="background-color: #ffffff;"></textarea>
+                                <label mdbLabel class="form-label" for="enlaces">Añadir comentario</label>
+                            </mdb-form-control>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row" class="ps-5">Enlace dedicado AMSA</th>
+                        <td>{{tablaDispo.enlace_dedicado}}</td>
+                        <td>
+                            <mdb-form-control class="">
+                                <textarea mdbInput class="form-control" id="enlace" rows="1"
+                                    formControlName="enlace"></textarea>
+                                <label mdbLabel class="form-label" for="enlace">Añadir comentario</label>
+                            </mdb-form-control>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <!-- <ul class="mt-3 d-flex flex-column gap-3 " style="list-style-type: none;">
+                <li class="d-flex gap-4  p-2">
+                    <p class="col-4" style="color: #00838F;">Infraestructura EMT: {{tablaDispo.infraestructura}}</p>
                     <mdb-form-control class="col-6">
                         <textarea mdbInput class="form-control" id="textAreaExample" rows="1"
                             formControlName="web"></textarea>
                         <label mdbLabel class="form-label" for="textAreaExample">Añadir comentario</label>
                     </mdb-form-control>
                 </li>
-                <li class="d-flex gap-4 ">
-                    <p class="col-4">Servicio imágenes: {{tablaDispo.servicio_imagenes}}</p>
+                <li>
+                    <ul class=" d-flex flex-column gap-3 border p-5">
+                        <li class="d-flex gap-4 ">
+                            <p class="col-4">Servicio Web: {{tablaDispo.servicio_web}}</p>
+                            <mdb-form-control class="col-6">
+                                <textarea mdbInput class="form-control" id="textAreaExample" rows="1"
+                                    formControlName="web"></textarea>
+                                <label mdbLabel class="form-label" for="textAreaExample">Añadir comentario</label>
+                            </mdb-form-control>
+                        </li>
+                        <li class="d-flex gap-4 ">
+                            <p class="col-4">Servicio imágenes: {{tablaDispo.servicio_imagenes}}</p>
+                            <mdb-form-control class="col-6">
+                                <textarea mdbInput class="form-control" id="textAreaExample" rows="1"
+                                    formControlName="img"></textarea>
+                                <label mdbLabel class="form-label" for="textAreaExample">Añadir comentario</label>
+                            </mdb-form-control>
+                        </li>
+                        <li class="d-flex gap-4 ">
+                            <p class="col-4">Servicio base de datos: {{tablaDispo.servicio_db}}</p>
+                            <mdb-form-control class="col-6">
+                                <textarea mdbInput class="form-control" id="textAreaExample" rows="1"
+                                    formControlName="bd"></textarea>
+                                <label mdbLabel class="form-label" for="textAreaExample">Añadir comentario</label>
+                            </mdb-form-control>
+                        </li>
+                        <li class="d-flex gap-4 ">
+                            <p class="col-4">Servicio API: {{tablaDispo.servicio_api}}</p>
+                            <mdb-form-control class="col-6">
+                                <textarea mdbInput class="form-control" id="textAreaExample" rows="1"
+                                    formControlName="api"></textarea>
+                                <label mdbLabel class="form-label" for="textAreaExample">Añadir comentario</label>
+                            </mdb-form-control>
+                        </li>
+                        <li class="d-flex gap-4 ">
+                            <p class="col-4">Servicio de computo: {{tablaDispo.servicio_computo}}</p>
+                            <mdb-form-control class="col-6">
+                                <textarea mdbInput class="form-control" id="textAreaExample" rows="1"
+                                    formControlName="computo"></textarea>
+                                <label mdbLabel class="form-label" for="textAreaExample">Añadir comentario</label>
+                            </mdb-form-control>
+                        </li>
+                    </ul>
+                </li>
+                <li class="d-flex gap-4  p-2">
+                    <p class="col-4" style="color: #00838F;">Infraestructura ANT: {{tablaDispo.infraestructura}}</p>
                     <mdb-form-control class="col-6">
                         <textarea mdbInput class="form-control" id="textAreaExample" rows="1"
-                            formControlName="img"></textarea>
+                            formControlName="web"></textarea>
                         <label mdbLabel class="form-label" for="textAreaExample">Añadir comentario</label>
                     </mdb-form-control>
                 </li>
-                <li class="d-flex gap-4 ">
-                    <p class="col-4">Servicio base de datos: {{tablaDispo.servicio_db}}</p>
+                <li >
+                    <ul class="d-flex flex-column gap-3 border p-5">
+                        <li class="d-flex gap-4">
+                            <p class="col-4">Sistema de adquisición de imágenes:
+                                {{tablaDispo.sistema_adquisicion_imagenes}}</p>
+                            <mdb-form-control class="col-6">
+                                <textarea mdbInput class="form-control" id="textAreaExample" rows="1"
+                                    formControlName="sistema"></textarea>
+                                <label mdbLabel class="form-label" for="textAreaExample">Añadir comentario</label>
+                            </mdb-form-control>
+                        </li>
+                    </ul>
+                </li>
+                <li class="d-flex gap-4  p-2">
+                    <p class="col-4" style="color: #00838F;">Infraestructura EMT: {{tablaDispo.infraestructura}}</p>
                     <mdb-form-control class="col-6">
                         <textarea mdbInput class="form-control" id="textAreaExample" rows="1"
-                            formControlName="bd"></textarea>
-                        <label mdbLabel class="form-label" for="textAreaExample">Añadir comentario</label>
-                    </mdb-form-control>
-                </li>
-                <li class="d-flex gap-4 ">
-                    <p class="col-4">Servicio API: {{tablaDispo.servicio_api}}</p>
-                    <mdb-form-control class="col-6">
-                        <textarea mdbInput class="form-control" id="textAreaExample" rows="1"
-                            formControlName="api"></textarea>
-                        <label mdbLabel class="form-label" for="textAreaExample">Añadir comentario</label>
-                    </mdb-form-control>
-                </li>
-                <li class="d-flex gap-4 ">
-                    <p class="col-4">Servicio de computo: {{tablaDispo.servicio_computo}}</p>
-                    <mdb-form-control class="col-6">
-                        <textarea mdbInput class="form-control" id="textAreaExample" rows="1"
-                            formControlName="computo"></textarea>
-                        <label mdbLabel class="form-label" for="textAreaExample">Añadir comentario</label>
-                    </mdb-form-control>
-                </li>
-                <li class="d-flex gap-4">
-                    <p class="col-4" style="color: #00838F;">Promedio: {{tablaDispo.infraestructura}}</p>
-                </li>
-                <li class="d-flex gap-4 ">
-                    <p class="col-4">Sistema de adquisición de imágenes: {{tablaDispo.sistema_adquisicion_imagenes}}</p>
-                    <mdb-form-control class="col-6">
-                        <textarea mdbInput class="form-control" id="textAreaExample" rows="1"
-                            formControlName="sistema"></textarea>
+                            formControlName="web"></textarea>
                         <label mdbLabel class="form-label" for="textAreaExample">Añadir comentario</label>
                     </mdb-form-control>
                 </li>
@@ -105,7 +257,7 @@
                         <label mdbLabel class="form-label" for="textAreaExample">Añadir comentario</label>
                     </mdb-form-control>
                 </li>
-            </ul>
+            </ul> -->
         </div>
     </div>
     <div class="col-8 mt-4">

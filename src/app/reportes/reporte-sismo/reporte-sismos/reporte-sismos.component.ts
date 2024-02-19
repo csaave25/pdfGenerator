@@ -8,6 +8,7 @@ import { prevenirSaltosDeLinea } from 'src/app/helpers';
 import html2canvas from 'html2canvas';
 import domtoimage from 'dom-to-image';
 
+
 @Component({
   selector: 'app-reporte-sismos',
   templateUrl: './reporte-sismos.component.html',
@@ -30,8 +31,7 @@ export class ReporteSismosComponent implements OnInit, AfterViewInit {
     id: new FormControl(0),
     estacion: new FormControl(''),
     radar: new FormControl(''),
-    otrasObs: new FormControl(''),
-    otrasObs2: new FormControl(''),
+    observaciones: new FormControl('')
   })
   fechaMaxima = new Date().toISOString().slice(0, 10)
   imagenMapa = new Image()
@@ -43,8 +43,8 @@ export class ReporteSismosComponent implements OnInit, AfterViewInit {
     this.loadMapa()
   }
 
-  prevenir(numSaltosPermitidos: number, evt: Event){
-    prevenirSaltosDeLinea(numSaltosPermitidos,evt)
+  prevenir(numSaltosPermitidos: number, evt: Event) {
+    prevenirSaltosDeLinea(numSaltosPermitidos, evt)
   }
 
 
@@ -78,6 +78,7 @@ export class ReporteSismosComponent implements OnInit, AfterViewInit {
       }
       this.marker = leaf.marker([dato.latitud, dato.longitud], { icon: estrella }).addTo(this.map);
     }
+    this.loadScreenshotMapa()
   }
 
   loadMapa() {
@@ -184,17 +185,35 @@ export class ReporteSismosComponent implements OnInit, AfterViewInit {
     })
 
     str = newString
-    this.inputs.get('otrasObs')?.setValue(str)
+    this.inputs.get('observaciones')?.setValue(str)
   }
 
 
 
   generarPDF() {
-    this.loadScreenshotMapa()
     setTimeout(() => {
       this.generador.descargarInforme(this.inputs, this.datoSeleccionado, this.imagenMapa)
     }, 600);
 
+  }
+
+
+  enviarDatos() {
+
+    let blob = new Blob([''], { type: 'image/png' })
+    let fd = new FormData();
+    fd.append('imagen-1', blob)
+    fd.append('fechaConsultada', this.inputs.get('fecha')?.value!)
+    fd.append('comentarioEstacion', this.inputs.get('estacion')?.value!)
+    fd.append('comentarioRadar', this.inputs.get('radar')?.value!)
+    fd.append('observaciones', this.inputs.get('observaciones')?.value!)
+    fd.append('dataSismo', JSON.stringify(this.datoSeleccionado))
+
+    
+    this.api.guardarDatos(fd).subscribe((res) => {
+      console.log( res);
+      
+    })
 
   }
 

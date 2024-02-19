@@ -8,6 +8,8 @@ export class ApiService {
 
   constructor(private http: HttpClient) { }
 
+ 
+
 
   getUltimosSismosChile() {
     return this.http.get('https://api.gael.cloud/general/public/sismos')
@@ -24,8 +26,12 @@ export class ApiService {
   getMoreInfo(id : string){
     // https://earthquake.usgs.gov/fdsnws/event/1/query?eventid=us7000labe&format=geojson
     return this.http.get(`https://earthquake.usgs.gov/fdsnws/event/1/query?eventid=${id}&format=geojson`)
+  }
 
 
+  guardarDatos(body : any){
+    let URLApiPDF = 'http://localhost:3000/reporte/sismo'
+    return this.http.post(URLApiPDF, {})
   }
 
 }

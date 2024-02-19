@@ -255,6 +255,9 @@ export class InformeService {
       let comnt5 = inputs.controls['disponibilidadComentario'].value.computo
       let comnt6 = inputs.controls['disponibilidadComentario'].value.sistema
       let comnt7 = inputs.controls['disponibilidadComentario'].value.enlace
+      let comnt8 = inputs.controls['disponibilidadComentario'].value.infraEMT
+      let comnt9 = inputs.controls['disponibilidadComentario'].value.infraANT
+      let comnt10 = inputs.controls['disponibilidadComentario'].value.enlaceObs
 
       this.listaContenido.push(contenido)
 
@@ -313,6 +316,8 @@ export class InformeService {
 
       this.usoPagina += 285
 
+
+
       autoTable(this.doc, {
         tableWidth: this.marginRight - this.marginContent,
         styles: { fontSize: 10, lineWidth: .1, fillColor: undefined, lineColor: [1, 48, 51], textColor: [1, 48, 51] },
@@ -320,15 +325,15 @@ export class InformeService {
         head: [[{ content: 'Indicador', styles: { minCellWidth: 250 } }, 'Disponibilidad [%]', 'Observaciones']],
         bodyStyles: { font: 'Lato', fontStyle: 'normal', fontSize: 9, fillColor: undefined, halign: 'left' },
         body: [
-          [{ content: 'Infraestructura EMT', styles: { minCellWidth: 200, font: 'Lato', fontStyle: 'bold', fillColor: [218, 218, 217], cellPadding: { left: 50, top: 5 } } }, { content: tablaDispo.infraestructura, styles: { font: 'Lato', fontStyle: 'bold', fillColor: [218, 218, 217], halign: 'center' } }, { content: '', styles: { fillColor: [218, 218, 217] } }],
+          [{ content: 'Infraestructura EMT', styles: { minCellWidth: 200, font: 'Lato', fontStyle: 'bold', fillColor: [218, 218, 217], cellPadding: { left: 50, top: 5 } } }, { content: tablaDispo.infraestructura, styles: { font: 'Lato', fontStyle: 'bold', fillColor: [218, 218, 217], halign: 'center' } }, { content: comnt8, styles: { fillColor: [218, 218, 217] } }],
           [{ content: 'Servicio web', styles: { halign: 'left', cellPadding: { left: 75, top: 5 } } }, { content: tablaDispo.servicio_web, styles: { halign: 'center' } }, comnt1],
           [{ content: 'Servicio imágenes', styles: { halign: 'left', cellPadding: { left: 75, top: 5 } } }, { content: tablaDispo.servicio_imagenes, styles: { halign: 'center' } }, comnt2],
           [{ content: 'Servicio base de datos', styles: { halign: 'left', cellPadding: { left: 75, top: 5 } } }, { content: tablaDispo.servicio_db, styles: { halign: 'center' } }, comnt3],
           [{ content: 'Servicio API', styles: { halign: 'left', cellPadding: { left: 75, top: 5 } } }, { content: tablaDispo.servicio_api, styles: { halign: 'center' } }, comnt4],
           [{ content: 'Servicio de computo', styles: { halign: 'left', cellPadding: { left: 75, top: 5 } } }, { content: tablaDispo.servicio_computo, styles: { halign: 'center' } }, comnt5],
-          [{ content: 'Infraestructura ANT', styles: { font: 'Lato', fontStyle: 'bold', fillColor: [218, 218, 217], cellPadding: { left: 50, top: 5 } } }, { content: tablaDispo.sistema_adquisicion_imagenes, styles: { font: 'Lato', fontStyle: 'bold', fillColor: [218, 218, 217], halign: 'center' } }, { content: '', styles: { fillColor: [218, 218, 217] } }],
+          [{ content: 'Infraestructura ANT', styles: { font: 'Lato', fontStyle: 'bold', fillColor: [218, 218, 217], cellPadding: { left: 50, top: 5 } } }, { content: tablaDispo.sistema_adquisicion_imagenes, styles: { font: 'Lato', fontStyle: 'bold', fillColor: [218, 218, 217], halign: 'center' } }, { content: comnt9, styles: { fillColor: [218, 218, 217] } }],
           [{ content: 'Sistema de adquisición de imágenes', styles: { halign: 'left', cellPadding: { left: 75, top: 5 } } }, { content: tablaDispo.sistema_adquisicion_imagenes, styles: { halign: 'center' } }, comnt6],
-          [{ content: ' Enlaces', styles: { font: 'Lato', fontStyle: 'bold', fillColor: [218, 218, 217], cellPadding: { left: 50, top: 5 } } }, { content: tablaDispo.enlace_dedicado, styles: { font: 'Lato', fontStyle: 'bold', fillColor: [218, 218, 217], halign: 'center' } }, { content: '', styles: { fillColor: [218, 218, 217] } }],
+          [{ content: ' Enlaces', styles: { font: 'Lato', fontStyle: 'bold', fillColor: [218, 218, 217], cellPadding: { left: 50, top: 5 } } }, { content: tablaDispo.enlace_dedicado, styles: { font: 'Lato', fontStyle: 'bold', fillColor: [218, 218, 217], halign: 'center' } }, { content: comnt10, styles: { fillColor: [218, 218, 217] } }],
           [{ content: 'Enlace dedicado AMSA', styles: { halign: 'left', cellPadding: { left: 75, top: 5 } } }, { content: tablaDispo.enlace_dedicado, styles: { halign: 'center' } }, comnt7],
 
         ],
@@ -382,13 +387,6 @@ export class InformeService {
         }]
       }
 
-      let comnt1 = inputs.controls['disponibilidadComentario'].value.web
-      let comnt2 = inputs.controls['disponibilidadComentario'].value.img
-      let comnt3 = inputs.controls['disponibilidadComentario'].value.bd
-      let comnt4 = inputs.controls['disponibilidadComentario'].value.api
-      let comnt5 = inputs.controls['disponibilidadComentario'].value.computo
-      let comnt6 = inputs.controls['disponibilidadComentario'].value.sistema
-      let comnt7 = inputs.controls['disponibilidadComentario'].value.enlace
 
       this.listaContenido.push(contenido)
 
@@ -422,80 +420,140 @@ export class InformeService {
 
       this.usoPagina += 140
 
-      autoTable(this.doc, {
-        tableWidth: this.marginRight - this.marginContent,
-        styles: { fontSize: 10, lineWidth: .1, fillColor: undefined, lineColor: [1, 48, 51], textColor: [1, 48, 51] },
-        headStyles: { font: 'Lato', fontStyle: 'bold', fillColor: [217, 217, 217], halign: 'center' },
-        head: [[{ content: 'Indicador', styles: { minCellWidth: 250 } }, '*Disponibilidad [%]', 'Observaciones']],
-        bodyStyles: { font: 'Lato', fontStyle: 'normal', fontSize: 9, fillColor: undefined, halign: 'left' },
-        body: [
-          [{ content: 'Infraestructura EMT', styles: { minCellWidth: 200, font: 'Lato', fontStyle: 'bold', cellPadding: { left: 50, top: 5 } } }, { content: tablaDispo.infraestructura, styles: { font: 'Lato', fontStyle: 'bold', halign: 'center' } }, { content: '' }],
-          [{ content: 'Infraestructura ANT', styles: { font: 'Lato', fontStyle: 'bold', cellPadding: { left: 50, top: 5 } } }, { content: tablaDispo.sistema_adquisicion_imagenes, styles: { font: 'Lato', fontStyle: 'bold', halign: 'center' } }, { content: '' }],
-          [{ content: ' Enlaces', styles: { font: 'Lato', fontStyle: 'bold', cellPadding: { left: 50, top: 5 } } }, { content: tablaDispo.enlace_dedicado, styles: { font: 'Lato', fontStyle: 'bold', halign: 'center' } }, { content: '', }],
 
 
-        ],
-        margin: { top: this.startcContent, left: this.marginContent, bottom: 80 },
-        startY: this.usoPagina,
-        alternateRowStyles: { fillColor: undefined },
-        rowPageBreak: 'avoid',
-        didDrawCell: (data) => {
+      let comnt1 = inputs.controls['disponibilidadComentario'].value?.infraEMT
+      let comnt2 = inputs.controls['disponibilidadComentario'].value?.infraANT
+      let comnt3 = inputs.controls['disponibilidadComentario'].value?.enlaceObs
 
-          if (page == data.pageCount) {
-            if (data.row.index != index) {
-              index = data.row.index
-              this.usoPagina += data.row.height
+
+
+      let head
+      if (comnt1.length > 0 || comnt2.length > 0 || comnt3.length > 0) {
+
+        head = [[{ content: 'Indicador', styles: { minCellWidth: 150 } }, { content: '*Disponibilidad [%]', styles: { minCellWidth: 100 } }, 'Observaciones']]
+        autoTable(this.doc, {
+          tableWidth: this.marginRight - this.marginContent,
+          styles: { fontSize: 10, lineWidth: .1, fillColor: undefined, lineColor: [1, 48, 51], textColor: [1, 48, 51] },
+          headStyles: { font: 'Lato', fontStyle: 'bold', fillColor: [217, 217, 217], halign: 'center' },
+          head: head,
+          bodyStyles: { font: 'Lato', fontStyle: 'normal', fontSize: 9, fillColor: undefined, halign: 'left' },
+          body: [
+            [{ content: 'Infraestructura EMT', styles: { font: 'Lato', fontStyle: 'bold' } }, { content: tablaDispo.infraestructura, styles: { font: 'Lato', fontStyle: 'bold', halign: 'center' } }, { content: comnt1 }],
+            [{ content: 'Infraestructura ANT', styles: { font: 'Lato', fontStyle: 'bold' } }, { content: tablaDispo.sistema_adquisicion_imagenes, styles: { font: 'Lato', fontStyle: 'bold', halign: 'center' } }, { content: comnt2 }],
+            [{ content: ' Enlaces', styles: { font: 'Lato', fontStyle: 'bold' } }, { content: tablaDispo.enlace_dedicado, styles: { font: 'Lato', fontStyle: 'bold', halign: 'center' } }, { content: comnt3, }],
+
+
+          ],
+          margin: { top: this.startcContent, left: this.marginContent, bottom: 80 },
+          startY: this.usoPagina,
+          alternateRowStyles: { fillColor: undefined },
+          rowPageBreak: 'avoid',
+          didDrawCell: (data) => {
+
+            if (page == data.pageCount) {
+              if (data.column.index == 2) {
+                index = data.row.index
+                this.usoPagina += data.row.height
+              }
             }
+          },
+          willDrawPage: (data) => {
+            if (!flag && data.pageNumber != 1) {
+              flag = true
+            }
+          },
+
+          didDrawPage: (data) => {
+
+            if (data.pageNumber != 1) {
+              this.implementarFooter()
+              this.implementarHeader()
+
+              page++
+              lastTableHeight = this.usoPagina
+              this.usoPagina = 0
+            }
+
           }
-        },
-        willDrawPage: (data) => {
-          if (!flag && data.pageNumber != 1) {
-            flag = true
+
+        })
+        this.usoPagina += 35
+
+      } else {
+
+        head = [[{ content: 'Indicador', styles: {} }, '*Disponibilidad [%]']]
+        autoTable(this.doc, {
+          tableWidth: 300,
+          styles: { fontSize: 10, lineWidth: .1, fillColor: undefined, lineColor: [1, 48, 51], textColor: [1, 48, 51] },
+          headStyles: { font: 'Lato', fontStyle: 'bold', fillColor: [217, 217, 217], halign: 'center' },
+          head: head,
+          bodyStyles: { font: 'Lato', fontStyle: 'normal', fontSize: 9, fillColor: undefined, halign: 'left' },
+          body: [
+            [{ content: 'Infraestructura EMT', styles: { font: 'Lato', fontStyle: 'bold' } }, { content: tablaDispo.infraestructura, styles: { font: 'Lato', fontStyle: 'bold', halign: 'center' } }, { content: '' }],
+            [{ content: 'Infraestructura ANT', styles: { font: 'Lato', fontStyle: 'bold' } }, { content: tablaDispo.sistema_adquisicion_imagenes, styles: { font: 'Lato', fontStyle: 'bold', halign: 'center' } }, { content: '' }],
+            [{ content: ' Enlaces', styles: { font: 'Lato', fontStyle: 'bold' } }, { content: tablaDispo.enlace_dedicado, styles: { font: 'Lato', fontStyle: 'bold', halign: 'center' } }, { content: 'Hola mundo', }],
+
+
+          ],
+          margin: { top: this.startcContent, left: 150, bottom: 80, },
+          startY: this.usoPagina,
+          alternateRowStyles: { fillColor: undefined },
+          rowPageBreak: 'avoid',
+          didDrawCell: (data) => {
+
+            if (page == data.pageCount) {
+              if (data.column.index == 2) {
+                index = data.row.index
+                this.usoPagina += data.row.height
+              }
+            }
+          },
+          willDrawPage: (data) => {
+            if (!flag && data.pageNumber != 1) {
+              flag = true
+            }
+          },
+
+          didDrawPage: (data) => {
+
+            if (data.pageNumber != 1) {
+              this.implementarFooter()
+              this.implementarHeader()
+              this.usoPagina = this.startcContent
+            }
+            
           }
-        },
 
-        didDrawPage: (data) => {
-
-          if (data.pageNumber != 1) {
-            this.implementarFooter()
-            this.implementarHeader()
-          }
-          page++
-
-          lastTableHeight = this.usoPagina
-          this.usoPagina = 0
-        }
-
-      })
+        })
+        this.usoPagina += 115
+      }
 
       this.doc.setFont('Lato', 'normal')
       this.doc.setFontSize(11)
 
-      this.doc.text('*', this.marginContent, this.startcContent + 250, { align: 'left' })
-      formateadoraDeTexto(this.doc, 'La disponibilidad del sistema, indica cuánto tiempo este está operativo con respecto al tiempo programado de funcionamiento. La fórmula para calcular la disponibilidad es:', this.startcContent + 250, this.marginContent + this.doc.getTextWidth('*'), this.marginRight - this.marginContent - this.doc.getTextWidth('*'), this.fecha, '', this.finalContenido)
+      this.doc.text('*', this.marginContent, this.usoPagina, { align: 'left' })
+      this.usoPagina = formateadoraDeTexto(this.doc, 'La disponibilidad del sistema, indica cuánto tiempo este está operativo con respecto al tiempo programado de funcionamiento. La fórmula para calcular la disponibilidad es:', this.usoPagina, this.marginContent + this.doc.getTextWidth('*'), this.marginRight - this.marginContent - this.doc.getTextWidth('*'), this.fecha, '', this.finalContenido)
 
-      let sumador = 180
+      let sumador = 10
       this.doc.setFont('Time', 'italic')
       this.doc.setFontSize(12)
-      this.doc.text('Disponibilidad del sistema [%] =', this.marginContent + 20, this.startcContent + 130 + sumador, { align: 'left' })
-      this.doc.text('Tiempo', this.marginContent + 190, this.startcContent + 120 + sumador, { align: 'left' })
-      this.doc.text('Tiempo', this.marginContent + 190, this.startcContent + 144 + sumador, { align: 'left' })
+      this.doc.text('Disponibilidad del sistema [%] =', this.marginContent + 20, this.usoPagina + 30 + sumador, { align: 'left' })
+      this.doc.text('Tiempo', this.marginContent + 190, this.usoPagina + 20 + sumador, { align: 'left' })
+      this.doc.text('Tiempo', this.marginContent + 190, this.usoPagina + 44 + sumador, { align: 'left' })
       this.doc.setFontSize(9)
-      this.doc.text('disponible', this.marginContent + 228, this.startcContent + 124 + sumador, { align: 'left' })
-      this.doc.text('nominal', this.marginContent + 228, this.startcContent + 148 + sumador, { align: 'left' })
-      this.doc.line(this.marginContent + 190, this.startcContent + 128 + sumador, this.marginContent + 270, this.startcContent + 128 + sumador)
+      this.doc.text('disponible', this.marginContent + 228, this.usoPagina + 24 + sumador, { align: 'left' })
+      this.doc.text('nominal', this.marginContent + 228, this.usoPagina + 48 + sumador, { align: 'left' })
+      this.doc.line(this.marginContent + 190, this.usoPagina + 28 + sumador, this.marginContent + 270, this.usoPagina + 28 + sumador)
       this.doc.setFontSize(12)
-      this.doc.text('=', this.marginContent + 280, this.startcContent + 130 + sumador, { align: 'left' })
-      this.doc.text('Efectivo+Demoras+Reserva', this.marginContent + 306, this.startcContent + 120 + sumador, { align: 'left', })
-      this.doc.text('Tiempo', this.marginContent + 345, this.startcContent + 144 + sumador, { align: 'left' })
+      this.doc.text('=', this.marginContent + 280, this.usoPagina + 30 + sumador, { align: 'left' })
+      this.doc.text('Efectivo+Demoras+Reserva', this.marginContent + 306, this.usoPagina + 20 + sumador, { align: 'left', })
+      this.doc.text('Tiempo', this.marginContent + 345, this.usoPagina + 44 + sumador, { align: 'left' })
       this.doc.setFontSize(9)
-      this.doc.text('nominal', this.marginContent + 383, this.startcContent + 148 + sumador, { align: 'left', maxWidth: this.marginRight - this.marginContent })
-      this.doc.line(this.marginContent + 300, this.startcContent + 128 + sumador, this.marginContent + 450, this.startcContent + 128 + sumador)
+      this.doc.text('nominal', this.marginContent + 383, this.usoPagina + 48 + sumador, { align: 'left', maxWidth: this.marginRight - this.marginContent })
+      this.doc.line(this.marginContent + 300, this.usoPagina + 28 + sumador, this.marginContent + 450, this.usoPagina + 28 + sumador)
 
-
-
-
-      this.usoPagina += 80 + lastTableHeight + this.startcContent
+      this.usoPagina += 100
     }
   }
 
@@ -711,6 +769,11 @@ export class InformeService {
     if (this.usoPagina + 10 > this.totalUso)
       this.nuevaPagina()
 
+
+    this.doc.setFontSize(11)
+    this.doc.setTextColor(this.colores.negro)
+    this.doc.setFont('Lato', 'normal')
+
     this.doc.text('(*) ', this.marginContent, this.usoPagina)
     this.usoPagina = formateadoraDeTexto(this.doc, 'Se considerarán solo las grietas capturadas por las cámaras de A2MG.', this.usoPagina, this.marginContent + this.doc.getTextWidth('(*) '), this.marginRight - this.marginContent - this.doc.getTextWidth('(*) '), this.fecha, '', this.finalContenido) + 20
 
@@ -718,6 +781,10 @@ export class InformeService {
     if (this.usoPagina + 7 > this.totalUso)
       this.nuevaPagina()
 
+
+    this.doc.setFontSize(11)
+    this.doc.setTextColor(this.colores.negro)
+    this.doc.setFont('Lato', 'normal')
     let text = 'La confiabilidad del servicio durante el periodo fue del *' + promedio + '%*.'
     // this.doc.text(text, this.marginContent, this.usoPagina + 230, { align: 'left', maxWidth: this.marginRight - this.marginContent })
     this.usoPagina = formateadoraDeTexto(this.doc, text, this.usoPagina, this.marginContent, this.marginRight - this.marginContent, this.fecha, '', this.finalContenido) + 25
@@ -1010,7 +1077,7 @@ export class InformeService {
 
       let fecha
       let hora
-      
+
       let copyInit = elm.initDate
       let copyEnde = elm.endDate
       if (!copyInit.includes('Z')) {

@@ -23,7 +23,7 @@ export class GeneradorService {
   private generarObservaciones(inputs: FormGroup, dataSismo: any) {
     let estacion = inputs.get('estacion')?.value
     let radar = inputs.get('radar')?.value
-    let otrasObs = inputs.get('otrasObs')?.value
+    let otrasObs = inputs.get('observaciones')?.value
 
 
 

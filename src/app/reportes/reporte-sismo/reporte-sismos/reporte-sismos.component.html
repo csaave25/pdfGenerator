@@ -7,7 +7,7 @@
             <div class="gap-3 d-flex mt-5">
                 <button type="button" style="background-color: #00838F; color: #fbfbfb" class="btn "
                     (click)="generarPDF()" mdbRipple>mostrar</button>
-                <button type="button" style="background-color: #00838F; color: #fbfbfb" class="btn " (click)="false"
+                <button type="button" style="background-color: #00838F; color: #fbfbfb" class="btn " (click)="enviarDatos()"
                     mdbRipple>Subir</button>
             </div>
             <!-- El id del informe me deberia llegar por api -->
@@ -104,7 +104,7 @@
                     <div>
                         <label>Otras observaciones</label>
                         <mdb-form-control>
-                            <textarea mdbInput class="form-control" id="OBSERVACIONES" formControlName="otrasObs"
+                            <textarea mdbInput class="form-control" id="OBSERVACIONES" formControlName="observaciones"
                                 rows="4" (keypress)="formateador($event)" maxlength="300"  (keydown)="prevenir(2,$event)"></textarea>
                             <label mdbLabel class="form-label" for="OBSERVACIONES">Observaciones.</label>
                         </mdb-form-control>

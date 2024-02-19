@@ -29,13 +29,16 @@ export class InformeA2mgComponent implements OnInit {
       cargo3: new FormControl('JEFE MCM'),
     }),
     disponibilidadComentario: new FormGroup({
-      web: new FormControl(),
-      img: new FormControl(),
-      bd: new FormControl(),
-      api: new FormControl(),
-      computo: new FormControl(),
-      sistema: new FormControl(),
-      enlace: new FormControl(),
+      infraEMT: new FormControl(''),
+      infraANT : new FormControl(''),
+      enlaceObs: new FormControl(''),
+      web: new FormControl(''),
+      img: new FormControl(''),
+      bd: new FormControl(''),
+      api: new FormControl(''),
+      computo: new FormControl(''),
+      sistema: new FormControl(''),
+      enlace: new FormControl(''),
     }),
     confiabilidad: new FormGroup({
       identificacion: new FormControl(0),
@@ -87,12 +90,15 @@ export class InformeA2mgComponent implements OnInit {
       this.inputs.get('usrs.cargo2')?.setValue(datos.inputs.usrs.cargo2)
       this.inputs.get('usrs.aprobado')?.setValue(datos.inputs.usrs.aprobado)
       this.inputs.get('usrs.cargo3')?.setValue(datos.inputs.usrs.cargo3)
+      this.inputs.get('disponibilidadComentario.infraEMT')?.setValue(datos.inputs.disponibilidadComentario.infraEMT)
       this.inputs.get('disponibilidadComentario.web')?.setValue(datos.inputs.disponibilidadComentario.web)
       this.inputs.get('disponibilidadComentario.img')?.setValue(datos.inputs.disponibilidadComentario.img)
       this.inputs.get('disponibilidadComentario.bd')?.setValue(datos.inputs.disponibilidadComentario.bd)
       this.inputs.get('disponibilidadComentario.api')?.setValue(datos.inputs.disponibilidadComentario.api)
       this.inputs.get('disponibilidadComentario.computo')?.setValue(datos.inputs.disponibilidadComentario.computo)
+      this.inputs.get('disponibilidadComentario.infraANT')?.setValue(datos.inputs.disponibilidadComentario.infraANT)
       this.inputs.get('disponibilidadComentario.sistema')?.setValue(datos.inputs.disponibilidadComentario.sistema)
+      this.inputs.get('disponibilidadComentario.enlaceObs')?.setValue(datos.inputs.disponibilidadComentario.enlaceObs)
       this.inputs.get('disponibilidadComentario.enlace')?.setValue(datos.inputs.disponibilidadComentario.enalce)
       this.inputs.get('confiabilidad.identificacion')?.setValue(datos.inputs.confiabilidad.identificacion)
       this.inputs.get('confiabilidad.clasificacion')?.setValue(datos.inputs.confiabilidad.clasificacion)
@@ -118,7 +124,10 @@ export class InformeA2mgComponent implements OnInit {
           cargo3: this.inputs.get('usrs.cargo3')?.value,
         },
         disponibilidadComentario: {
+          infraEMT: this.inputs.get('disponibilidadComentario.infraEMT')?.value,
+          infraANT: this.inputs.get('disponibilidadComentario.infraANT')?.value,
           web: this.inputs.get('disponibilidadComentario.web')?.value,
+          enlaceObs: this.inputs.get('disponibilidadComentario.enlaceObs')?.value,
           img: this.inputs.get('disponibilidadComentario.img')?.value,
           bd: this.inputs.get('disponibilidadComentario.bd')?.value,
           api: this.inputs.get('disponibilidadComentario.api')?.value,
