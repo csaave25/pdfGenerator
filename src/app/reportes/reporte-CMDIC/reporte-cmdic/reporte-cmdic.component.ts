@@ -1,6 +1,8 @@
 import { AfterViewInit, Component } from '@angular/core';
 import * as leaf from 'leaflet';
 import { ApiService } from '../api.service';
+import { FormControl, FormGroup } from '@angular/forms';
+import { GeneradorService } from '../generador.service';
 
 @Component({
   selector: 'app-reporte-cmdic',
@@ -11,9 +13,14 @@ export class ReporteCMDICComponent implements AfterViewInit {
 
 
   map: any
+  inputs = new FormGroup({
+    resumen: new FormControl(''),
+    principales : new FormControl(''),
+    segundarios: new FormControl(''),
+  })
 
 
-  constructor(private api: ApiService) { }
+  constructor(private api: ApiService, private generador : GeneradorService) { }
 
 
   ngAfterViewInit(): void {
@@ -21,7 +28,7 @@ export class ReporteCMDICComponent implements AfterViewInit {
     this.loadMapa()
     this.loadDataTopo()
     this.loadDataPozos()
-    this.loadDataBasePozo()
+    // this.loadDataBasePozo()
 
   }
 
@@ -138,9 +145,9 @@ export class ReporteCMDICComponent implements AfterViewInit {
   }
 
   loadDataBasePozo() {
-    this.api.getBaseDatosPozos().subscribe((data : any) => {
+    this.api.getBaseDatosPozos().subscribe((data: any) => {
       console.log(data);
-      
+
     })
   }
 
@@ -163,6 +170,11 @@ export class ReporteCMDICComponent implements AfterViewInit {
     // });
     // leaf.Marker.prototype.options.icon = iconDefault;
 
+  }
+
+
+  generarPDF() {
+    this.generador.descargarPDF(this.inputs)
   }
 
 

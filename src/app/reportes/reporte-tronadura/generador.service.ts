@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { jsPDF } from 'jspdf'
 import { latoBold, latoRegular, montBold, montMedium, montSemi } from 'src/assets/fonts/fonts';
-import autoTable, { Column, Table } from 'jspdf-autotable';
+import autoTable from 'jspdf-autotable';
 import { formateadoraDeTexto } from './data';
 import { image } from 'html2canvas/dist/types/css/types/image';
 
