@@ -605,7 +605,7 @@
                                 <th scope="col">Acumulado [mm]</th>
                             </tr>
                         </thead>
-                        <tbody *ngFor="let prisma of dataTablaPrismas.slice(0,9)">
+                        <tbody *ngFor="let prisma of dataTablaPrismas.slice(0,5)">
                             <tr>
                                 <th scope="row">{{prisma.nombre}}</th>
                                 <td>{{prisma.fecha}}</td>
@@ -651,7 +651,7 @@
                                 <th scope="col">Acumulado [mm]</th>
                             </tr>
                         </thead>
-                        <tbody *ngFor="let prisma of dataTablaPrismas.slice(9,dataTablaPrismas.length)">
+                        <tbody *ngFor="let prisma of dataTablaPrismas.slice(5,dataTablaPrismas.length)">
                             <tr>
                                 <th scope="row">{{prisma.nombre}}</th>
                                 <td>{{prisma.fecha}}</td>

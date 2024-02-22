@@ -585,6 +585,8 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
 
 
     this.api.getNombrePrismas().subscribe(res => {
+      
+      
       let dataPrismas: any[] = []
       this.api.getDataPrismas().subscribe(data => {
         res.objects.forEach((prisma: any) => {
@@ -615,8 +617,10 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
 
         this.dataTablaPrismas.sort((data: any, data2: any) => (data.nombre > data2.nombre) ? 1 : (data2.nombre > data.nombre) ? -1 : 0)
         dataPrismas.sort((data: any, data2: any) => (data.nombre > data2.nombre) ? 1 : (data2.nombre > data.nombre) ? -1 : 0)
-        let dataGraph1 = dataPrismas.slice(3, 12)
-        let dataGraph2 = dataPrismas.slice(12, dataPrismas.length)
+        console.log(dataPrismas);
+        
+        let dataGraph1 = dataPrismas.slice(0, 5)
+        let dataGraph2 = dataPrismas.slice(5, dataPrismas.length)
 
 
         this.cargarDataTablaPrismas(dataPrismas)
@@ -676,7 +680,7 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
   }
 
   cargarDataTablaPrismas(datos: any[]) {
-    const data = datos.slice(3, datos.length)
+    const data = datos.slice(0, datos.length)
     data.forEach(elm => {
       let primeraDate = elm.date[0]
       let primerDesp = elm.desplazamiento[0]
