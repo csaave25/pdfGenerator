@@ -1,8 +1,10 @@
-import { AfterViewInit, Component } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import * as leaf from 'leaflet';
 import { ApiService } from '../api.service';
 import { FormControl, FormGroup } from '@angular/forms';
 import { GeneradorService } from '../generador.service';
+import domtoimage from 'dom-to-image';
+
 
 @Component({
   selector: 'app-reporte-cmdic',
@@ -11,16 +13,18 @@ import { GeneradorService } from '../generador.service';
 })
 export class ReporteCMDICComponent implements AfterViewInit {
 
+  @ViewChild("mapaElement") mapa!: ElementRef
 
+  imagenMapa = new Image()
   map: any
   inputs = new FormGroup({
     resumen: new FormControl(''),
-    principales : new FormControl(''),
+    principales: new FormControl(''),
     segundarios: new FormControl(''),
   })
 
 
-  constructor(private api: ApiService, private generador : GeneradorService) { }
+  constructor(private api: ApiService, private generador: GeneradorService) { }
 
 
   ngAfterViewInit(): void {
@@ -32,13 +36,41 @@ export class ReporteCMDICComponent implements AfterViewInit {
 
   }
 
+  loadScreenshotMapa() {
 
+    var node = this.mapa.nativeElement
+    let img = new Image();
+    var scale = 2;
+    domtoimage.toPng(node, {
+      width: node.clientWidth * scale,
+      height: node.clientHeight * scale,
+      style: {
+        transform: 'scale(' + scale + ')',
+        transformOrigin: 'top left'
+      }
+    })
+      .then(function (dataUrl: any) {
+        img.src = dataUrl;
+      })
+      .catch(function (error: any) {
+        console.error('error', error);
+      });
+
+    this.imagenMapa = img
+  }
+
+
+  // loadScreenshotMapa() {
+
+    
+  // }
 
   loadDataTopo() {
 
     this.api.getTopo().subscribe((data: any) => {
       leaf.geoJSON(data, { style: { weight: .1, color: 'black' } }
       ).addTo(this.map)
+     this.loadScreenshotMapa()
     })
   }
 
@@ -174,7 +206,11 @@ export class ReporteCMDICComponent implements AfterViewInit {
 
 
   generarPDF() {
-    this.generador.descargarPDF(this.inputs)
+    // this.loadScreenshotMapa()
+    setTimeout(() => {
+    this.generador.descargarPDF(this.inputs, this.imagenMapa)
+      
+    }, 1000);
   }
 
 
