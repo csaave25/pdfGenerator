@@ -136,14 +136,15 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
   }
 
   ngAfterContentInit(): void {
-      this.cargarLocalStorage()  
+    this.cargarLocalStorage()
+    
   }
 
 
-  prevenir(numSaltosPermitidos: number, evt: Event){
-    prevenirSaltosDeLinea(numSaltosPermitidos,evt)
+  prevenir(numSaltosPermitidos: number, evt: Event) {
+    prevenirSaltosDeLinea(numSaltosPermitidos, evt)
   }
-  
+
   cargarLocalStorage() {
 
     let data = localStorage.getItem('dataEFE')
@@ -559,9 +560,12 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
         }
 
       });
+      
 
       this.geocentinelasDeformacion.push(gcc10)
+
       this.geocentinelasDeformacion.push(gcc8)
+
       this.geocentinelasDeformacion.push(gcc7)
 
       this.crearGraficosDeformacion()
@@ -572,8 +576,8 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
   }
 
   loadPrismas() {
-    let dateMin = new Date(this.inputs.get('datos.fechaInicio')?.value)
-    let dateMax = new Date(this.inputs.get('datos.fechaFinal')?.value)
+    // let dateMin = new Date(this.inputs.get('datos.fechaInicio')?.value)
+    // let dateMax = new Date(this.inputs.get('datos.fechaFinal')?.value)
     // if (this.inputs.get('datos.fechaInicio')?.value != '' && this.inputs.get('datos.fechaFinal')?.value != '') {
     //   dateMin = new Date(this.inputs.get('datos.fechaInicio')?.value)
     //   dateMax = new Date(this.inputs.get('datos.fechaFinal')?.value)
@@ -585,8 +589,8 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
 
 
     this.api.getNombrePrismas().subscribe(res => {
-      
-      
+
+
       let dataPrismas: any[] = []
       this.api.getDataPrismas().subscribe(data => {
         res.objects.forEach((prisma: any) => {
@@ -617,10 +621,24 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
 
         this.dataTablaPrismas.sort((data: any, data2: any) => (data.nombre > data2.nombre) ? 1 : (data2.nombre > data.nombre) ? -1 : 0)
         dataPrismas.sort((data: any, data2: any) => (data.nombre > data2.nombre) ? 1 : (data2.nombre > data.nombre) ? -1 : 0)
-        console.log(dataPrismas);
-        
-        let dataGraph1 = dataPrismas.slice(0, 5)
-        let dataGraph2 = dataPrismas.slice(5, dataPrismas.length)
+
+
+        let dataGraph1 : any[]= []
+        let dataGraph2  : any[]= []
+
+        dataPrismas.forEach((elm: any) => {
+          if (['P01', 'P02', 'P03', 'P04', 'P05', 'P06', 'P07', 'P08', 'P09', 'P10', 'P11', 'P12'].includes(elm.nombre)) {
+            dataGraph1.push(elm)
+
+          } else {
+            dataGraph2.push(elm)
+          }
+        })
+
+
+
+
+       
 
 
         this.cargarDataTablaPrismas(dataPrismas)
@@ -722,7 +740,7 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
           gid: 0
         }
 
-        elm.forEach((el: any) => {
+        elm.reverse().forEach((el: any) => {
 
           dataGCD.dates.push(el.fecha.slice(0, 10))
           dataGCD.numbers.push(el.medicion)
@@ -733,7 +751,7 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
 
         data.push(dataGCD)
 
-
+        
       })
 
 

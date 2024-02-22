@@ -12,7 +12,7 @@ export class ApiService {
   private urlEstadoGeocentinelas = "https://consultasefe.emt.cl/api/geocentinelas/corte/estado"
   private urlProfundidadGeocentinela = "https://consultasefe.emt.cl/api/geocentinelas/corte"
   private urlPDF = "http://10.10.10.18:6450/api/insertos/pdf/TESTING"
-  private urlGeocenDeformacion = "https://consultasefe.emt.cl/api/geocentinelas/registros/deformacion/semanas/10"
+  private urlGeocenDeformacion = "https://consultasefe.emt.cl/api/geocentinelas/registros/deformacion/semanas/6"
   private urlDataPrismas = "https://consultasefe.emt.cl/api/prismas/registros/semanas/150"
   private urlNombrePrismas = "https://consultasefe.emt.cl/api/prismas"
   private urlNombrePiezometro = "https://consultasefe.emt.cl/api/piezometros"
