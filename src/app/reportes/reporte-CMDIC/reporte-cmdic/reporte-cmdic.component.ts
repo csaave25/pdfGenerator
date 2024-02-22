@@ -4,6 +4,7 @@ import { ApiService } from '../api.service';
 import { FormControl, FormGroup } from '@angular/forms';
 import { GeneradorService } from '../generador.service';
 import domtoimage from 'dom-to-image';
+import geojsonvt from 'geojson-vt';
 
 
 @Component({
