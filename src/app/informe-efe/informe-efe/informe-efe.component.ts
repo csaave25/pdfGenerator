@@ -932,7 +932,7 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
               display: true,
               text: 'Desplazamiento acumulado [mm]'
             },
-            min: -20,
+            min: -30,
             max: 100,
             ticks: {
 
@@ -992,7 +992,7 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
               display: true,
               text: 'Desplazamiento acumulado [mm]'
             },
-            min: -20,
+            min: -30,
             max: 100,
             ticks: {
               // forces step size to be 50 units
