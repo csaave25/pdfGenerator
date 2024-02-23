@@ -325,15 +325,15 @@ export class InformeService {
         head: [[{ content: 'Indicador', styles: { minCellWidth: 250 } }, 'Disponibilidad [%]', 'Observaciones']],
         bodyStyles: { font: 'Lato', fontStyle: 'normal', fontSize: 9, fillColor: undefined, halign: 'left' },
         body: [
-          [{ content: 'Infraestructura EMT', styles: { minCellWidth: 200, font: 'Lato', fontStyle: 'bold', fillColor: [218, 218, 217], cellPadding: { left: 50, top: 5 } } }, { content: tablaDispo.infraestructura, styles: { font: 'Lato', fontStyle: 'bold', fillColor: [218, 218, 217], halign: 'center' } }, { content: comnt8, styles: { fillColor: [218, 218, 217] } }],
+          [{ content: 'Infraestructura EMT', styles: { minCellWidth: 200, font: 'Lato', fontStyle: 'bold', fillColor: [218, 218, 217], cellPadding: { left: 50, top: 5 } } }, { content: tablaDispo.infraestructura, styles: { font: 'Lato', fontStyle: 'bold', fillColor: [218, 218, 217], halign: 'center' } }, { content: comnt8 ? comnt8 : '' , styles: { fillColor: [218, 218, 217] } }],
           [{ content: 'Servicio web', styles: { halign: 'left', cellPadding: { left: 75, top: 5 } } }, { content: tablaDispo.servicio_web, styles: { halign: 'center' } }, comnt1],
           [{ content: 'Servicio imágenes', styles: { halign: 'left', cellPadding: { left: 75, top: 5 } } }, { content: tablaDispo.servicio_imagenes, styles: { halign: 'center' } }, comnt2],
           [{ content: 'Servicio base de datos', styles: { halign: 'left', cellPadding: { left: 75, top: 5 } } }, { content: tablaDispo.servicio_db, styles: { halign: 'center' } }, comnt3],
           [{ content: 'Servicio API', styles: { halign: 'left', cellPadding: { left: 75, top: 5 } } }, { content: tablaDispo.servicio_api, styles: { halign: 'center' } }, comnt4],
           [{ content: 'Servicio de computo', styles: { halign: 'left', cellPadding: { left: 75, top: 5 } } }, { content: tablaDispo.servicio_computo, styles: { halign: 'center' } }, comnt5],
-          [{ content: 'Infraestructura ANT', styles: { font: 'Lato', fontStyle: 'bold', fillColor: [218, 218, 217], cellPadding: { left: 50, top: 5 } } }, { content: tablaDispo.sistema_adquisicion_imagenes, styles: { font: 'Lato', fontStyle: 'bold', fillColor: [218, 218, 217], halign: 'center' } }, { content: comnt9, styles: { fillColor: [218, 218, 217] } }],
+          [{ content: 'Infraestructura ANT', styles: { font: 'Lato', fontStyle: 'bold', fillColor: [218, 218, 217], cellPadding: { left: 50, top: 5 } } }, { content: tablaDispo.sistema_adquisicion_imagenes, styles: { font: 'Lato', fontStyle: 'bold', fillColor: [218, 218, 217], halign: 'center' } }, { content: comnt9 ? comnt9 : '' , styles: { fillColor: [218, 218, 217] } }],
           [{ content: 'Sistema de adquisición de imágenes', styles: { halign: 'left', cellPadding: { left: 75, top: 5 } } }, { content: tablaDispo.sistema_adquisicion_imagenes, styles: { halign: 'center' } }, comnt6],
-          [{ content: ' Enlaces', styles: { font: 'Lato', fontStyle: 'bold', fillColor: [218, 218, 217], cellPadding: { left: 50, top: 5 } } }, { content: tablaDispo.enlace_dedicado, styles: { font: 'Lato', fontStyle: 'bold', fillColor: [218, 218, 217], halign: 'center' } }, { content: comnt10, styles: { fillColor: [218, 218, 217] } }],
+          [{ content: ' Enlaces', styles: { font: 'Lato', fontStyle: 'bold', fillColor: [218, 218, 217], cellPadding: { left: 50, top: 5 } } }, { content: tablaDispo.enlace_dedicado, styles: { font: 'Lato', fontStyle: 'bold', fillColor: [218, 218, 217], halign: 'center' } }, { content: comnt10? comnt10 : '' , styles: { fillColor: [218, 218, 217] } }],
           [{ content: 'Enlace dedicado AMSA', styles: { halign: 'left', cellPadding: { left: 75, top: 5 } } }, { content: tablaDispo.enlace_dedicado, styles: { halign: 'center' } }, comnt7],
 
         ],
@@ -422,10 +422,10 @@ export class InformeService {
 
 
 
-      let comnt1 = inputs.controls['disponibilidadComentario'].value?.infraEMT
-      let comnt2 = inputs.controls['disponibilidadComentario'].value?.infraANT
-      let comnt3 = inputs.controls['disponibilidadComentario'].value?.enlaceObs
-
+      let comnt1 = inputs.get('disponibilidadComentario.infraEMT')?.value
+      let comnt2 = inputs.get('disponibilidadComentario.infraANT')?.value
+      let comnt3 = inputs.get('disponibilidadComentario.enlaceObs')?.value
+      
 
 
       let head
@@ -439,9 +439,9 @@ export class InformeService {
           head: head,
           bodyStyles: { font: 'Lato', fontStyle: 'normal', fontSize: 9, fillColor: undefined, halign: 'left' },
           body: [
-            [{ content: 'Infraestructura EMT', styles: { font: 'Lato', fontStyle: 'bold' } }, { content: tablaDispo.infraestructura, styles: { font: 'Lato', fontStyle: 'bold', halign: 'center' } }, { content: comnt1 }],
-            [{ content: 'Infraestructura ANT', styles: { font: 'Lato', fontStyle: 'bold' } }, { content: tablaDispo.sistema_adquisicion_imagenes, styles: { font: 'Lato', fontStyle: 'bold', halign: 'center' } }, { content: comnt2 }],
-            [{ content: ' Enlaces', styles: { font: 'Lato', fontStyle: 'bold' } }, { content: tablaDispo.enlace_dedicado, styles: { font: 'Lato', fontStyle: 'bold', halign: 'center' } }, { content: comnt3, }],
+            [{ content: 'Infraestructura EMT', styles: { font: 'Lato', fontStyle: 'bold' } }, { content: tablaDispo.infraestructura, styles: { font: 'Lato', fontStyle: 'bold', halign: 'center' } }, { content: comnt1 ? comnt1 : ''}],
+            [{ content: 'Infraestructura ANT', styles: { font: 'Lato', fontStyle: 'bold' } }, { content: tablaDispo.sistema_adquisicion_imagenes, styles: { font: 'Lato', fontStyle: 'bold', halign: 'center' } }, { content: comnt2 ? comnt2 : '' }],
+            [{ content: ' Enlaces', styles: { font: 'Lato', fontStyle: 'bold' } }, { content: tablaDispo.enlace_dedicado, styles: { font: 'Lato', fontStyle: 'bold', halign: 'center' } }, { content: comnt3 ? comnt3 : ''}],
 
 
           ],
@@ -522,7 +522,7 @@ export class InformeService {
               this.implementarHeader()
               this.usoPagina = this.startcContent
             }
-            
+
           }
 
         })
@@ -1134,7 +1134,89 @@ export class InformeService {
 
 
     this.usoPagina += 60
-    tablaMatrix.forEach((mtx, index) => {
+    // tablaMatrix.forEach((mtx, index) => {
+
+    //   if (this.usoPagina + 170 > this.totalUso)
+    //     this.nuevaPagina()
+
+
+    //   let doc = this.doc
+    //   this.doc.setFontSize(8)
+    //   this.doc.setFont('Lato', 'normal')
+
+    //   this.doc.text('TABLA ' + this.contadorTabla + ': DESDE ' + mtx.fechaInicio + ' HASTA ' + mtx.fechaFinal, ((this.marginRight - this.marginContent) / 2 + this.marginContent), this.usoPagina, { align: 'center', maxWidth: this.marginRight - this.marginContent })
+
+    //   this.usoPagina += 5
+    //   autoTable(doc, {
+    //     margin: { left: this.marginContent },
+    //     styles: { halign: 'center', lineWidth: .1, fillColor: undefined, lineColor: [1, 48, 51], textColor: [1, 48, 51] },
+    //     bodyStyles: { fontStyle: 'bold' },
+    //     headStyles: { fillColor: [217, 217, 217] },
+    //     alternateRowStyles: { fillColor: undefined },
+    //     head: [[{ content: 'Probabilidad de daño al esparcidor', styles: { cellWidth: 125, cellPadding: { top: 15, bottom: 15 } } }, { content: 'Longitud' }, { content: 'Apertura' }, { content: 'Áreas de criticidad' }]],
+    //     columnStyles: { 0: { fillColor: [217, 217, 217] } },
+    //     body: mtx.matrix.matrixNombre,
+    //     startY: this.usoPagina,
+    //     didDrawCell: function (data) {
+
+    //       if (data.cell.text[0].includes('Longitud')) {
+    //         autoTable(doc, {
+    //           styles: { fillColor: undefined, halign: 'center', textColor: [1, 48, 51], lineWidth: .1, lineColor: [1, 48, 51] },
+    //           alternateRowStyles: { fillColor: undefined },
+    //           startY: data.cell.y + 20,
+    //           margin: { left: data.cell.x },
+    //           tableWidth: data.cell.width,
+    //           head: [['Min\n[px]', 'Max\n[px]']],
+    //           body: mtx.matrix.matrixLongitud
+
+    //         })
+    //       }
+
+    //       if (data.cell.text[0].includes('Apertura')) {
+    //         autoTable(doc, {
+    //           styles: { fillColor: undefined, halign: 'center', textColor: [1, 48, 51], lineWidth: .1, lineColor: [1, 48, 51] },
+    //           alternateRowStyles: { fillColor: undefined },
+    //           startY: data.cell.y + 20,
+    //           margin: { left: data.cell.x },
+    //           tableWidth: data.cell.width,
+    //           head: [['Min\n[px]', 'Max\n[px]']],
+    //           body: mtx.matrix.matrixApertura
+
+    //         })
+    //       }
+
+    //       if (data.cell.text[0].includes('Áreas de criticidad')) {
+    //         autoTable(doc, {
+    //           styles: { fillColor: undefined, halign: 'center', textColor: [1, 48, 51], lineWidth: .1, lineColor: [1, 48, 51] },
+    //           alternateRowStyles: { fillColor: undefined },
+    //           headStyles: { cellPadding: { top: 11.5, bottom: 10 }, },
+    //           startY: data.cell.y + 20,
+    //           margin: { left: data.cell.x },
+    //           tableWidth: data.cell.width,
+    //           head: [['A4', 'A3', 'A2', 'A1']],
+    //           body: mtx.matrix.matrixAreas
+
+    //         })
+    //       }
+    //     },
+
+
+    //     // didDrawPage: (data) => {
+    //     //   this.usoPagina = this.marginContent
+    //     // }
+
+    //   })
+
+    //   this.contadorTabla++
+
+    //   if (index - 1 != tablaMatrix.length) {
+    //     this.usoPagina += 180
+    //   } else {
+    //     this.usoPagina += 220
+    //   }
+    // })
+
+    
 
       if (this.usoPagina + 170 > this.totalUso)
         this.nuevaPagina()
@@ -1144,7 +1226,7 @@ export class InformeService {
       this.doc.setFontSize(8)
       this.doc.setFont('Lato', 'normal')
 
-      this.doc.text('TABLA ' + this.contadorTabla + ': DESDE ' + mtx.fechaInicio + ' HASTA ' + mtx.fechaFinal, ((this.marginRight - this.marginContent) / 2 + this.marginContent), this.usoPagina, { align: 'center', maxWidth: this.marginRight - this.marginContent })
+      this.doc.text('TABLA ' + this.contadorTabla + ': DESDE ' + tablaMatrix[0].fechaInicio + ' HASTA 31/01/2024, 23:59:59' , ((this.marginRight - this.marginContent) / 2 + this.marginContent), this.usoPagina, { align: 'center', maxWidth: this.marginRight - this.marginContent })
 
       this.usoPagina += 5
       autoTable(doc, {
@@ -1155,7 +1237,7 @@ export class InformeService {
         alternateRowStyles: { fillColor: undefined },
         head: [[{ content: 'Probabilidad de daño al esparcidor', styles: { cellWidth: 125, cellPadding: { top: 15, bottom: 15 } } }, { content: 'Longitud' }, { content: 'Apertura' }, { content: 'Áreas de criticidad' }]],
         columnStyles: { 0: { fillColor: [217, 217, 217] } },
-        body: mtx.matrix.matrixNombre,
+        body: tablaMatrix[0].matrix.matrixNombre,
         startY: this.usoPagina,
         didDrawCell: function (data) {
 
@@ -1167,7 +1249,7 @@ export class InformeService {
               margin: { left: data.cell.x },
               tableWidth: data.cell.width,
               head: [['Min\n[px]', 'Max\n[px]']],
-              body: mtx.matrix.matrixLongitud
+              body: tablaMatrix[0].matrix.matrixLongitud
 
             })
           }
@@ -1180,7 +1262,7 @@ export class InformeService {
               margin: { left: data.cell.x },
               tableWidth: data.cell.width,
               head: [['Min\n[px]', 'Max\n[px]']],
-              body: mtx.matrix.matrixApertura
+              body: tablaMatrix[0].matrix.matrixApertura
 
             })
           }
@@ -1194,7 +1276,7 @@ export class InformeService {
               margin: { left: data.cell.x },
               tableWidth: data.cell.width,
               head: [['A4', 'A3', 'A2', 'A1']],
-              body: mtx.matrix.matrixAreas
+              body: tablaMatrix[0].matrix.matrixAreas
 
             })
           }
@@ -1209,12 +1291,13 @@ export class InformeService {
 
       this.contadorTabla++
 
-      if (index - 1 != tablaMatrix.length) {
-        this.usoPagina += 180
-      } else {
-        this.usoPagina += 220
-      }
-    })
+      this.usoPagina += 180
+      // if (index - 1 != tablaMatrix.length) {
+      //   this.usoPagina += 180
+      // } else {
+      //   this.usoPagina += 220
+      // }
+    
 
 
 
