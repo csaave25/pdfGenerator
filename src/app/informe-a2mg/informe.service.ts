@@ -29,7 +29,7 @@ export class InformeService {
     gris: '#7A7A7A',
     gris_claro: '#CCCCCC'
   }
-
+  doc = new jsPDF('p', 'pt', 'letter')
   marginLeft = 20
   marginRight = 562
   endPage = 760
@@ -49,10 +49,11 @@ export class InformeService {
   listaContenido: Data[] = []
   tablaCriticidades = []
   contadorPagina = 2
+  puntoMedio = (this.doc.internal.pageSize.width || this.doc.internal.pageSize.getWidth()) / 2
 
 
 
-  doc = new jsPDF('p', 'pt', 'letter')
+
 
 
   iniciarValores() {
@@ -303,7 +304,7 @@ export class InformeService {
 
       this.doc.setFontSize(8)
       this.doc.setFont('Lato', 'normal')
-      this.doc.text('TABLA ' + this.contadorTabla + ': DISPONIBILIDAD DEL SISTEMA', ((this.marginRight - this.marginContent) / 2 + this.marginContent), this.startcContent + 280, { align: 'center', maxWidth: this.marginRight - this.marginContent })
+      this.doc.text('TABLA ' + this.contadorTabla + ': DISPONIBILIDAD DEL SISTEMA', ((this.marginRight - this.marginContent) / 2 + this.marginContent), this.startcContent + 285, { align: 'center', maxWidth: this.marginRight - this.marginContent })
       this.contadorTabla++
 
 
@@ -314,7 +315,7 @@ export class InformeService {
       let imgContador = 0
       let flag = false
 
-      this.usoPagina += 285
+      this.usoPagina += 290
 
 
 
@@ -409,7 +410,7 @@ export class InformeService {
 
       this.doc.setFontSize(8)
       this.doc.setFont('Lato', 'normal')
-      this.doc.text('TABLA ' + this.contadorTabla + ': DISPONIBILIDAD DEL SISTEMA', ((this.marginRight - this.marginContent) / 2 + this.marginContent), this.startcContent + 135, { align: 'center', maxWidth: this.marginRight - this.marginContent })
+      this.doc.text('TABLA ' + this.contadorTabla + ': DISPONIBILIDAD DEL SISTEMA', ((this.marginRight - this.marginContent) / 2 + this.marginContent), this.startcContent + 140, { align: 'center', maxWidth: this.marginRight - this.marginContent })
       this.contadorTabla++
 
       let index = 0
@@ -418,7 +419,7 @@ export class InformeService {
       let imgContador = 0
       let flag = false
 
-      this.usoPagina += 140
+      this.usoPagina += 145
 
 
 
@@ -433,19 +434,19 @@ export class InformeService {
 
         head = [[{ content: 'Indicador', styles: { minCellWidth: 150 } }, { content: '*Disponibilidad [%]', styles: { minCellWidth: 100 } }, 'Observaciones']]
         autoTable(this.doc, {
-          tableWidth: this.marginRight - this.marginContent,
+          tableWidth: 420,
           styles: { fontSize: 10, lineWidth: .1, fillColor: undefined, lineColor: [1, 48, 51], textColor: [1, 48, 51] },
           headStyles: { font: 'Lato', fontStyle: 'bold', fillColor: [217, 217, 217], halign: 'center' },
           head: head,
           bodyStyles: { font: 'Lato', fontStyle: 'normal', fontSize: 9, fillColor: undefined, halign: 'left' },
           body: [
-            [{ content: 'Infraestructura EMT', styles: { font: 'Lato', fontStyle: 'bold' } }, { content: tablaDispo.infraestructura, styles: { font: 'Lato', fontStyle: 'bold', halign: 'center' } }, { content: comnt1 ? comnt1 : ''}],
-            [{ content: 'Infraestructura ANT', styles: { font: 'Lato', fontStyle: 'bold' } }, { content: tablaDispo.sistema_adquisicion_imagenes, styles: { font: 'Lato', fontStyle: 'bold', halign: 'center' } }, { content: comnt2 ? comnt2 : '' }],
-            [{ content: ' Enlaces', styles: { font: 'Lato', fontStyle: 'bold' } }, { content: tablaDispo.enlace_dedicado, styles: { font: 'Lato', fontStyle: 'bold', halign: 'center' } }, { content: comnt3 ? comnt3 : ''}],
+            [{ content: 'Infraestructura EMT', styles: {cellWidth: 120}  }, { content: tablaDispo.infraestructura, styles:  {cellWidth: 120, halign: 'center'} }, { content: comnt1 ? comnt1 : '', styles: {cellWidth: 180}}],
+            [{ content: 'Infraestructura ANT' }, { content: tablaDispo.sistema_adquisicion_imagenes, styles: {halign: 'center'}  }, { content: comnt2 ? comnt2 : '' }],
+            [{ content: ' Enlaces' }, { content: tablaDispo.enlace_dedicado, styles: {halign: 'center'}}, { content: comnt3 ? comnt3 : ''}],
 
 
           ],
-          margin: { top: this.startcContent, left: this.marginContent, bottom: 80 },
+          margin: { top: this.startcContent, left: this.puntoMedio-210 , bottom: 80 },
           startY: this.usoPagina,
           alternateRowStyles: { fillColor: undefined },
           rowPageBreak: 'avoid',
@@ -490,9 +491,9 @@ export class InformeService {
           head: head,
           bodyStyles: { font: 'Lato', fontStyle: 'normal', fontSize: 9, fillColor: undefined, halign: 'left' },
           body: [
-            [{ content: 'Infraestructura EMT', styles: { font: 'Lato', fontStyle: 'bold' } }, { content: tablaDispo.infraestructura, styles: { font: 'Lato', fontStyle: 'bold', halign: 'center' } }, { content: '' }],
-            [{ content: 'Infraestructura ANT', styles: { font: 'Lato', fontStyle: 'bold' } }, { content: tablaDispo.sistema_adquisicion_imagenes, styles: { font: 'Lato', fontStyle: 'bold', halign: 'center' } }, { content: '' }],
-            [{ content: ' Enlaces', styles: { font: 'Lato', fontStyle: 'bold' } }, { content: tablaDispo.enlace_dedicado, styles: { font: 'Lato', fontStyle: 'bold', halign: 'center' } }, { content: 'Hola mundo', }],
+            [{ content: 'Infraestructura EMT' }, { content: tablaDispo.infraestructura, styles: {  halign: 'center' } }, { content: '' }],
+            [{ content: 'Infraestructura ANT' }, { content: tablaDispo.sistema_adquisicion_imagenes, styles: {  halign: 'center' } }, { content: '' }],
+            [{ content: 'Enlaces' }, { content: tablaDispo.enlace_dedicado, styles: { halign: 'center' } }, { content: '', }],
 
 
           ],
@@ -535,7 +536,7 @@ export class InformeService {
       this.doc.text('*', this.marginContent, this.usoPagina, { align: 'left' })
       this.usoPagina = formateadoraDeTexto(this.doc, 'La disponibilidad del sistema, indica cuánto tiempo este está operativo con respecto al tiempo programado de funcionamiento. La fórmula para calcular la disponibilidad es:', this.usoPagina, this.marginContent + this.doc.getTextWidth('*'), this.marginRight - this.marginContent - this.doc.getTextWidth('*'), this.fecha, '', this.finalContenido)
 
-      let sumador = 10
+      let sumador = 5
       this.doc.setFont('Time', 'italic')
       this.doc.setFontSize(12)
       this.doc.text('Disponibilidad del sistema [%] =', this.marginContent + 20, this.usoPagina + 30 + sumador, { align: 'left' })
@@ -553,7 +554,7 @@ export class InformeService {
       this.doc.text('nominal', this.marginContent + 383, this.usoPagina + 48 + sumador, { align: 'left', maxWidth: this.marginRight - this.marginContent })
       this.doc.line(this.marginContent + 300, this.usoPagina + 28 + sumador, this.marginContent + 450, this.usoPagina + 28 + sumador)
 
-      this.usoPagina += 100
+      this.usoPagina += 85
     }
   }
 
@@ -764,7 +765,7 @@ export class InformeService {
     this.doc.setTextColor(this.colores.negro)
     this.doc.setFont('Lato', 'normal')
     this.usoPagina = formateadoraDeTexto(this.doc, dataInforme.confiabilidad.texto1Cliente, this.usoPagina, this.marginContent, this.marginRight - this.marginContent, this.fecha, '', this.finalContenido) + 15
-    this.doc.text('(*).', 278, this.usoPagina - 28)
+    this.doc.text('(*).', 440, this.usoPagina - 28)
 
     if (this.usoPagina + 10 > this.totalUso)
       this.nuevaPagina()
@@ -1307,7 +1308,7 @@ export class InformeService {
   implementarConclusion(inputs: FormGroup) {
 
     let conc = inputs.controls['conclusion'].value
-    if (this.usoPagina + 120 > this.totalUso)
+    if (this.usoPagina + 11000 > this.totalUso)
       this.nuevaPagina()
 
     let contenido: Data = {
