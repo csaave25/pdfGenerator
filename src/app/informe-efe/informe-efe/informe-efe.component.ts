@@ -137,7 +137,7 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
 
   ngAfterContentInit(): void {
     this.cargarLocalStorage()
-    
+
   }
 
 
@@ -434,8 +434,8 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
   }
 
   loadGCCDeformacion() {
-    let dateMin = new Date(this.inputs.get('datos.fechaInicio')?.value).getTime()
-    let dateMax = new Date(this.inputs.get('datos.fechaFinal')?.value).getTime()
+    // let dateMin = new Date(this.inputs.get('datos.fechaInicio')?.value).getTime()
+    // let dateMax = new Date(this.inputs.get('datos.fechaFinal')?.value).getTime()
     // if (this.inputs.get('datos.fechaInicio')?.value != '' && this.inputs.get('datos.fechaFinal')?.value != '') {
     //   dateMin = new Date(this.inputs.get('datos.fechaInicio')?.value)
     //   dateMax = new Date(this.inputs.get('datos.fechaFinal')?.value)
@@ -443,6 +443,10 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
     //   dateMin = new Date('2021/01/01')
     //   dateMax = new Date()
     // }
+
+    let dateMin = new Date()
+    let dateMax = new Date()
+    dateMin.setMonth(dateMin.getMonth() -1)
 
     this.api.getGeocentinalasDeformacion().subscribe(data => {
       let gcc10: any[] = [[], [], [], []]
@@ -452,7 +456,7 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
       data.objects.forEach((elemento: any) => {
         let dateElemento = new Date(elemento.fecha).getTime()
 
-        if (dateElemento > dateMin && dateElemento < dateMax) {
+        if (dateElemento > dateMin.getTime() && dateElemento < dateMax.getTime()) {
           if (elemento.nombre == "GCC10") {
             if (elemento.canal == 1)
               gcc10[0].push({
@@ -560,7 +564,7 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
         }
 
       });
-      
+
 
       this.geocentinelasDeformacion.push(gcc10)
 
@@ -589,7 +593,6 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
 
 
     this.api.getNombrePrismas().subscribe(res => {
-
 
       let dataPrismas: any[] = []
       this.api.getDataPrismas().subscribe(data => {
@@ -623,8 +626,8 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
         dataPrismas.sort((data: any, data2: any) => (data.nombre > data2.nombre) ? 1 : (data2.nombre > data.nombre) ? -1 : 0)
 
 
-        let dataGraph1 : any[]= []
-        let dataGraph2  : any[]= []
+        let dataGraph1: any[] = []
+        let dataGraph2: any[] = []
 
         dataPrismas.forEach((elm: any) => {
           if (['P01', 'P02', 'P03', 'P04', 'P05', 'P06', 'P07', 'P08', 'P09', 'P10', 'P11', 'P12'].includes(elm.nombre)) {
@@ -638,7 +641,7 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
 
 
 
-       
+
 
 
         this.cargarDataTablaPrismas(dataPrismas)
@@ -649,10 +652,13 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
   }
 
   LoadPiezometro() {
-    let dateMin = new Date(this.inputs.get('datos.fechaInicio')?.value).getTime()
-    let dateMax = new Date(this.inputs.get('datos.fechaFinal')?.value).getTime()
+    // let dateMin = new Date(this.inputs.get('datos.fechaInicio')?.value).getTime()
+    // let dateMax = new Date(this.inputs.get('datos.fechaFinal')?.value).getTime()
 
 
+    let dateMin = new Date()
+    let dateMax = new Date()
+    dateMin.setMonth(dateMin.getMonth() -1)
 
 
 
@@ -667,12 +673,14 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
 
 
       this.api.getMilimetrosPiezometros().subscribe(data => {
+
         piezometros.forEach(piezometro => {
           data.objects.forEach((elm: any) => {
             let fechaElm = new Date(elm.fecha).getTime()
-            if (fechaElm > dateMin && fechaElm < dateMax) {
+            if (fechaElm > dateMin.getTime() && fechaElm < dateMax.getTime()) {
               if (piezometro.gid == elm.piezometro_id) {
                 let index = dataPiezometros.findIndex(data => data.gid == elm.piezometro_id)
+
                 if (index == -1) {
                   dataPiezometros.push({
                     gid: elm.piezometro_id,
@@ -688,12 +696,80 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
           })
         })
 
+
+        //algoritomo para agregar un piezometro en caso de que no le llegue info.
+        if (dataPiezometros.length < 3) {
+          let data: any[] = []
+          for (let i = 0; i < 3; i++) {
+
+            if (dataPiezometros[i]) {
+              if (dataPiezometros[i].gid == 4) {
+                data[0] = dataPiezometros[i]
+              }
+
+              if (dataPiezometros[i].gid == 3) {
+                data[1] = dataPiezometros[i]
+              }
+
+              if (dataPiezometros[i].gid == 6) {
+                data[2] = dataPiezometros[i]
+              }
+
+            }
+
+          }
+
+          let gid = 0
+          let nombre = 'null'
+          let datos: any[] = []
+          for (let i = 0; i < 3; i++) {
+
+            if (!data[i]) {
+
+              if (i == 0) {
+                gid = 4
+                nombre = 'PZ02'
+              } else if (i == 1) {
+                gid = 3
+                nombre = 'PZ03'
+              } else if (i == 2) {
+                gid = 6
+                nombre = 'PZ04'
+              }
+
+              data[i] = {
+                gid,
+                nombre,
+                data: []
+              }
+            }
+          }
+
+
+          for (let i = 0; i < 3; i++) {
+            if (data[i].data.length > 0) {
+              datos = [...data[i].data]
+              break
+            }
+          }
+
+          datos = datos.map((elm: any) => {
+            return { ...elm, milimetros: null }
+          })
+
+          data.forEach((elm: any) => {
+            if (elm.data.length == 0) {
+              elm.data = datos
+
+            }
+          })
+
+          dataPiezometros = data
+        }
+
         this.crearGradicoPiezometro(dataPiezometros);
 
       })
-
-
-
     })
   }
 
@@ -751,7 +827,7 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
 
         data.push(dataGCD)
 
-        
+
       })
 
 
@@ -1054,6 +1130,7 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
     dataPiezometro.forEach(piezometro => {
 
       let datos = loadData(piezometro.data, piezometro.nombre)
+
       new Chart("piezometro" + piezometro.gid, {
         type: "line",
         data: {
