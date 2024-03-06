@@ -769,17 +769,18 @@ export class InformeService {
 
 
   completarDatos(inputs: FormGroup) {
-    let fecha = inputs.get('datos.fechaFinal')
-    let fechaInicio = inputs.get('datos.fechaInicio')
-    let mesNum = fecha?.value.getMonth() + 1
-    let mes = fecha?.value.toLocaleString('default', { month: 'long' });
-    let mesInicio = fechaInicio?.value.toLocaleString('default', { month: 'long' });
-    let ano = fecha?.value.getFullYear()
-    let anoInicio = fechaInicio?.value.getFullYear()
+    
+    let fecha =  new Date( inputs.get('datos.fechaFinal')?.value)
+    let fechaInicio = new Date (inputs.get('datos.fechaInicio')?.value)
+    // let mesNum = fecha?.value.getMonth() + 1
+    let mes = fecha.toLocaleString('default', { month: 'long' });
+    let mesInicio = fechaInicio.toLocaleString('default', { month: 'long' });
+    let ano = fecha.getFullYear()
+    let anoInicio = fechaInicio.getFullYear()
     this.date = mes.charAt(0).toUpperCase() + mes.slice(1) + ' ' + ano;
     this.numeroInforme = inputs.get('datos.numeroInforme')?.value
     this.anoMes = ano + '.' + ('0' + this.numeroInforme).slice(-2)
-    this.entreFechas = '21 de ' + mesInicio + ' de ' + anoInicio + ' a 21 de ' + mes + ' de ' + ano
+    this.entreFechas = (fechaInicio.getDate() +1) +' de ' + mesInicio + ' de ' + anoInicio + ' a ' + (fecha.getDate()+1) + ' de ' + mes + ' de ' + ano
 
   }
 

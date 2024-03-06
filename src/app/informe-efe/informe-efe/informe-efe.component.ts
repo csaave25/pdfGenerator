@@ -44,11 +44,16 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
   imagenAgua1: any
   imagenAgua2: any
   imagenAgua3: any
+  chartsPiezometro: any[] = []
+  chartsGeoDeformacion: any[] = []
+
+
+
 
   inputs: FormGroup = new FormGroup({
     datos: new FormGroup({
-      fechaInicio: new FormControl({ value: null, disabled: true }),
-      fechaFinal: new FormControl({ value: null, disabled: true }),
+      fechaInicio: new FormControl({ value: null, disabled: false }),
+      fechaFinal: new FormControl({ value: null, disabled: false }),
       numeroInforme: new FormControl(0)
     }),
     gestores: new FormGroup({
@@ -131,8 +136,10 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
     this.setFechas()
     this.loadGCC()
     this.loadPrismas()
-    this.loadGCCDeformacion()
-    this.LoadPiezometro()
+    if (this.inputs.get('datos.fechaInicio')?.value.length > 2 && this.inputs.get('datos.fechaFinal')?.value.length > 2) {
+      this.loadGCCDeformacion()
+      this.LoadPiezometro()
+    }
   }
 
   ngAfterContentInit(): void {
@@ -151,8 +158,8 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
     if (data) {
       let datos = JSON.parse(data)
 
-      // this.inputs.get('fechaInicio')?.setValue(datos.fechaFinal)
-      // this.inputs.get('fechaFinal')?.setValue(datos.fechaFinal)
+      this.inputs.get('fechaInicio')?.setValue(datos.fechaInicio)
+      this.inputs.get('fechaFinal')?.setValue(datos.fechaFinal)
       this.inputs.get('numeroInforme')?.setValue(datos.numeroInforme)
       this.inputs.get('gestores.elaborado')?.setValue(datos.gestores.elaborado)
       this.inputs.get('gestores.revisado')?.setValue(datos.gestores.revisado)
@@ -197,8 +204,8 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
 
   guardarEnLocalStorage() {
     let datos = {
-      // fechaInicio: this.inputs.get('fechaInicio')?.value,
-      // fechaFinal: this.inputs.get('fechaFinal')?.value,
+      fechaInicio: this.inputs.get('fechaInicio')?.value,
+      fechaFinal: this.inputs.get('fechaFinal')?.value,
       numeroInforme: this.inputs.get('numeroInforme')?.value,
       gestores: {
         elaborado: this.inputs.get('gestores.elaborado')?.value,
@@ -296,10 +303,13 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
 
 
   reloadData() {
-    if (this.inputs.get('datos.fechaInicio')?.value != '' && this.inputs.get('datos.fechaFinal')?.value != '') {
-      this.loadGCCDeformacion()
-      this.loadPrismas()
-    }
+    let fecha = this.inputs.get('datos.fechaInicio')?.value.length
+    let fecha2 = this.inputs.get('datos.fechaFinal')?.value.length
+    if (fecha && fecha2)
+      if (fecha > 3 && fecha2 > 3) {
+        this.loadGCCDeformacion()
+        this.LoadPiezometro()
+      }
   }
 
 
@@ -434,8 +444,10 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
   }
 
   loadGCCDeformacion() {
-    // let dateMin = new Date(this.inputs.get('datos.fechaInicio')?.value).getTime()
-    // let dateMax = new Date(this.inputs.get('datos.fechaFinal')?.value).getTime()
+    let dateMin = new Date(this.inputs.get('datos.fechaInicio')?.value)
+    let dateMax = new Date(this.inputs.get('datos.fechaFinal')?.value)
+    console.log(dateMin, dateMax)
+    
     // if (this.inputs.get('datos.fechaInicio')?.value != '' && this.inputs.get('datos.fechaFinal')?.value != '') {
     //   dateMin = new Date(this.inputs.get('datos.fechaInicio')?.value)
     //   dateMax = new Date(this.inputs.get('datos.fechaFinal')?.value)
@@ -444,11 +456,11 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
     //   dateMax = new Date()
     // }
 
-    let dateMin = new Date()
-    let dateMax = new Date()
-    dateMax.setDate(21)
-    dateMin.setDate(21)
-    dateMin.setMonth(dateMin.getMonth() -1)
+    // let dateMin = new Date()
+    // let dateMax = new Date()
+    // dateMax.setDate(21)
+    // dateMin.setDate(21)
+    // dateMin.setMonth(dateMin.getMonth() -1)
 
     this.api.getGeocentinalasDeformacion().subscribe(data => {
       let gcc10: any[] = [[], [], [], []]
@@ -457,7 +469,7 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
 
       data.objects.forEach((elemento: any) => {
         let dateElemento = new Date(elemento.fecha).getTime()
-
+        
         if (dateElemento > dateMin.getTime() && dateElemento < dateMax.getTime()) {
           if (elemento.nombre == "GCC10") {
             if (elemento.canal == 1)
@@ -654,17 +666,17 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
   }
 
   LoadPiezometro() {
-    // let dateMin = new Date(this.inputs.get('datos.fechaInicio')?.value).getTime()
-    // let dateMax = new Date(this.inputs.get('datos.fechaFinal')?.value).getTime()
+    let dateMin = new Date(this.inputs.get('datos.fechaInicio')?.value)
+    let dateMax = new Date(this.inputs.get('datos.fechaFinal')?.value)
 
 
-    let dateMin = new Date()
-    let dateMax = new Date()
-    
-    dateMax.setDate(21)
-    dateMin.setDate(21)
-    dateMin.setMonth(dateMin.getMonth() -1)
-    
+    // let dateMin = new Date()
+    // let dateMax = new Date()
+
+    // dateMax.setDate(21)
+    // dateMin.setDate(21)
+    // dateMin.setMonth(dateMin.getMonth() -1)
+
 
 
 
@@ -812,6 +824,10 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
   crearGraficosDeformacion() {
     let i = 0
     Chart.defaults.font.size = 8;
+    this.chartsGeoDeformacion.forEach((elm: any) => { elm.destroy() })
+    console.log('borrado');
+    
+
     this.geocentinelasDeformacion.reverse().forEach((element: any) => {
       let data: any[] = []
       element.forEach((elm: any) => {
@@ -841,112 +857,114 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
 
       if (i < 3) {
 
-        new Chart("chart" + i, {
-          type: "line",
 
-          plugins: [{
-            id: 'loadData', afterRender: (chart) => {
-              if (chart.id == "2") {
+        this.chartsGeoDeformacion.push(
+          new Chart("chart" + i, {
+            type: "line",
 
+            plugins: [{
+              id: 'loadData', afterRender: (chart) => {
+                if (chart.id == "2") {
+
+                }
               }
-            }
-          }],
-          data: {
-            labels: data[0].dates,
-            datasets: [
-              {
-                label: data[0].canal + '/ ' + Math.abs(data[0].profundidad) + ' [m]',
-                data: data[0].numbers,
-                borderWidth: 1,
-                backgroundColor: '#118DFF',
-                borderColor: '#118DFF',
-              },
-              {
-                label: data[1].canal + '/ ' + Math.abs(data[1].profundidad) + ' [m]',
-                data: data[1].numbers,
-                borderWidth: 1,
-                backgroundColor: '#12239E',
-                borderColor: '#12239E',
-              },
-              {
-                label: data[2].canal + '/ ' + Math.abs(data[2].profundidad) + ' [m]',
-                data: data[2].numbers,
-                borderWidth: 1,
-                backgroundColor: '#E66C37',
-                borderColor: '#E66C37',
-              },
-              {
-                label: data[3].canal + '/ ' + Math.abs(data[3].profundidad) + ' [m]',
-                data: data[3].numbers,
-                borderWidth: 1,
-                backgroundColor: '#6B007B',
-                borderColor: '#6B007B',
-              },
-              // {
-              //   data: [15,15,30,31] 
-              // }
-            ]
-          },
-
-          options: {
-            // maintainAspectRatio: false,
-            responsive: true,
-            elements: {
-              point: {
-                radius: 0
-              }
+            }],
+            data: {
+              labels: data[0].dates,
+              datasets: [
+                {
+                  label: data[0].canal + '/ ' + Math.abs(data[0].profundidad) + ' [m]',
+                  data: data[0].numbers,
+                  borderWidth: 1,
+                  backgroundColor: '#118DFF',
+                  borderColor: '#118DFF',
+                },
+                {
+                  label: data[1].canal + '/ ' + Math.abs(data[1].profundidad) + ' [m]',
+                  data: data[1].numbers,
+                  borderWidth: 1,
+                  backgroundColor: '#12239E',
+                  borderColor: '#12239E',
+                },
+                {
+                  label: data[2].canal + '/ ' + Math.abs(data[2].profundidad) + ' [m]',
+                  data: data[2].numbers,
+                  borderWidth: 1,
+                  backgroundColor: '#E66C37',
+                  borderColor: '#E66C37',
+                },
+                {
+                  label: data[3].canal + '/ ' + Math.abs(data[3].profundidad) + ' [m]',
+                  data: data[3].numbers,
+                  borderWidth: 1,
+                  backgroundColor: '#6B007B',
+                  borderColor: '#6B007B',
+                },
+                // {
+                //   data: [15,15,30,31] 
+                // }
+              ]
             },
-            plugins: {
-              legend: {
-                title: {
-                  font: {
-                    weight: 'normal'
+
+            options: {
+              // maintainAspectRatio: false,
+              responsive: true,
+              elements: {
+                point: {
+                  radius: 0
+                }
+              },
+              plugins: {
+                legend: {
+                  title: {
+                    font: {
+                      weight: 'normal'
+                    }
+                  },
+                  labels: {
+                    font: {
+                      size: 8
+                    }
                   }
                 },
-                labels: {
-                  font: {
-                    size: 8
-                  }
-                }
-              },
-              title: {
-                display: true,
-                text: 'Canal / Prof.'
-              },
-
-            },
-            scales: {
-
-              x: {
-                // title: {
-                //   display: true,
-                //   text: 'Fecha',
-
-                // },
-                ticks: {
-
-                  // For a category axis, the val is the index so the lookup via getLabelForValue is needed
-                  maxTicksLimit: 7,
-                  autoSkip: true,
-                  includeBounds: true
-                }
-              },
-              y: {
                 title: {
                   display: true,
-                  text: 'Deformación [%]'
+                  text: 'Canal / Prof.'
                 },
-                min: 0,
-                max: 100,
-                ticks: {
-                  // forces step size to be 50 units
-                  stepSize: 20,
 
+              },
+              scales: {
+
+                x: {
+                  // title: {
+                  //   display: true,
+                  //   text: 'Fecha',
+
+                  // },
+                  ticks: {
+
+                    // For a category axis, the val is the index so the lookup via getLabelForValue is needed
+                    maxTicksLimit: 7,
+                    autoSkip: true,
+                    includeBounds: true
+                  }
+                },
+                y: {
+                  title: {
+                    display: true,
+                    text: 'Deformación [%]'
+                  },
+                  min: 0,
+                  max: 100,
+                  ticks: {
+                    // forces step size to be 50 units
+                    stepSize: 20,
+
+                  }
                 }
               }
             }
-          }
-        });
+          }));
 
         i++
       }
@@ -1133,65 +1151,66 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
 
       return datas
     }
-
+    this.chartsPiezometro.forEach((elm: any) => { elm.destroy() })
     dataPiezometro.forEach(piezometro => {
 
       let datos = loadData(piezometro.data, piezometro.nombre)
 
-      new Chart("piezometro" + piezometro.gid, {
-        type: "line",
-        data: {
-          datasets: datos,
-        },
-        options: {
-          animation: false,
-          responsive: true,
-          elements: {
-            point: {
-              radius: 0
-            }
+      this.chartsPiezometro.push(
+        new Chart("piezometro" + piezometro.gid, {
+          type: "line",
+          data: {
+            datasets: datos,
           },
-          plugins: {
-            legend: {
-              title: {
-                font: {
-                  weight: 'normal'
-                }
-              },
-              labels: {
-                font: {
-                  size: 8
-                }
+          options: {
+            animation: false,
+            responsive: true,
+            elements: {
+              point: {
+                radius: 0
               }
             },
-          },
-          scales: {
-
-            x: {
-              type: 'time',
-              display: true,
-              ticks: {
-                autoSkip: true,
-                stepSize: 6
-
+            plugins: {
+              legend: {
+                title: {
+                  font: {
+                    weight: 'normal'
+                  }
+                },
+                labels: {
+                  font: {
+                    size: 8
+                  }
+                }
               },
             },
-            y: {
-              title: {
+            scales: {
+
+              x: {
+                type: 'time',
                 display: true,
-                text: 'Columna de agua [cm]'
+                ticks: {
+                  autoSkip: true,
+                  stepSize: 6
+
+                },
               },
-              min: -25,
-              max: 75,
-              ticks: {
+              y: {
+                title: {
+                  display: true,
+                  text: 'Columna de agua [cm]'
+                },
+                min: -25,
+                max: 75,
+                ticks: {
 
-                stepSize: 25,
+                  stepSize: 25,
 
+                }
               }
             }
           }
-        }
-      });
+        }));
 
 
 
