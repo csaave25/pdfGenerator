@@ -446,6 +446,8 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
 
     let dateMin = new Date()
     let dateMax = new Date()
+    dateMax.setDate(21)
+    dateMin.setDate(21)
     dateMin.setMonth(dateMin.getMonth() -1)
 
     this.api.getGeocentinalasDeformacion().subscribe(data => {
@@ -658,7 +660,12 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
 
     let dateMin = new Date()
     let dateMax = new Date()
+    
+    dateMax.setDate(21)
+    dateMin.setDate(21)
     dateMin.setMonth(dateMin.getMonth() -1)
+    
+
 
 
 
