@@ -200,6 +200,20 @@ export const genradorDeHeaderYFooter = (doc: jsPDF , date: string, anoMes: strin
 }
 
 
+export function getFechasFormatos(fechaInicio : string, fechaTermino : string){
+    
+    function formater(fc : string){
+        let fecha = fc.replaceAll('-', '/')
+        return fecha
+    }
+
+    let fechaInit = formater(fechaInicio)
+    let fechaFin = formater(fechaTermino)
+    
+    return {fechaInit , fechaFin}
+}
+
+
 
 export const data = {
     ano: 2023,

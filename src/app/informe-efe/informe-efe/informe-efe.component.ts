@@ -7,6 +7,7 @@ import html2canvas from 'html2canvas';
 import 'chartjs-adapter-moment';
 import moment from 'moment';
 import { prevenirSaltosDeLinea } from 'src/app/helpers';
+import { getFechasFormatos } from '../data';
 
 // ng build --output-path docs --base-href /pdfGenerator/
 
@@ -133,13 +134,9 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
 
 
   ngOnInit() {
-    this.setFechas()
     this.loadGCC()
     this.loadPrismas()
-    if (this.inputs.get('datos.fechaInicio')?.value.length > 2 && this.inputs.get('datos.fechaFinal')?.value.length > 2) {
-      this.loadGCCDeformacion()
-      this.LoadPiezometro()
-    }
+    this.reloadData()
   }
 
   ngAfterContentInit(): void {
@@ -291,25 +288,18 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
 
 
 
-  setFechas() {
-    let fechaHoy = new Date()
-    fechaHoy = new Date(fechaHoy.getFullYear() + '/' + (fechaHoy.getMonth() + 1) + '/21')
-    let fechaMesPasado = new Date()
-    fechaMesPasado.setDate(fechaMesPasado.getMonth() - 1)
-    fechaMesPasado = new Date(fechaMesPasado.getFullYear() + '/' + (fechaMesPasado.getMonth() + 1) + '/21')
-    this.inputs.get('datos.fechaInicio')?.setValue(fechaMesPasado)
-    this.inputs.get('datos.fechaFinal')?.setValue(fechaHoy)
-  }
+
+
+
+
 
 
   reloadData() {
-    let fecha = this.inputs.get('datos.fechaInicio')?.value.length
-    let fecha2 = this.inputs.get('datos.fechaFinal')?.value.length
-    if (fecha && fecha2)
-      if (fecha > 3 && fecha2 > 3) {
-        this.loadGCCDeformacion()
-        this.LoadPiezometro()
-      }
+    if (this.inputs.get('datos.fechaInicio')?.value && this.inputs.get('datos.fechaFinal')?.value) {
+      this.loadGCCDeformacion()
+      this.LoadPiezometro()
+    }
+
   }
 
 
@@ -443,24 +433,14 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
 
   }
 
-  loadGCCDeformacion() {
-    let dateMin = new Date(this.inputs.get('datos.fechaInicio')?.value)
-    let dateMax = new Date(this.inputs.get('datos.fechaFinal')?.value)
-    console.log(dateMin, dateMax)
-    
-    // if (this.inputs.get('datos.fechaInicio')?.value != '' && this.inputs.get('datos.fechaFinal')?.value != '') {
-    //   dateMin = new Date(this.inputs.get('datos.fechaInicio')?.value)
-    //   dateMax = new Date(this.inputs.get('datos.fechaFinal')?.value)
-    // } else {
-    //   dateMin = new Date('2021/01/01')
-    //   dateMax = new Date()
-    // }
 
-    // let dateMin = new Date()
-    // let dateMax = new Date()
-    // dateMax.setDate(21)
-    // dateMin.setDate(21)
-    // dateMin.setMonth(dateMin.getMonth() -1)
+  loadGCCDeformacion() {
+
+    let { fechaInit, fechaFin } = getFechasFormatos(this.inputs.get('datos.fechaInicio')?.value, this.inputs.get('datos.fechaFinal')?.value)
+    let dateMin = new Date(fechaInit)
+    let dateMax = new Date(fechaFin)
+    dateMin.setHours(0, 0, 0, 0)
+    dateMax.setHours(23, 59, 59)
 
     this.api.getGeocentinalasDeformacion().subscribe(data => {
       let gcc10: any[] = [[], [], [], []]
@@ -469,7 +449,7 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
 
       data.objects.forEach((elemento: any) => {
         let dateElemento = new Date(elemento.fecha).getTime()
-        
+
         if (dateElemento > dateMin.getTime() && dateElemento < dateMax.getTime()) {
           if (elemento.nombre == "GCC10") {
             if (elemento.canal == 1)
@@ -594,17 +574,6 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
   }
 
   loadPrismas() {
-    // let dateMin = new Date(this.inputs.get('datos.fechaInicio')?.value)
-    // let dateMax = new Date(this.inputs.get('datos.fechaFinal')?.value)
-    // if (this.inputs.get('datos.fechaInicio')?.value != '' && this.inputs.get('datos.fechaFinal')?.value != '') {
-    //   dateMin = new Date(this.inputs.get('datos.fechaInicio')?.value)
-    //   dateMax = new Date(this.inputs.get('datos.fechaFinal')?.value)
-    // } else {
-    //   dateMin = new Date('2021/01/01')
-    //   dateMax = new Date()
-    // }
-
-
 
     this.api.getNombrePrismas().subscribe(res => {
 
@@ -666,20 +635,11 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
   }
 
   LoadPiezometro() {
-    let dateMin = new Date(this.inputs.get('datos.fechaInicio')?.value)
-    let dateMax = new Date(this.inputs.get('datos.fechaFinal')?.value)
-
-
-    // let dateMin = new Date()
-    // let dateMax = new Date()
-
-    // dateMax.setDate(21)
-    // dateMin.setDate(21)
-    // dateMin.setMonth(dateMin.getMonth() -1)
-
-
-
-
+    let { fechaInit, fechaFin } = getFechasFormatos(this.inputs.get('datos.fechaInicio')?.value, this.inputs.get('datos.fechaFinal')?.value)
+    let dateMin = new Date(fechaInit)
+    let dateMax = new Date(fechaFin)
+    dateMin.setHours(0, 0, 0, 0)
+    dateMax.setHours(23, 59, 59)
 
     let dataPiezometros: any[] = []
     this.api.getNombrePiezometros().subscribe(data => {
@@ -825,8 +785,8 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
     let i = 0
     Chart.defaults.font.size = 8;
     this.chartsGeoDeformacion.forEach((elm: any) => { elm.destroy() })
-    console.log('borrado');
     
+
 
     this.geocentinelasDeformacion.reverse().forEach((element: any) => {
       let data: any[] = []
@@ -1135,7 +1095,7 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
       let arr: any[] = []
       data.forEach(dato => {
         let fecha = new Date(dato.fecha)
-        // console.log(fecha);
+        
 
         arr.push({
           x: fecha,
