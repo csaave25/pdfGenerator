@@ -97,7 +97,7 @@ export class GeneradorService {
     this.doc.setFontSize(12)
     this.doc.setFont("Lato", "normal");
     let numPag = this.doc.getNumberOfPages()
-    this.doc.text('CODIGO', this.margenIzq, 772, { align: 'left' })
+    this.doc.text('CM', this.margenIzq, 772, { align: 'left' })
     this.doc.text('CMDIC-001', this.margenDer, 772, { align: 'right' })
     this.doc.text(numPag.toString(), this.puntoMedio, 772, { align: 'center' })
 

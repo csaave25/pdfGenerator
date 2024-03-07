@@ -15,14 +15,19 @@ import geojsonvt from 'geojson-vt';
 export class ReporteCMDICComponent implements AfterViewInit {
 
   @ViewChild("mapaElement") mapa!: ElementRef
+  @ViewChild("table") tabla!: ElementRef
+
 
   imagenMapa = new Image()
   map: any
   inputs = new FormGroup({
+    fecha: new FormControl(''),
     resumen: new FormControl(''),
     principales: new FormControl(''),
     segundarios: new FormControl(''),
   })
+
+  contadorRow = 0
 
 
   constructor(private api: ApiService, private generador: GeneradorService) { }
@@ -63,7 +68,7 @@ export class ReporteCMDICComponent implements AfterViewInit {
 
   // loadScreenshotMapa() {
 
-    
+
   // }
 
   loadDataTopo() {
@@ -71,7 +76,7 @@ export class ReporteCMDICComponent implements AfterViewInit {
     this.api.getTopo().subscribe((data: any) => {
       leaf.geoJSON(data, { style: { weight: .1, color: 'black' } }
       ).addTo(this.map)
-     this.loadScreenshotMapa()
+      this.loadScreenshotMapa()
     })
   }
 
@@ -206,11 +211,40 @@ export class ReporteCMDICComponent implements AfterViewInit {
   }
 
 
+  generateRow() {
+    let id = this.contadorRow
+    this.contadorRow++
+    let mockup = `
+             
+                <td style="padding: 0;"><input style="border-radius: 0;" id="foco-${id}"  mdbInput type="text" id="form1" class="form-control form-control-sm" placeholder="Foco"/></td>
+                <td style="padding: 0;"> <input style="border-radius: 0;"  id="comentario-${id}" mdbInput type="text" id="form1" class="form-control form-control-sm" placeholder="Comentario"/></td>
+                <td style="width: 100px; padding: 0;">
+                <select style="border-radius: 0;"   id="estado-${id}" class="form-control form-control-sm" >
+                      <option hidden>Seleccione</option>
+                                <option value="alto">Alto</option>
+                                <option value="medio">Medio</option>
+                                <option value="bajo">Bajo</option>
+                </select>
+                        </td>
+              
+    `
+    let row = document.createElement('tr')
+    row.innerHTML = mockup
+    row.setAttribute('id', `row-${id}`)
+    this.tabla.nativeElement.appendChild(row)
+
+  }
+
+  deleteRow() {
+    this.tabla.nativeElement.removeChild(this.tabla.nativeElement.lastChild)  //borra el ultimo hijo
+  }
+
+
   generarPDF() {
     // this.loadScreenshotMapa()
     setTimeout(() => {
-    this.generador.descargarPDF(this.inputs, this.imagenMapa)
-      
+      this.generador.descargarPDF(this.inputs, this.imagenMapa)
+
     }, 1000);
   }
 
