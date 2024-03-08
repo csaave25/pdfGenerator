@@ -1,5 +1,8 @@
 import jsPDF from "jspdf";
 
+
+//Solo funciones relacionadas con el generador de reportes
+
 export function justify(pdfGen: jsPDF, text: string, xStart: number, yStart: number, textWidth: number) {
     text = text.replace(/(?:\r\n|\r|\n)/g, ' ');
     text = text.replace(/ +(?= )/g, '');
