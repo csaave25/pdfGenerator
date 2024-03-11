@@ -22,12 +22,15 @@ export class ReporteCMDICComponent implements AfterViewInit {
   map: any
   inputs = new FormGroup({
     fecha: new FormControl(''),
+    hora: new FormControl(''),
     resumen: new FormControl(''),
     principales: new FormControl(''),
     segundarios: new FormControl(''),
   })
   contadorRow = 0
   infoTabla: TablaDato[] = []
+  seleccionaronFecha = false
+  seleccionaronHora = false
 
 
   constructor(private api: ApiService, private generador: GeneradorService, private mapaService: MapaService) { }
@@ -39,7 +42,28 @@ export class ReporteCMDICComponent implements AfterViewInit {
     this.mapaService.loadDataPozos(this.map)
     this.mapaService.loadDataTopo(this.map, this.mapa, this.imagenMapa)
     // this.loadDataBasePozo()
+  }
 
+  loadDataApi( fecha : string, hora: string) {
+
+  }
+
+  selectionDate(event: Event) {
+    let target = event.target as HTMLInputElement
+    if (target.id === 'fecha') {
+      this.seleccionaronFecha = true
+    } else if (target.id === 'hora') {
+      this.seleccionaronHora = true
+
+    }
+
+    if(this.seleccionaronFecha && this.seleccionaronHora){
+      
+      let fecha = this.inputs.get('fecha')?.value?.replaceAll('-', '/')
+      let hora = this.inputs.get('hora')?.value
+      
+      //loadDataApi(fecha, hora)
+    }
   }
 
   loadDataBasePozo() {
@@ -77,21 +101,18 @@ export class ReporteCMDICComponent implements AfterViewInit {
     document.getElementById(`foco-${id}`)?.addEventListener('change', (e: Event) => {
       let target = e.target as HTMLInputElement
       this.infoTabla[id] = this.infoTabla[id] ? { ...this.infoTabla[id], foco: target.value } : { foco: target.value, comentario: '', estado: '' }
-      console.log(this.infoTabla);
 
     })
 
     document.getElementById(`comentario-${id}`)?.addEventListener('change', (e: Event) => {
       let target = e.target as HTMLInputElement
       this.infoTabla[id] = this.infoTabla[id] ? { ...this.infoTabla[id], comentario: target.value } : { foco: '', comentario: target.value, estado: '' }
-      console.log(this.infoTabla);
 
     })
 
     document.getElementById(`estado-${id}`)?.addEventListener('change', (e: Event) => {
       let target = e.target as HTMLInputElement
       this.infoTabla[id] = this.infoTabla[id] ? { ...this.infoTabla[id], estado: target.value } : { foco: '', comentario: '', estado: target.value }
-      console.log(this.infoTabla);
 
     })
 
@@ -109,7 +130,7 @@ export class ReporteCMDICComponent implements AfterViewInit {
 
   generarPDF() {
     setTimeout(() => {
-      this.generador.descargarPDF(this.inputs, this.imagenMapa)
+      this.generador.descargarPDF(this.inputs, this.imagenMapa, this.infoTabla)
     }, 1000);
   }
 

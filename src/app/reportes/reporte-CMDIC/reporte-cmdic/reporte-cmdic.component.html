@@ -5,11 +5,17 @@
         </div>
         <div class="mt-5">
             <p> Seleccione la fecha del informe</p>
-            <mdb-form-control class="col-2 mt-0">
-                <input mdbInput type="date" id="form1" class="form-control" style="background-color: aliceblue;"
-                    formControlName="fecha" />
-                <label mdbLabel class="form-label" for="form1">Fecha</label>
-            </mdb-form-control>
+            <div class="d-flex gap-2">
+                <mdb-form-control class=" mt-0" style="width: 200px;">
+                    <input id="fecha" mdbInput type="Date" id="form1" class="form-control" style="background-color: aliceblue;"
+                        formControlName="fecha" (change)="selectionDate($event)"/>
+                    <label mdbLabel class="form-label" for="form1">Fecha</label>
+                </mdb-form-control>
+                <mdb-form-control class=" mt-0" style="width: 100px;">
+                    <input id="hora" mdbInput type="time" id="form1" class="form-control" style="background-color: aliceblue;"
+                        formControlName="hora" (change)="selectionDate($event)"/>
+                </mdb-form-control>
+            </div>
         </div>
         <div class="mt-5">
             <div>
@@ -18,7 +24,6 @@
             <div class="mt-4">
                 <div class="row">
                     <label class="col-9" mdbLabel for="c3">Comentarios</label>
-                    
                 </div>
                 <mdb-form-control class="mt-1">
                     <textarea mdbInput class="form-control" id="resumen" rows="5" style="background-color: aliceblue;"
@@ -33,7 +38,6 @@
             <div class="mt-4">
                 <div class="row">
                     <label class="col-9" mdbLabel for="c2">Comentarios</label>
-                    
                 </div>
                 <mdb-form-control class="mt-1">
                     <textarea mdbInput class="form-control" id="focosp" rows="5" style="background-color: aliceblue;"
@@ -48,11 +52,10 @@
             <div class="mt-4">
                 <div class="row">
                     <label class="col-9" mdbLabel for="c1">Comentarios</label>
-                    
                 </div>
                 <mdb-form-control class="mt-1">
                     <textarea mdbInput class="form-control" id="focoss" rows="5" style="background-color: aliceblue;"
-                    formControlName="segundarios" placeholder="Funcion de - y *"></textarea>
+                        formControlName="segundarios" placeholder=""></textarea>
                 </mdb-form-control>
             </div>
         </div>
@@ -68,12 +71,14 @@
         </div>
         <div class=" mx-auto my-5" style="width: 620px;">
             <div class="d-flex justify-content-end gap-1">
-                <button (click)="generateRow()" class="btns-tabla" href="#"><i style="color: rgb(73, 207, 36);" class="fas fa-plus-circle fa-lg"></i></button>
-                <button (click)="deleteRow()" class="btns-tabla" href="#"><i style="color: rgb(221, 80, 24);" class="fas fa-minus-circle fa-lg"></i></button>
+                <button (click)="generateRow()" class="btns-tabla" href="#"><i style="color: rgb(73, 207, 36);"
+                        class="fas fa-plus-circle fa-lg"></i></button>
+                <button (click)="deleteRow()" class="btns-tabla" href="#"><i style="color: rgb(221, 80, 24);"
+                        class="fas fa-minus-circle fa-lg"></i></button>
             </div>
             <table class="table table-bordered">
                 <thead>
-                    <tr >
+                    <tr>
                         <th scope="col" style="width: 258px;">Foco</th>
                         <th scope="col" style="width: 258px;">Comentario</th>
                         <th scope="col" style="width: 100px;">Estado</th>
