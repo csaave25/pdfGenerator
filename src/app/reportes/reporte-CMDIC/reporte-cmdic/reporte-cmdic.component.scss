@@ -49,6 +49,17 @@ select{
     background-color: white;;
 }
 
+.second-table thead{
+  background-color: rgba(202, 230, 218, 0.022);
+  color: black;
+
+}
+
+.second-table thead tr th{
+  text-align: start;
+  padding-left: 15px;
+}
+
 
 .btns-tabla{
   border: none;

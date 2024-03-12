@@ -7,13 +7,13 @@
             <p> Seleccione la fecha del informe</p>
             <div class="d-flex gap-2">
                 <mdb-form-control class=" mt-0" style="width: 200px;">
-                    <input id="fecha" mdbInput type="Date" id="form1" class="form-control" style="background-color: aliceblue;"
-                        formControlName="fecha" (change)="selectionDate($event)"/>
+                    <input id="fecha" mdbInput type="Date" id="form1" class="form-control"
+                        style="background-color: aliceblue;" formControlName="fecha" (change)="selectionDate($event)" />
                     <label mdbLabel class="form-label" for="form1">Fecha</label>
                 </mdb-form-control>
                 <mdb-form-control class=" mt-0" style="width: 100px;">
-                    <input id="hora" mdbInput type="time" id="form1" class="form-control" style="background-color: aliceblue;"
-                        formControlName="hora" (change)="selectionDate($event)"/>
+                    <input id="hora" mdbInput type="time" id="form1" class="form-control"
+                        style="background-color: aliceblue;" formControlName="hora" (change)="selectionDate($event)" />
                 </mdb-form-control>
             </div>
         </div>
@@ -29,6 +29,29 @@
                     <textarea mdbInput class="form-control" id="resumen" rows="5" style="background-color: aliceblue;"
                         formControlName="resumen"></textarea>
                 </mdb-form-control>
+                <div class="d-flex justify-content-center">
+                    <table class="table table-bordered mt-3 second-table" style="width: 516px;">
+                        <thead>
+                            <tr>
+                                <th scope="col" style="width: 258px;">Caudal Diario R+U</th>
+                                <th scope="col" style="width: 258px;">138,1 l/s</th>
+
+                            </tr>
+                            <tr>
+                                <th scope="col" style="width: 258px;">Caudal Promedio Mes</th>
+                                <th scope="col" style="width: 258px;">144,4 l/s</th>
+
+                            </tr>
+                            <tr>
+                                <th scope="col" style="width: 258px;">Caudal Promedio Plan Enero</th>
+                                <th scope="col" style="width: 258px;">134,0 l/s</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
         <div class="mt-5">
