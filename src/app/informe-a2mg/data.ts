@@ -15,7 +15,7 @@ export const dataInforme = {
     fecha: 'Octubre 2023',
     disponibilidad: {
         texto1: 'La disponibilidad del sistema, indica cuánto tiempo este está operativo con respecto al tiempo programado de funcionamiento. La fórmula para calcular la disponibilidad es:',
-         texto1Cliente: 'La confiabilidad del servicio, cuantifica la cantidad de grietas alertadas anticipadamente con el sistema de monitoreo disponible, en función a la cantidad de grietas formadas en el área de cobertura asociada a la operación del esparcidor. ',
+        texto1Cliente: 'La confiabilidad del servicio, cuantifica la cantidad de grietas alertadas anticipadamente con el sistema de monitoreo disponible, en función a la cantidad de grietas formadas en el área de cobertura asociada a la operación del esparcidor. ',
         texto2: 'Los componentes del sistema de monitoreo corresponden a Infraestructura EMT (servicio web, imágenes, base de datos, API y cómputo), Infraestructura ANT (sistema de adquisición de imágenes) y Enlaces (Dedicado AMSA). A continuación, en la *TABLA 1* se presenta la disponibilidad del sistema. '
     },
     confiabilidad: {
@@ -38,7 +38,12 @@ export function justify(pdfGen: jsPDF, text: string, xStart: number, yStart: num
     let wordsInfo: IWordInfo[] = [];
     let lineLength = 0;
     for (const word of words) {
-        const wordLength = pdfGen.getTextWidth(word.replace('*', "").replace('*', "") + ' ');
+        let wordLength = pdfGen.getTextWidth(word + ' ');
+
+        if (textHaveBold(word)) {
+            wordLength = pdfGen.getTextWidth(word.replaceAll('*', '') + ' ');
+        }
+
         if (wordLength + lineLength > textWidth) {
             writeLine(pdfGen, wordsInfo, lineLength, lineNumber++, xStart, yStart, lineHeight, textWidth);
             wordsInfo = [];
@@ -53,8 +58,6 @@ export function justify(pdfGen: jsPDF, text: string, xStart: number, yStart: num
 }
 
 function writeLastLine(wordsInfo: IWordInfo[], pdfGen: jsPDF, xStart: number, yStart: number, lineNumber: number, lineHeight: number) {
-
-    //-Esto es una *prueba* de todas maneras. Esto es una *prueba* de todas maneras. Esto es una *prueba* de todas maneras. Esto es una *prueba* de todas maneras. Esto es una *prueba* de todas maneras. Esto es una *prueba* de todas maneras. Esto es una *prueba* de todas maneras. Esto es una *prueba* de todas maneras. Esto es una *prueba* de todas maneras.
 
     const line = wordsInfo.map(x => x.text).join(' ');
     let txt = line.split('*')
@@ -76,14 +79,25 @@ function writeLine(pdfGen: jsPDF, wordsInfo: IWordInfo[], lineLength: number, li
     let x = xStart;
     const y = yStart + lineNumber * lineHeight;
     for (const wordInfo of wordsInfo) {
-        if (wordInfo.text.includes('*')) {
+
+        if (textHaveBold(wordInfo.text)) {
             pdfGen.setFont('Lato', 'bold')
+            pdfGen.text(wordInfo.text.replace('*', "").replace('*', ""), x, y);
+            x += wordInfo.wordLength + wordSpacing;
+        } else if (wordInfo.text.includes('*')) {
+            pdfGen.setFont('Lato', 'normal')
+            pdfGen.text(wordInfo.text, x, y);
+            x += wordInfo.wordLength + wordSpacing;
         } else {
             pdfGen.setFont('Lato', 'normal')
+            pdfGen.text(wordInfo.text, x, y);
+            x += wordInfo.wordLength + wordSpacing;
         }
-        pdfGen.text(wordInfo.text.replace('*', "").replace('*', ""), x, y);
-        x += wordInfo.wordLength + wordSpacing;
     }
+}
+
+function textHaveBold(text: string) {
+    return text.split('*').length === 3 ? true : false
 }
 
 interface IWordInfo {
@@ -95,7 +109,8 @@ export const obtenerAncho = (pdfGen: jsPDF, texto: string, margen: number) => {
     let dimensiones = pdfGen.getTextDimensions(texto)
     let lineHeight = dimensiones.h * 1.15
     let lines = Math.round(dimensiones.w / margen)
-    if ((dimensiones.w / margen) > Math.round(dimensiones.w / margen)) {
+
+    if ((dimensiones.w / margen) + 0.1 > Math.round(dimensiones.w / margen)) {
         lines += 1
     }
     let valor = lines * lineHeight
@@ -139,7 +154,9 @@ export const formateadoraDeTexto = (doc: jsPDF, textos: string, margenTop: numbe
                 if (copytext.length == 0) {
                     margenTop += 10
                 } else {
-                    margenTop = saltoDePagina(texto, doc, ancho, margenTop, date, anoMes)
+
+                    margenTop = saltoDePagina(texto, doc, anchoMax, margenTop, date, anoMes)
+                    obtenerAncho(doc, texto, anchoMax)
                     justify(doc, texto, inicio, margenTop, anchoMax)
                     margenTop = margenTop + obtenerAncho(doc, texto, anchoMax)
                 }
