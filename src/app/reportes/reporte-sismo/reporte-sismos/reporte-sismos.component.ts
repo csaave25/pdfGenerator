@@ -192,7 +192,12 @@ export class ReporteSismosComponent implements OnInit, AfterViewInit {
 
   generarPDF() {
     setTimeout(() => {
-      this.generador.descargarInforme(this.inputs, this.datoSeleccionado, this.imagenMapa)
+      console.log(this.datoSeleccionado);
+      let datosSismo = {...this.datoSeleccionado}
+      console.log(datosSismo);
+      
+      
+      // this.generador.descargarInforme(this.inputs, this.datoSeleccionado, this.imagenMapa)
     }, 600);
 
   }
