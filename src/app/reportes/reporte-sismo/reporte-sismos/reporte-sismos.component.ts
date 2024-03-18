@@ -192,12 +192,7 @@ export class ReporteSismosComponent implements OnInit, AfterViewInit {
 
   generarPDF() {
     setTimeout(() => {
-      console.log(this.datoSeleccionado);
-      let datosSismo = {...this.datoSeleccionado}
-      console.log(datosSismo);
-      
-      
-      // this.generador.descargarInforme(this.inputs, this.datoSeleccionado, this.imagenMapa)
+      this.generador.descargarInforme(this.inputs, this.datoSeleccionado, this.imagenMapa)
     }, 600);
 
   }
@@ -205,20 +200,27 @@ export class ReporteSismosComponent implements OnInit, AfterViewInit {
 
   enviarDatos() {
 
-    let blob = new Blob([''], { type: 'image/png' })
+    let blob = new Blob([this.imagenMapa.src], { type: 'image/png' })
     let fd = new FormData();
-    fd.append('imagen-1', blob)
-    fd.append('fechaConsultada', this.inputs.get('fecha')?.value!)
-    fd.append('comentarioEstacion', this.inputs.get('estacion')?.value!)
-    fd.append('comentarioRadar', this.inputs.get('radar')?.value!)
-    fd.append('observaciones', this.inputs.get('observaciones')?.value!)
-    fd.append('dataSismo', JSON.stringify(this.datoSeleccionado))
+    fd.append('file', blob)
+    fd.append('data', JSON.stringify({
+      fecha: this.inputs.get('fecha')?.value,
+      id: this.inputs.get('id')?.value,
+      estacion: this.inputs.get('estacion')?.value,
+      radar: this.inputs.get('radar')?.value,
+      observaciones: this.inputs.get('observaciones')?.value,
+      dataSismo: this.datoSeleccionado
+    }))
 
-    
     this.api.guardarDatos(fd).subscribe((res) => {
-      console.log( res);
-      
-    })
+      let blob = new Blob([res as any], { type: 'application/pdf' });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'report.pdf';
+      link.click();
+      window.URL.revokeObjectURL(url);
+    });
 
   }
 
