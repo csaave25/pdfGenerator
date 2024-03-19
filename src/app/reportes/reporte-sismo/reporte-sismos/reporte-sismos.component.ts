@@ -200,7 +200,9 @@ export class ReporteSismosComponent implements OnInit, AfterViewInit {
 
   enviarDatos() {
 
-    let blob = new Blob([this.imagenMapa.src], { type: 'image/png' })
+    let blob = new Blob([this.imagenMapa.src])
+    console.log(blob);
+    
     let fd = new FormData();
     fd.append('file', blob)
     fd.append('data', JSON.stringify({
