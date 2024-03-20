@@ -145,7 +145,7 @@ export class ReporteSismosComponent implements OnInit, AfterViewInit {
 
     var node = this.mapa.nativeElement
     let img = new Image();
-    var scale = 4;
+    var scale = 1;
     domtoimage.toPng(node, {
       width: node.clientWidth * scale,
       height: node.clientHeight * scale,
@@ -154,14 +154,16 @@ export class ReporteSismosComponent implements OnInit, AfterViewInit {
         transformOrigin: 'top left'
       }
     })
-      .then(function (dataUrl: any) {
+      .then((dataUrl: any) => {
         img.src = dataUrl;
+        this.imagenMapa = img
+
+
       })
       .catch(function (error: any) {
         console.error('error', error);
       });
 
-    this.imagenMapa = img
   }
 
 
@@ -198,11 +200,25 @@ export class ReporteSismosComponent implements OnInit, AfterViewInit {
   }
 
 
+
+  transformImageURLtoBlob(url: string) {
+    const byteString = atob(url.split(',')[1]);
+    const mimeString = url.split(',')[0].split(':')[1].split(';')[0];
+    const ab = new ArrayBuffer(byteString.length);
+    const ia = new Uint8Array(ab);
+    for (let i = 0; i < byteString.length; i++) {
+      ia[i] = byteString.charCodeAt(i);
+    }
+    const blob = new Blob([ab], { type: mimeString });
+
+    return blob
+  }
+
+
   enviarDatos() {
 
-    let blob = new Blob([this.imagenMapa.src])
-    console.log(blob);
-    
+    let blob = this.transformImageURLtoBlob(this.imagenMapa.src)
+
     let fd = new FormData();
     fd.append('file', blob)
     fd.append('data', JSON.stringify({
