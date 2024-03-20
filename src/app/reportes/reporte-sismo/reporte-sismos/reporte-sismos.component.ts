@@ -235,6 +235,7 @@ export class ReporteSismosComponent implements OnInit, AfterViewInit {
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
+      // window.open(url, '_blank'); // <- uncomment this line to open the PDF in a new tab 
       link.download = 'report.pdf';
       link.click();
       window.URL.revokeObjectURL(url);
