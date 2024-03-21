@@ -205,20 +205,10 @@ export class ReporteSismosComponent implements OnInit, AfterViewInit {
 
   enviarDatos() {
 
-    let blob = this.transformImageURLtoBlob(this.imagenMapa.src)
-
-    let fd = new FormData();
-    fd.append('file', blob)
-    fd.append('data', JSON.stringify({
-      fecha: this.inputs.get('fecha')?.value,
-      id: this.inputs.get('id')?.value,
-      estacion: this.inputs.get('estacion')?.value,
-      radar: this.inputs.get('radar')?.value,
-      observaciones: this.inputs.get('observaciones')?.value,
-      dataSismo: this.datoSeleccionado
-    }))
-
-    this.api.guardarDatos(fd).subscribe((res) => {
+    let body = JSON.stringify( {...this.inputs.value, imagen: this.imagenMapa.src, dataSismo: this.datoSeleccionado})
+    console.log( body);
+    
+    this.api.guardarDatos(body).subscribe((res) => {
       let blob = new Blob([res as any], { type: 'application/pdf' });
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
