@@ -21,6 +21,7 @@ export class ReporteTronaduraComponent {
 
     inputs = new FormGroup({
         fecha: new FormControl(''),
+        hora:  new FormControl(''),
         comentarios: new FormControl(''),
         zonaMonitoreo: new FormControl(''),
         pared: new FormControl(''),

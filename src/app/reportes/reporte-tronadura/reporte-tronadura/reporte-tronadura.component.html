@@ -12,12 +12,21 @@
                         <h4>General</h4>
                     </div>
                     <div>
-                        <div>
-                            <label mdbLabel id="fechaTronadura">Fecha</label>
-                            <mdb-form-control class="col-3">
-                                <input mdbInput type="datetime-local" id="fechaTronadura" class="form-control"
-                                    formControlName="fecha" />
-                            </mdb-form-control>
+                        <div class="d-flex gap-2">
+                            <div>
+                                <label mdbLabel id="fechaTronadura">Fecha</label>
+                                <mdb-form-control class="">
+                                    <input mdbInput type="date" id="fechaTronadura" class="form-control"
+                                        formControlName="fecha" />
+                                </mdb-form-control>
+                            </div>
+                            <div>
+                                <label mdbLabel id="horaTronadura">Hora</label>
+                                <div class="">
+                                    <input  type="time" id="horaTronadura" 
+                                        formControlName="hora" />
+                                </div>
+                            </div>
                         </div>
                         <div class="mt-2">
                             <label mdbLabel for="form1">Comentarios</label>
@@ -179,14 +188,16 @@
                         <div class="d-flex gap-4">
                             <div style="width: 375px;">
                                 <label mdbLabel id="">Antes Panorámica</label>
-                                <input type="file" class="form-control form-control-sm" id="antes-panoramica" (change)="visualizarImagenCargada('aPanoramica', $event)" />
+                                <input type="file" class="form-control form-control-sm" id="antes-panoramica"
+                                    (change)="visualizarImagenCargada('aPanoramica', $event)" />
                                 <div class=" mt-2" style="height: 240px;">
                                     <img class="d-none" src="#" alt="" width="100%" height="100%">
                                 </div>
                             </div>
                             <div style="width: 375px;">
                                 <label mdbLabel id="">Después Panorámica </label>
-                                <input type="file" class="form-control form-control-sm" id="customFile2" (change)="visualizarImagenCargada('dPanoramica', $event)"/>
+                                <input type="file" class="form-control form-control-sm" id="customFile2"
+                                    (change)="visualizarImagenCargada('dPanoramica', $event)" />
                                 <div class=" mt-2" style="height: 240px;">
                                     <img class="d-none" src="#" alt="" width="100%" height="100%">
                                 </div>
@@ -195,30 +206,34 @@
                         <div class="d-flex gap-4">
                             <div style="width: 375px;">
                                 <label mdbLabel id="">Antes Zoom</label>
-                                <input type="file" class="form-control form-control-sm" id="antes-panoramica" (change)="visualizarImagenCargada('aZoom', $event)" />
+                                <input type="file" class="form-control form-control-sm" id="antes-panoramica"
+                                    (change)="visualizarImagenCargada('aZoom', $event)" />
                                 <div class=" mt-2" style="height: 240px;">
-                                    <img class="d-none"  src="#" alt="" width="100%" height="100%">
+                                    <img class="d-none" src="#" alt="" width="100%" height="100%">
                                 </div>
                             </div>
                             <div style="width: 375px;">
                                 <label mdbLabel id="">Después Zoom</label>
-                                <input type="file" class="form-control form-control-sm" id="customFile2" (change)="visualizarImagenCargada('dZoom', $event)"/>
+                                <input type="file" class="form-control form-control-sm" id="customFile2"
+                                    (change)="visualizarImagenCargada('dZoom', $event)" />
                                 <div class=" mt-2" style="height: 240px;">
-                                    <img class="d-none"  src="#" alt="" width="100%" height="100%">
+                                    <img class="d-none" src="#" alt="" width="100%" height="100%">
                                 </div>
                             </div>
                         </div>
                         <div class="d-flex gap-4">
                             <div style="width: 375px;">
                                 <label mdbLabel id="">Antes Superior</label>
-                                <input type="file" class="form-control form-control-sm" id="antes-panoramica" (change)="visualizarImagenCargada('aSuperior', $event)"/>
+                                <input type="file" class="form-control form-control-sm" id="antes-panoramica"
+                                    (change)="visualizarImagenCargada('aSuperior', $event)" />
                                 <div class=" mt-2" style="height: 240px;">
                                     <img class="d-none" src="#" alt="" width="100%" height="100%">
                                 </div>
                             </div>
                             <div style="width: 375px;">
                                 <label mdbLabel id="">Después Superior</label>
-                                <input type="file" class="form-control form-control-sm" id="customFile2" (change)="visualizarImagenCargada('dSuperior', $event)"/>
+                                <input type="file" class="form-control form-control-sm" id="customFile2"
+                                    (change)="visualizarImagenCargada('dSuperior', $event)" />
                                 <div class=" mt-2" style="height: 240px;">
                                     <img class="d-none" src="#" alt="" width="100%" height="100%">
                                 </div>
@@ -227,14 +242,16 @@
                         <div class="d-flex gap-4">
                             <div style="width: 375px;">
                                 <label mdbLabel id="">Antes Inferior</label>
-                                <input type="file" class="form-control form-control-sm" id="antes-panoramica" (change)="visualizarImagenCargada('aInferior', $event)"/>
+                                <input type="file" class="form-control form-control-sm" id="antes-panoramica"
+                                    (change)="visualizarImagenCargada('aInferior', $event)" />
                                 <div class=" mt-2" style="height: 240px;">
                                     <img class="d-none" src="#" alt="" width="100%" height="100%">
                                 </div>
                             </div>
                             <div style="width: 375px;">
                                 <label mdbLabel id="">Después Inferior</label>
-                                <input type="file" class="form-control form-control-sm" id="customFile2" (change)="visualizarImagenCargada('dInferior', $event)"/>
+                                <input type="file" class="form-control form-control-sm" id="customFile2"
+                                    (change)="visualizarImagenCargada('dInferior', $event)" />
                                 <div class=" mt-2" style="height: 240px;">
                                     <img class="d-none" src="#" alt="" width="100%" height="100%">
                                 </div>

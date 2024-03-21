@@ -4,7 +4,6 @@ import { jsPDF } from 'jspdf'
 import { latoBold, latoRegular, montBold, montMedium, montSemi } from 'src/assets/fonts/fonts';
 import autoTable from 'jspdf-autotable';
 import { formateadoraDeTexto } from './data';
-import { image } from 'html2canvas/dist/types/css/types/image';
 
 @Injectable({
   providedIn: 'root'
@@ -207,9 +206,12 @@ export class GeneradorService {
     this.doc.setFont("Lato", "bold");
     this.doc.text('IMÁGENES', this.margenIzq, this.usoPagina, { align: 'left' })
     this.usoPagina += 20
+
+    
     imagenes.forEach((data, index) => {
-      this.nuevaPagina(200)
+      
       if (data.img && index % 2 == 0) {
+        this.nuevaPagina(200)
 
         this.doc.addImage(data.img, 'PNG', this.margenIzq, this.usoPagina, 250, 200, 'img' + index, 'FAST')
 
@@ -289,7 +291,8 @@ export class GeneradorService {
   }
 
   private formateoDeDatos(inputs: FormGroup) {
-    let fechaCompleta = new Date(inputs.get('fecha')?.value)
+    let fechaCompleta = new Date(inputs.get('fecha')?.value + 'T' + inputs.get('hora')?.value + ':00');
+
     let obs = inputs.get('comentarios')?.value
     let zona = inputs.get('zonaMonitoreo')?.value
     let pared = inputs.get('pared')?.value
@@ -320,24 +323,7 @@ export class GeneradorService {
 
     // Formateo de fecha 
     let fecha = fechaCompleta.toLocaleString('es-ES', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }) + ' hrs.'
-    let str = fecha.split(' ')
-    let arr = [...str[0]];
-    arr[0] = arr[0].toUpperCase();
-    str[0] = arr.join('')
-
-    arr = [...str[3]];
-    arr[0] = arr[0].toUpperCase();
-    str[3] = arr.join('')
-
-    let format: string = ''
-    str.forEach((s, index) => {
-      if (index == 0) {
-        format = s
-      } else {
-        format += ' ' + s
-      }
-    })
-    fecha = format
+    
     //---------------------
 
     let subTitulo
@@ -407,8 +393,6 @@ export class GeneradorService {
     setTimeout(() => {
       // this.doc.output('dataurlnewwindow')
       // this.doc.save('prueba')
-
-
       var blob = this.doc.output("blob");
       window.open(URL.createObjectURL(blob));
       this.usoPagina = this.margenContenido

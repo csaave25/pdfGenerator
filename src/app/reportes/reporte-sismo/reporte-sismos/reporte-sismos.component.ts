@@ -3,7 +3,6 @@ import { ApiService } from '../api.service';
 import * as leaf from 'leaflet';
 import { FormControl, FormGroup } from '@angular/forms';
 import { traduccionPuntosCardinales } from 'src/app/helpers';
-import { GeneradorService } from '../generador.service';
 import { prevenirSaltosDeLinea } from 'src/app/helpers';
 import html2canvas from 'html2canvas';
 import domtoimage from 'dom-to-image';
@@ -18,7 +17,7 @@ export class ReporteSismosComponent implements OnInit, AfterViewInit {
 
   @ViewChild("mapaElement") mapa!: ElementRef
 
-  constructor(private api: ApiService, private generador: GeneradorService) { }
+  constructor(private api: ApiService) { }
 
   dataUltimosSismos: any[] = []
   texto1 = ''
@@ -189,17 +188,6 @@ export class ReporteSismosComponent implements OnInit, AfterViewInit {
     str = newString
     this.inputs.get('observaciones')?.setValue(str)
   }
-
-
-
-  generarPDF() {
-    setTimeout(() => {
-      this.generador.descargarInforme(this.inputs, this.datoSeleccionado, this.imagenMapa)
-    }, 600);
-
-  }
-
-
 
   transformImageURLtoBlob(url: string) {
     const byteString = atob(url.split(',')[1]);
