@@ -326,7 +326,41 @@ export class ReporteTronaduraComponent {
 
     previsualizar() {
         this.inputs.get('graficosDVT')?.setValue(this.imagenesDVT)
-        this.servicio.previsualizarPDF(this.inputs)
+        
+        console.log(JSON.stringify(this.inputs.value));
+        
+        // this.servicio.previsualizarPDF(this.inputs)
     }
 
 }
+
+
+// inputs = new FormGroup({
+//     fecha: new FormControl(''),
+//     hora:  new FormControl(''),
+//     comentarios: new FormControl(''),
+//     zonaMonitoreo: new FormControl(''),
+//     pared: new FormControl(''),
+//     este: new FormControl(0),
+//     norte: new FormControl(0),
+//     cota: new FormControl(0),
+//     produccion: new FormControl(false),
+//     precorte: new FormControl(false),
+//     destape: new FormControl(false),
+//     bolones: new FormControl(false),
+//     desquinche: new FormControl(false),
+//     contorno: new FormControl(false),
+//     pozosProduccion: new FormControl(0),
+//     pozosPrecorte: new FormControl(0),
+//     volumen: new FormControl(0),
+//     factorCarga: new FormControl(0),
+//     graficosDVT: new FormControl(),
+//     aPanoramica: new FormControl(''),
+//     dPanoramica: new FormControl(''),
+//     aZoom: new FormControl(''),
+//     dZoom: new FormControl(''),
+//     aSuperior: new FormControl(''),
+//     dSuperior: new FormControl(''),
+//     aInferior: new FormControl(''),
+//     dInferior: new FormControl(''),
+// })
