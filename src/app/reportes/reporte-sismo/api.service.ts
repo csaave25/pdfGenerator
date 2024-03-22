@@ -29,10 +29,10 @@ export class ApiService {
   }
 
 
-  guardarDatos(body: string) {
+  guardarDatos(body: any) {
 
     let URLApiPDF = 'http://localhost:3000/api/services/sismo';
-    return this.http.post(URLApiPDF, body);
+    return this.http.post(URLApiPDF, body,  { responseType: 'blob' });
 
   }
 
