@@ -10,7 +10,7 @@ export class ApiService {
 
 
 
-  getReporteTronadura(body : string){
+  getReporteTronadura(body : any){
     return this.http.post('http://localhost:3000/api/servicio/tronadura', {body});
   }
 

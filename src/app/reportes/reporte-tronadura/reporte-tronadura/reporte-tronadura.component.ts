@@ -1,6 +1,7 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { GeneradorService } from '../generador.service';
 import { FormControl, FormGroup } from '@angular/forms';
+import { ApiService } from '../api/api.service';
 
 
 @Component({
@@ -12,7 +13,7 @@ export class ReporteTronaduraComponent {
 
     @ViewChild('punto') puntoElemento!: ElementRef
 
-    constructor(private servicio: GeneradorService) {
+    constructor(private api: ApiService) {
 
     }
 
@@ -21,7 +22,7 @@ export class ReporteTronaduraComponent {
 
     inputs = new FormGroup({
         fecha: new FormControl(''),
-        hora:  new FormControl(''),
+        hora: new FormControl(''),
         comentarios: new FormControl(''),
         zonaMonitoreo: new FormControl(''),
         pared: new FormControl(''),
@@ -326,41 +327,26 @@ export class ReporteTronaduraComponent {
 
     previsualizar() {
         this.inputs.get('graficosDVT')?.setValue(this.imagenesDVT)
-        
-        console.log(JSON.stringify(this.inputs.value));
-        
+        let body = this.inputs.value
+        console.log(JSON.stringify(body));
+
         // this.servicio.previsualizarPDF(this.inputs)
+
+        this.api.getReporteTronadura(body).subscribe((res) => {
+            let blob = new Blob([res as any]);
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            // window.open(url, '_blank'); // <- uncomment this line to open the PDF in a new tab 
+            link.download = 'report.pdf';
+            link.click();
+            window.URL.revokeObjectURL(url);
+        });
+
+
+
     }
 
 }
 
 
-// inputs = new FormGroup({
-//     fecha: new FormControl(''),
-//     hora:  new FormControl(''),
-//     comentarios: new FormControl(''),
-//     zonaMonitoreo: new FormControl(''),
-//     pared: new FormControl(''),
-//     este: new FormControl(0),
-//     norte: new FormControl(0),
-//     cota: new FormControl(0),
-//     produccion: new FormControl(false),
-//     precorte: new FormControl(false),
-//     destape: new FormControl(false),
-//     bolones: new FormControl(false),
-//     desquinche: new FormControl(false),
-//     contorno: new FormControl(false),
-//     pozosProduccion: new FormControl(0),
-//     pozosPrecorte: new FormControl(0),
-//     volumen: new FormControl(0),
-//     factorCarga: new FormControl(0),
-//     graficosDVT: new FormControl(),
-//     aPanoramica: new FormControl(''),
-//     dPanoramica: new FormControl(''),
-//     aZoom: new FormControl(''),
-//     dZoom: new FormControl(''),
-//     aSuperior: new FormControl(''),
-//     dSuperior: new FormControl(''),
-//     aInferior: new FormControl(''),
-//     dInferior: new FormControl(''),
-// })
