@@ -12,7 +12,7 @@ export class ApiService {
   urlMatrixUltimosCambios = 'https://a2mggestion.emt.cl/api/matrixLogs/logs/resumeAll'
   urlDisponibilidad = 'http://10.10.10.238:8766/reportabilidad/metricas/'
 
-  token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI2M2FjM2FiYjA0MDc4YjI5NWRmMzU1NDMiLCJpYXQiOjE3MDg5NzMzNjMsImV4cCI6MTcwOTAzMzM2M30.3hCIiApcH4tUfcSN0o3I_TtnMMmupkjens1pNZ1F_DY'
+  token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI2M2FjM2FiYjA0MDc4YjI5NWRmMzU1NDMiLCJpYXQiOjE3MTExMjU2OTQsImV4cCI6MTcxMTE4NTY5NH0.N--WYgodUP66MNn8ILJZXMAhE0RJJr1mVs1YqlrAZgU'
 
   constructor(private http: HttpClient) { }
 
@@ -63,11 +63,20 @@ export class ApiService {
       'x-token': this.token,
     }
 
-    const requestOptions = {
-      headers: new HttpHeaders(headerDict),
+    const params = {
+      month: mes,
+      year: ano
     };
 
-    let url = 'https://m2d.emt.cl/api3/matrixLogs/logs/matrixChanges?month=' + mes + '&year=' + ano
+    const requestOptions = {
+      headers: new HttpHeaders(headerDict),
+      // params: params
+      params
+    };
+
+
+
+    let url = 'https://a2mggestion.emt.cl/api/matrixLogs/logs/matrixChanges'
     return this.http.get<any>(url,requestOptions);
   }
 

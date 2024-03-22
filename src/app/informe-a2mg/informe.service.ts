@@ -1141,164 +1141,164 @@ export class InformeService {
 
 
     this.usoPagina += 60
-    // tablaMatrix.forEach((mtx, index) => {
+    tablaMatrix.forEach((mtx, index) => {
 
-    //   if (this.usoPagina + 170 > this.totalUso)
-    //     this.nuevaPagina()
-
-
-    //   let doc = this.doc
-    //   this.doc.setFontSize(8)
-    //   this.doc.setFont('Lato', 'normal')
-
-    //   this.doc.text('TABLA ' + this.contadorTabla + ': DESDE ' + mtx.fechaInicio + ' HASTA ' + mtx.fechaFinal, ((this.marginRight - this.marginContent) / 2 + this.marginContent), this.usoPagina, { align: 'center', maxWidth: this.marginRight - this.marginContent })
-
-    //   this.usoPagina += 5
-    //   autoTable(doc, {
-    //     margin: { left: this.marginContent },
-    //     styles: { halign: 'center', lineWidth: .1, fillColor: undefined, lineColor: [1, 48, 51], textColor: [1, 48, 51] },
-    //     bodyStyles: { fontStyle: 'bold' },
-    //     headStyles: { fillColor: [217, 217, 217] },
-    //     alternateRowStyles: { fillColor: undefined },
-    //     head: [[{ content: 'Probabilidad de daño al esparcidor', styles: { cellWidth: 125, cellPadding: { top: 15, bottom: 15 } } }, { content: 'Longitud' }, { content: 'Apertura' }, { content: 'Áreas de criticidad' }]],
-    //     columnStyles: { 0: { fillColor: [217, 217, 217] } },
-    //     body: mtx.matrix.matrixNombre,
-    //     startY: this.usoPagina,
-    //     didDrawCell: function (data) {
-
-    //       if (data.cell.text[0].includes('Longitud')) {
-    //         autoTable(doc, {
-    //           styles: { fillColor: undefined, halign: 'center', textColor: [1, 48, 51], lineWidth: .1, lineColor: [1, 48, 51] },
-    //           alternateRowStyles: { fillColor: undefined },
-    //           startY: data.cell.y + 20,
-    //           margin: { left: data.cell.x },
-    //           tableWidth: data.cell.width,
-    //           head: [['Min\n[px]', 'Max\n[px]']],
-    //           body: mtx.matrix.matrixLongitud
-
-    //         })
-    //       }
-
-    //       if (data.cell.text[0].includes('Apertura')) {
-    //         autoTable(doc, {
-    //           styles: { fillColor: undefined, halign: 'center', textColor: [1, 48, 51], lineWidth: .1, lineColor: [1, 48, 51] },
-    //           alternateRowStyles: { fillColor: undefined },
-    //           startY: data.cell.y + 20,
-    //           margin: { left: data.cell.x },
-    //           tableWidth: data.cell.width,
-    //           head: [['Min\n[px]', 'Max\n[px]']],
-    //           body: mtx.matrix.matrixApertura
-
-    //         })
-    //       }
-
-    //       if (data.cell.text[0].includes('Áreas de criticidad')) {
-    //         autoTable(doc, {
-    //           styles: { fillColor: undefined, halign: 'center', textColor: [1, 48, 51], lineWidth: .1, lineColor: [1, 48, 51] },
-    //           alternateRowStyles: { fillColor: undefined },
-    //           headStyles: { cellPadding: { top: 11.5, bottom: 10 }, },
-    //           startY: data.cell.y + 20,
-    //           margin: { left: data.cell.x },
-    //           tableWidth: data.cell.width,
-    //           head: [['A4', 'A3', 'A2', 'A1']],
-    //           body: mtx.matrix.matrixAreas
-
-    //         })
-    //       }
-    //     },
+      if (this.usoPagina + 170 > this.totalUso)
+        this.nuevaPagina()
 
 
-    //     // didDrawPage: (data) => {
-    //     //   this.usoPagina = this.marginContent
-    //     // }
+      let doc = this.doc
+      this.doc.setFontSize(8)
+      this.doc.setFont('Lato', 'normal')
 
-    //   })
+      this.doc.text('TABLA ' + this.contadorTabla + ': DESDE ' + mtx.fechaInicio + ' HASTA ' + mtx.fechaFinal, ((this.marginRight - this.marginContent) / 2 + this.marginContent), this.usoPagina, { align: 'center', maxWidth: this.marginRight - this.marginContent })
 
-    //   this.contadorTabla++
+      this.usoPagina += 5
+      autoTable(doc, {
+        margin: { left: this.marginContent },
+        styles: { halign: 'center', lineWidth: .1, fillColor: undefined, lineColor: [1, 48, 51], textColor: [1, 48, 51] },
+        bodyStyles: { fontStyle: 'bold' },
+        headStyles: { fillColor: [217, 217, 217] },
+        alternateRowStyles: { fillColor: undefined },
+        head: [[{ content: 'Probabilidad de daño al esparcidor', styles: { cellWidth: 125, cellPadding: { top: 15, bottom: 15 } } }, { content: 'Longitud' }, { content: 'Apertura' }, { content: 'Áreas de criticidad' }]],
+        columnStyles: { 0: { fillColor: [217, 217, 217] } },
+        body: mtx.matrix.matrixNombre,
+        startY: this.usoPagina,
+        didDrawCell: function (data) {
 
-    //   if (index - 1 != tablaMatrix.length) {
-    //     this.usoPagina += 180
-    //   } else {
-    //     this.usoPagina += 220
-    //   }
-    // })
+          if (data.cell.text[0].includes('Longitud')) {
+            autoTable(doc, {
+              styles: { fillColor: undefined, halign: 'center', textColor: [1, 48, 51], lineWidth: .1, lineColor: [1, 48, 51] },
+              alternateRowStyles: { fillColor: undefined },
+              startY: data.cell.y + 20,
+              margin: { left: data.cell.x },
+              tableWidth: data.cell.width,
+              head: [['Min\n[px]', 'Max\n[px]']],
+              body: mtx.matrix.matrixLongitud
 
+            })
+          }
 
+          if (data.cell.text[0].includes('Apertura')) {
+            autoTable(doc, {
+              styles: { fillColor: undefined, halign: 'center', textColor: [1, 48, 51], lineWidth: .1, lineColor: [1, 48, 51] },
+              alternateRowStyles: { fillColor: undefined },
+              startY: data.cell.y + 20,
+              margin: { left: data.cell.x },
+              tableWidth: data.cell.width,
+              head: [['Min\n[px]', 'Max\n[px]']],
+              body: mtx.matrix.matrixApertura
 
-    if (this.usoPagina + 170 > this.totalUso)
-      this.nuevaPagina()
+            })
+          }
 
+          if (data.cell.text[0].includes('Áreas de criticidad')) {
+            autoTable(doc, {
+              styles: { fillColor: undefined, halign: 'center', textColor: [1, 48, 51], lineWidth: .1, lineColor: [1, 48, 51] },
+              alternateRowStyles: { fillColor: undefined },
+              headStyles: { cellPadding: { top: 11.5, bottom: 10 }, },
+              startY: data.cell.y + 20,
+              margin: { left: data.cell.x },
+              tableWidth: data.cell.width,
+              head: [['A4', 'A3', 'A2', 'A1']],
+              body: mtx.matrix.matrixAreas
 
-    let doc = this.doc
-    this.doc.setFontSize(8)
-    this.doc.setFont('Lato', 'normal')
-
-    this.doc.text('TABLA ' + this.contadorTabla + ': DESDE ' + tablaMatrix[0].fechaInicio + ' HASTA 31/01/2024, 23:59:59', ((this.marginRight - this.marginContent) / 2 + this.marginContent), this.usoPagina, { align: 'center', maxWidth: this.marginRight - this.marginContent })
-
-    this.usoPagina += 5
-    autoTable(doc, {
-      margin: { left: this.marginContent },
-      styles: { halign: 'center', lineWidth: .1, fillColor: undefined, lineColor: [1, 48, 51], textColor: [1, 48, 51] },
-      bodyStyles: { fontStyle: 'bold' },
-      headStyles: { fillColor: [217, 217, 217] },
-      alternateRowStyles: { fillColor: undefined },
-      head: [[{ content: 'Probabilidad de daño al esparcidor', styles: { cellWidth: 125, cellPadding: { top: 15, bottom: 15 } } }, { content: 'Longitud' }, { content: 'Apertura' }, { content: 'Áreas de criticidad' }]],
-      columnStyles: { 0: { fillColor: [217, 217, 217] } },
-      body: tablaMatrix[0].matrix.matrixNombre,
-      startY: this.usoPagina,
-      didDrawCell: function (data) {
-
-        if (data.cell.text[0].includes('Longitud')) {
-          autoTable(doc, {
-            styles: { fillColor: undefined, halign: 'center', textColor: [1, 48, 51], lineWidth: .1, lineColor: [1, 48, 51] },
-            alternateRowStyles: { fillColor: undefined },
-            startY: data.cell.y + 20,
-            margin: { left: data.cell.x },
-            tableWidth: data.cell.width,
-            head: [['Min\n[px]', 'Max\n[px]']],
-            body: tablaMatrix[0].matrix.matrixLongitud
-
-          })
-        }
-
-        if (data.cell.text[0].includes('Apertura')) {
-          autoTable(doc, {
-            styles: { fillColor: undefined, halign: 'center', textColor: [1, 48, 51], lineWidth: .1, lineColor: [1, 48, 51] },
-            alternateRowStyles: { fillColor: undefined },
-            startY: data.cell.y + 20,
-            margin: { left: data.cell.x },
-            tableWidth: data.cell.width,
-            head: [['Min\n[px]', 'Max\n[px]']],
-            body: tablaMatrix[0].matrix.matrixApertura
-
-          })
-        }
-
-        if (data.cell.text[0].includes('Áreas de criticidad')) {
-          autoTable(doc, {
-            styles: { fillColor: undefined, halign: 'center', textColor: [1, 48, 51], lineWidth: .1, lineColor: [1, 48, 51] },
-            alternateRowStyles: { fillColor: undefined },
-            headStyles: { cellPadding: { top: 11.5, bottom: 10 }, },
-            startY: data.cell.y + 20,
-            margin: { left: data.cell.x },
-            tableWidth: data.cell.width,
-            head: [['A4', 'A3', 'A2', 'A1']],
-            body: tablaMatrix[0].matrix.matrixAreas
-
-          })
-        }
-      },
+            })
+          }
+        },
 
 
-      // didDrawPage: (data) => {
-      //   this.usoPagina = this.marginContent
-      // }
+        // didDrawPage: (data) => {
+        //   this.usoPagina = this.marginContent
+        // }
 
+      })
+
+      this.contadorTabla++
+
+      if (index - 1 != tablaMatrix.length) {
+        this.usoPagina += 180
+      } else {
+        this.usoPagina += 220
+      }
     })
+
+
+
+    // if (this.usoPagina + 170 > this.totalUso)
+    //   this.nuevaPagina()
+
+
+    // let doc = this.doc
+    // this.doc.setFontSize(8)
+    // this.doc.setFont('Lato', 'normal')
+
+    // this.doc.text('TABLA ' + this.contadorTabla + ': DESDE ' + tablaMatrix[0].fechaInicio + ' HASTA 31/01/2024, 23:59:59', ((this.marginRight - this.marginContent) / 2 + this.marginContent), this.usoPagina, { align: 'center', maxWidth: this.marginRight - this.marginContent })
+
+    // this.usoPagina += 5
+    // autoTable(doc, {
+    //   margin: { left: this.marginContent },
+    //   styles: { halign: 'center', lineWidth: .1, fillColor: undefined, lineColor: [1, 48, 51], textColor: [1, 48, 51] },
+    //   bodyStyles: { fontStyle: 'bold' },
+    //   headStyles: { fillColor: [217, 217, 217] },
+    //   alternateRowStyles: { fillColor: undefined },
+    //   head: [[{ content: 'Probabilidad de daño al esparcidor', styles: { cellWidth: 125, cellPadding: { top: 15, bottom: 15 } } }, { content: 'Longitud' }, { content: 'Apertura' }, { content: 'Áreas de criticidad' }]],
+    //   columnStyles: { 0: { fillColor: [217, 217, 217] } },
+    //   body: tablaMatrix[0].matrix.matrixNombre,
+    //   startY: this.usoPagina,
+    //   didDrawCell: function (data) {
+
+    //     if (data.cell.text[0].includes('Longitud')) {
+    //       autoTable(doc, {
+    //         styles: { fillColor: undefined, halign: 'center', textColor: [1, 48, 51], lineWidth: .1, lineColor: [1, 48, 51] },
+    //         alternateRowStyles: { fillColor: undefined },
+    //         startY: data.cell.y + 20,
+    //         margin: { left: data.cell.x },
+    //         tableWidth: data.cell.width,
+    //         head: [['Min\n[px]', 'Max\n[px]']],
+    //         body: tablaMatrix[0].matrix.matrixLongitud
+
+    //       })
+    //     }
+
+    //     if (data.cell.text[0].includes('Apertura')) {
+    //       autoTable(doc, {
+    //         styles: { fillColor: undefined, halign: 'center', textColor: [1, 48, 51], lineWidth: .1, lineColor: [1, 48, 51] },
+    //         alternateRowStyles: { fillColor: undefined },
+    //         startY: data.cell.y + 20,
+    //         margin: { left: data.cell.x },
+    //         tableWidth: data.cell.width,
+    //         head: [['Min\n[px]', 'Max\n[px]']],
+    //         body: tablaMatrix[0].matrix.matrixApertura
+
+    //       })
+    //     }
+
+    //     if (data.cell.text[0].includes('Áreas de criticidad')) {
+    //       autoTable(doc, {
+    //         styles: { fillColor: undefined, halign: 'center', textColor: [1, 48, 51], lineWidth: .1, lineColor: [1, 48, 51] },
+    //         alternateRowStyles: { fillColor: undefined },
+    //         headStyles: { cellPadding: { top: 11.5, bottom: 10 }, },
+    //         startY: data.cell.y + 20,
+    //         margin: { left: data.cell.x },
+    //         tableWidth: data.cell.width,
+    //         head: [['A4', 'A3', 'A2', 'A1']],
+    //         body: tablaMatrix[0].matrix.matrixAreas
+
+    //       })
+    //     }
+    //   },
+
+
+    // didDrawPage: (data) => {
+    //   this.usoPagina = this.marginContent
+    // }
+
+    // })
 
     this.contadorTabla++
 
-    this.usoPagina += 180
+    // this.usoPagina += 180
     // if (index - 1 != tablaMatrix.length) {
     //   this.usoPagina += 180
     // } else {
