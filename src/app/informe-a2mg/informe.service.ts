@@ -796,97 +796,66 @@ export class InformeService {
     // this.doc.text(text, this.marginContent, this.usoPagina + 230, { align: 'left', maxWidth: this.marginRight - this.marginContent })
     this.usoPagina = formateadoraDeTexto(this.doc, text, this.usoPagina, this.marginContent, this.marginRight - this.marginContent, this.fecha, '', this.finalContenido) + 25
 
-    if (this.usoPagina + 120 > this.totalUso)
-      this.nuevaPagina()
+    if (comentariosImagenes.length > 0)
+      if (comentariosImagenes.length > 0) {
+        this.usoPagina += 10
 
-    // this.doc.setFontSize(8)
-    // this.doc.setFont('Lato', 'normal')
-    // this.doc.text('TABLA ' + this.contadorTabla + ': CONFIABILIDAD', ((this.marginRight - this.marginContent) / 2 + this.marginContent), this.usoPagina, { align: 'center', maxWidth: this.marginRight - this.marginContent })
-    // this.contadorTabla++
-    // this.usoPagina += 5
+        comentariosImagenes.forEach(datos => {
 
+          this.doc.setFontSize(11)
+          this.doc.setTextColor(this.colores.negro)
+          this.doc.setFont('Lato', 'normal')
+          this.usoPagina = formateadoraDeTexto(this.doc, datos.comentario, this.usoPagina, this.marginContent, this.marginRight - this.marginContent, this.fecha, '', this.finalContenido)
 
-    // autoTable(this.doc, {
-    //   styles: { lineWidth: .1, halign: 'center', fontSize: 10, cellWidth: 100, fillColor: undefined, lineColor: [1, 48, 51], textColor: [1, 48, 51] },
-    //   headStyles: { font: 'Lato', fontStyle: 'bold', fillColor: [217, 217, 217] },
-    //   head: [['Parámetro', 'Valor [%]']],
-    //   bodyStyles: { font: 'Lato', fontStyle: 'normal', fontSize: 9, fillColor: undefined },
-    //   body: [
-    //     ['Identificación', valor1?.toFixed(2)],
-    //     ['Clasificación', valor2?.toFixed(2)],
-    //     ['Comunicación', valor3?.toFixed(2)],
-    //   ],
-    //   margin: { top: this.marginContent, left: (((this.marginRight - (100 * 2) + this.marginContent) / 2)) },
-    //   startY: this.usoPagina,
-    //   alternateRowStyles: { fillColor: undefined },
-    //   footStyles: { fillColor: [217, 217, 217] },
-    //   foot: [['Confiabilidad', promedio]]
-    // })
+          if (this.usoPagina + 30 > this.totalUso) {
+            this.nuevaPagina()
 
-    this.usoPagina += 10
+            if (datos.imagenes.length > 0) {
+              datos.imagenes.forEach((elm: any, index: number) => {
 
+                if (this.usoPagina + 130 > this.totalUso)
+                  this.nuevaPagina()
 
+                this.doc.setFontSize(8)
+                this.doc.setFont('Lato', 'normal')
+                this.doc.addImage(elm.img, 'png', 70, this.usoPagina, this.marginRight - this.marginContent, 200, 'imgx-mm' + this.contadorFigura, 'FAST');
+                this.doc.text('FIGURA ' + this.contadorFigura + ': ' + elm.nomFigura?.toUpperCase(), ((this.marginRight - this.marginContent) / 2 + this.marginContent), this.usoPagina + 210, { align: 'center', maxWidth: this.marginRight - this.marginContent })
 
-
-    if (comentariosImagenes.length > 0) {
-      this.usoPagina += 10
-
-      comentariosImagenes.forEach(datos => {
-
-        this.doc.setFontSize(11)
-        this.doc.setTextColor(this.colores.negro)
-        this.doc.setFont('Lato', 'normal')
-        this.usoPagina = formateadoraDeTexto(this.doc, datos.comentario, this.usoPagina, this.marginContent, this.marginRight - this.marginContent, this.fecha, '', this.finalContenido)
-
-        if (this.usoPagina + 30 > this.totalUso) {
-          this.nuevaPagina()
-
-          if (datos.imagenes.length > 0) {
-            datos.imagenes.forEach((elm: any, index: number) => {
-
-              if (this.usoPagina + 130 > this.totalUso)
-                this.nuevaPagina()
-
-              this.doc.setFontSize(8)
-              this.doc.setFont('Lato', 'normal')
-              this.doc.addImage(elm.img, 'png', 70, this.usoPagina, this.marginRight - this.marginContent, 200, 'imgx-mm' + this.contadorFigura, 'FAST');
-              this.doc.text('FIGURA ' + this.contadorFigura + ': ' + elm.nomFigura?.toUpperCase(), ((this.marginRight - this.marginContent) / 2 + this.marginContent), this.usoPagina + 210, { align: 'center', maxWidth: this.marginRight - this.marginContent })
-
-              this.contadorFigura++;
-              this.usoPagina += 230
-            });
-          }
-          this.usoPagina += 20
-        } else {
-
-          if (datos.imagenes.length > 0) {
-            datos.imagenes.forEach((elm: any, index: number) => {
-
-              if (this.usoPagina + 150 > this.totalUso)
-                this.nuevaPagina()
-
-              this.doc.setFontSize(8)
-              this.doc.setFont('Lato', 'normal')
-              this.doc.addImage(elm.img, 'png', 70, this.usoPagina, this.marginRight - this.marginContent, 200, 'imgx-mm' + this.contadorFigura, 'FAST');
-              this.doc.text('FIGURA ' + this.contadorFigura + ': ' + elm.nomFigura?.toUpperCase(), ((this.marginRight - this.marginContent) / 2 + this.marginContent), this.usoPagina + 210, { align: 'center', maxWidth: this.marginRight - this.marginContent })
-
-              this.contadorFigura++;
-              this.usoPagina += 230
-            });
-          }
-
-          if (comentariosImagenes.length > 0 && datos.imagenes.length > 0) {
-            this.usoPagina += 25
-          } else {
+                this.contadorFigura++;
+                this.usoPagina += 230
+              });
+            }
             this.usoPagina += 20
+          } else {
+
+            if (datos.imagenes.length > 0) {
+              datos.imagenes.forEach((elm: any, index: number) => {
+
+                if (this.usoPagina + 150 > this.totalUso)
+                  this.nuevaPagina()
+
+                this.doc.setFontSize(8)
+                this.doc.setFont('Lato', 'normal')
+                this.doc.addImage(elm.img, 'png', 70, this.usoPagina, this.marginRight - this.marginContent, 200, 'imgx-mm' + this.contadorFigura, 'FAST');
+                this.doc.text('FIGURA ' + this.contadorFigura + ': ' + elm.nomFigura?.toUpperCase(), ((this.marginRight - this.marginContent) / 2 + this.marginContent), this.usoPagina + 210, { align: 'center', maxWidth: this.marginRight - this.marginContent })
+
+                this.contadorFigura++;
+                this.usoPagina += 230
+              });
+            }
+
+            if (comentariosImagenes.length > 0 && datos.imagenes.length > 0) {
+              this.usoPagina += 25
+            } else {
+              this.usoPagina += 20
+            }
+
           }
 
-        }
-
-      })
+        })
 
 
-    }
+      }
 
 
   }
@@ -927,7 +896,7 @@ export class InformeService {
 
     this.tablaCriticidades = manejoData();
 
-    if (this.usoPagina + 65 > this.totalUso)
+    if (this.usoPagina + 40 > this.totalUso)
       this.nuevaPagina()
 
     let contenido: Data = {
@@ -1299,7 +1268,7 @@ export class InformeService {
 
     this.doc.setFontSize(8)
     this.doc.setFont('Lato', 'normal')
-    this.doc.text('TABLA 2: DESDE 02/02/2024, 13:11:46 HASTA 29/02/2024, 23:59:59', ((this.marginRight - this.marginContent) / 2 + this.marginContent), this.usoPagina, { align: 'center', maxWidth: this.marginRight - this.marginContent })
+    this.doc.text('TABLA 3: DESDE 02/02/2024, 13:11:46 HASTA 29/02/2024, 23:59:59', ((this.marginRight - this.marginContent) / 2 + this.marginContent), this.usoPagina, { align: 'center', maxWidth: this.marginRight - this.marginContent })
     this.usoPagina += 5
     autoTable(this.doc, {
       margin: { left: this.marginContent },
@@ -1376,7 +1345,7 @@ export class InformeService {
       this.usoPagina += 10
 
       comentariosImagenesMatriz.forEach(datos => {
-        
+
         this.doc.setFontSize(11)
         this.doc.setTextColor(this.colores.negro)
         this.doc.setFont('Lato', 'normal')

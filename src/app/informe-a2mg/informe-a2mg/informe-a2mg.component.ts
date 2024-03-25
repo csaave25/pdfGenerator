@@ -513,7 +513,6 @@ export class InformeA2mgComponent implements OnInit {
           elm.img = reader.result
         }
 
-
       }
     }
   }
