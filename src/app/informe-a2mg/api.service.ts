@@ -12,7 +12,7 @@ export class ApiService {
   urlMatrixUltimosCambios = 'https://a2mggestion.emt.cl/api/matrixLogs/logs/resumeAll'
   urlDisponibilidad = 'http://10.10.10.238:8766/reportabilidad/metricas/'
 
-  token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI2M2FjM2FiYjA0MDc4YjI5NWRmMzU1NDMiLCJpYXQiOjE3MTExMjU2OTQsImV4cCI6MTcxMTE4NTY5NH0.N--WYgodUP66MNn8ILJZXMAhE0RJJr1mVs1YqlrAZgU'
+  token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI2M2FjM2FiYjA0MDc4YjI5NWRmMzU1NDMiLCJpYXQiOjE3MTEzNzUwODUsImV4cCI6MTcxMTQzNTA4NX0.JybRrtwITBpnnLqfv684dbdocZCMWAHitryYp6loN3E'
 
   constructor(private http: HttpClient) { }
 

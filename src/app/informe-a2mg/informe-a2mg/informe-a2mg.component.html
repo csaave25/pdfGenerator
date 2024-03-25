@@ -122,18 +122,18 @@
                         </td>
                     </tr>
                     <tr style="background-color: #f2f3f3;">
-                        <th scope="row" >Infraestructura ANT</th>
+                        <th scope="row">Infraestructura ANT</th>
                         <td>{{tablaDispo.sistema_adquisicion_imagenes}}</td>
                         <td>
                             <mdb-form-control class="">
-                                <textarea mdbInput class="form-control" id="ant" rows="1"
-                                    formControlName="infraANT" style="background-color: #ffffff;"></textarea>
+                                <textarea mdbInput class="form-control" id="ant" rows="1" formControlName="infraANT"
+                                    style="background-color: #ffffff;"></textarea>
                                 <label mdbLabel class="form-label" for="ant">Añadir comentario</label>
                             </mdb-form-control>
                         </td>
                     </tr>
                     <tr>
-                        <th scope="row" class="ps-5" >Sistema de adquisición de imágenes</th>
+                        <th scope="row" class="ps-5">Sistema de adquisición de imágenes</th>
                         <td>{{tablaDispo.sistema_adquisicion_imagenes}}</td>
                         <td>
                             <mdb-form-control class="">
@@ -144,7 +144,7 @@
                         </td>
                     </tr>
                     <tr style="background-color: #f2f3f3;">
-                        <th scope="row" >Enlaces</th>
+                        <th scope="row">Enlaces</th>
                         <td>{{tablaDispo.enlace_dedicado}}</td>
                         <td>
                             <mdb-form-control class="">
@@ -167,97 +167,6 @@
                     </tr>
                 </tbody>
             </table>
-            <!-- <ul class="mt-3 d-flex flex-column gap-3 " style="list-style-type: none;">
-                <li class="d-flex gap-4  p-2">
-                    <p class="col-4" style="color: #00838F;">Infraestructura EMT: {{tablaDispo.infraestructura}}</p>
-                    <mdb-form-control class="col-6">
-                        <textarea mdbInput class="form-control" id="textAreaExample" rows="1"
-                            formControlName="web"></textarea>
-                        <label mdbLabel class="form-label" for="textAreaExample">Añadir comentario</label>
-                    </mdb-form-control>
-                </li>
-                <li>
-                    <ul class=" d-flex flex-column gap-3 border p-5">
-                        <li class="d-flex gap-4 ">
-                            <p class="col-4">Servicio Web: {{tablaDispo.servicio_web}}</p>
-                            <mdb-form-control class="col-6">
-                                <textarea mdbInput class="form-control" id="textAreaExample" rows="1"
-                                    formControlName="web"></textarea>
-                                <label mdbLabel class="form-label" for="textAreaExample">Añadir comentario</label>
-                            </mdb-form-control>
-                        </li>
-                        <li class="d-flex gap-4 ">
-                            <p class="col-4">Servicio imágenes: {{tablaDispo.servicio_imagenes}}</p>
-                            <mdb-form-control class="col-6">
-                                <textarea mdbInput class="form-control" id="textAreaExample" rows="1"
-                                    formControlName="img"></textarea>
-                                <label mdbLabel class="form-label" for="textAreaExample">Añadir comentario</label>
-                            </mdb-form-control>
-                        </li>
-                        <li class="d-flex gap-4 ">
-                            <p class="col-4">Servicio base de datos: {{tablaDispo.servicio_db}}</p>
-                            <mdb-form-control class="col-6">
-                                <textarea mdbInput class="form-control" id="textAreaExample" rows="1"
-                                    formControlName="bd"></textarea>
-                                <label mdbLabel class="form-label" for="textAreaExample">Añadir comentario</label>
-                            </mdb-form-control>
-                        </li>
-                        <li class="d-flex gap-4 ">
-                            <p class="col-4">Servicio API: {{tablaDispo.servicio_api}}</p>
-                            <mdb-form-control class="col-6">
-                                <textarea mdbInput class="form-control" id="textAreaExample" rows="1"
-                                    formControlName="api"></textarea>
-                                <label mdbLabel class="form-label" for="textAreaExample">Añadir comentario</label>
-                            </mdb-form-control>
-                        </li>
-                        <li class="d-flex gap-4 ">
-                            <p class="col-4">Servicio de computo: {{tablaDispo.servicio_computo}}</p>
-                            <mdb-form-control class="col-6">
-                                <textarea mdbInput class="form-control" id="textAreaExample" rows="1"
-                                    formControlName="computo"></textarea>
-                                <label mdbLabel class="form-label" for="textAreaExample">Añadir comentario</label>
-                            </mdb-form-control>
-                        </li>
-                    </ul>
-                </li>
-                <li class="d-flex gap-4  p-2">
-                    <p class="col-4" style="color: #00838F;">Infraestructura ANT: {{tablaDispo.infraestructura}}</p>
-                    <mdb-form-control class="col-6">
-                        <textarea mdbInput class="form-control" id="textAreaExample" rows="1"
-                            formControlName="web"></textarea>
-                        <label mdbLabel class="form-label" for="textAreaExample">Añadir comentario</label>
-                    </mdb-form-control>
-                </li>
-                <li >
-                    <ul class="d-flex flex-column gap-3 border p-5">
-                        <li class="d-flex gap-4">
-                            <p class="col-4">Sistema de adquisición de imágenes:
-                                {{tablaDispo.sistema_adquisicion_imagenes}}</p>
-                            <mdb-form-control class="col-6">
-                                <textarea mdbInput class="form-control" id="textAreaExample" rows="1"
-                                    formControlName="sistema"></textarea>
-                                <label mdbLabel class="form-label" for="textAreaExample">Añadir comentario</label>
-                            </mdb-form-control>
-                        </li>
-                    </ul>
-                </li>
-                <li class="d-flex gap-4  p-2">
-                    <p class="col-4" style="color: #00838F;">Infraestructura EMT: {{tablaDispo.infraestructura}}</p>
-                    <mdb-form-control class="col-6">
-                        <textarea mdbInput class="form-control" id="textAreaExample" rows="1"
-                            formControlName="web"></textarea>
-                        <label mdbLabel class="form-label" for="textAreaExample">Añadir comentario</label>
-                    </mdb-form-control>
-                </li>
-                <li class="d-flex gap-4 ">
-                    <p class="col-4">Enlace dedicado AMSA: {{tablaDispo.enlace_dedicado}}</p>
-                    <mdb-form-control class="col-6">
-                        <textarea mdbInput class="form-control" id="textAreaExample" rows="1"
-                            formControlName="enlace"></textarea>
-                        <label mdbLabel class="form-label" for="textAreaExample">Añadir comentario</label>
-                    </mdb-form-control>
-                </li>
-            </ul> -->
         </div>
     </div>
     <div class="col-8 mt-4">
@@ -328,6 +237,17 @@
                 <p>Durante el período no se registran grietas de criticidad alta asociadas a alguna condición de
                     fallamiento.</p>
             </ng-template>
+        </div>
+        <div >
+            <h4>Comentarios e imagenes matriz</h4>
+            <div>
+                <div #matriz>
+                </div>
+                <div class="mt-3">
+                    <button type="button" style="background-color: #00838F; color: #fbfbfb" class="btn btn-sm" mdbRipple
+                        (click)="loadMatrizComentario()">Añadir comentario</button>
+                </div>
+            </div>
         </div>
         <div class="my-4">
             <h4>Conclusiones y recomendaciones</h4>

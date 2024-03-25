@@ -14,6 +14,9 @@ export class InformeA2mgComponent implements OnInit {
   @ViewChild('preview') element!: ElementRef;
   @ViewChild('templateComentarios') templateComentario!: ElementRef;
   @ViewChildren('imagenes') imagenes!: ElementRef;
+  @ViewChild('matriz') matriz!: ElementRef;
+  @ViewChild('matrizImagenes') matrizImagenes!: ElementRef;
+
 
   constructor(private informeService: InformeService, private render: Renderer2, private rq: ApiService) { }
 
@@ -30,7 +33,7 @@ export class InformeA2mgComponent implements OnInit {
     }),
     disponibilidadComentario: new FormGroup({
       infraEMT: new FormControl(''),
-      infraANT : new FormControl(''),
+      infraANT: new FormControl(''),
       enlaceObs: new FormControl(''),
       web: new FormControl(''),
       img: new FormControl(''),
@@ -50,15 +53,19 @@ export class InformeA2mgComponent implements OnInit {
   })
 
   dataCriticisadad: any
-  
+
   tablaDispo: any
   comentariosCriticidad: any = []
   promedioTablaDispo: number = 0
   numTemplate = 0
   numImagen = 0
+  numTemplateMatriz = 0
+  numImagenMatriz = 0
   dataMatrix: any[] = []
   imgCriticidad: any = []
   comentariosImagenes: any[] = []
+  comentariosImagenesMatriz: any[] = []
+
   hoy: any = ""
 
 
@@ -221,6 +228,42 @@ export class InformeA2mgComponent implements OnInit {
     })
   }
 
+  loadMatrizComentario() {
+    let num = this.numTemplateMatriz
+    let template = `
+      <div id="template-matriz-${num}">
+        <mdb-form-control class="col-12 mt-5">
+          <div class="my-2 d-flex justify-content-between">
+            <label mdbLabel class="form-label"
+                for="comentarioImagenes">Comentario</label>
+            <button id="eliminarComentarioMatriz" type="button" class="btn btn-danger "  mdbRipple>
+                <i class="fas fa-trash" size="sm"></i>
+            </button>
+         </div>
+         <textarea mdbInput class="form-control"
+            id="comentarioImagenesMatriz" rows="4" ></textarea>
+        </mdb-form-control>
+      
+        <div class="mt-3">
+          <div id="contenedorImg-matriz-${this.numTemplateMatriz}">
+          </div>
+          <button id="imagenMatriz" type="button" style="background-color: #00838F; color: #fbfbfb" class="btn btn-sm mt-2 mb-4" mdbRipple> Añadir Imagen
+          </button>
+        </div>
+      </div>`
+
+    let newElement = document.createElement('div')
+    newElement.innerHTML = template
+    let elemento: HTMLElement = this.matriz.nativeElement
+    elemento.appendChild(newElement)
+    newElement.querySelector('#imagenMatriz')?.addEventListener('click', () => this.loadTemplateImagenesMatriz(num))
+    newElement.querySelector('#comentarioImagenesMatriz')?.addEventListener('change', (event) => this.saveComentarioMatriz(event, num))
+    newElement.querySelector('#eliminarComentarioMatriz')?.addEventListener('click', (event) => this.eliminarComentarioMatriz(event, num))
+
+    this.numTemplateMatriz++
+
+  }
+
   loadTemplateComentarios() {
     let num = this.numTemplate
     let template = `
@@ -259,6 +302,11 @@ export class InformeA2mgComponent implements OnInit {
     element?.remove()
     this.comentariosImagenes = this.comentariosImagenes.filter(dato => dato.num != num)
   }
+  eliminarComentarioMatriz(event: Event, num: number) {
+    let element = document.querySelector('#template-matriz-' + num)
+    element?.remove()
+    this.comentariosImagenesMatriz = this.comentariosImagenesMatriz.filter(dato => dato.num != num)
+  }
 
   saveComentario(event: Event, num: number) {
     event.preventDefault()
@@ -274,9 +322,21 @@ export class InformeA2mgComponent implements OnInit {
       this.comentariosImagenes[validator].comentario = elemento.value
     }
 
+  }
 
-
-
+  saveComentarioMatriz(event: Event, num: number) {
+    event.preventDefault()
+    let elemento = event.target as HTMLInputElement
+    let validator = this.comentariosImagenesMatriz.findIndex(dato => dato.num == num)
+    if (validator == -1) {
+      this.comentariosImagenesMatriz.push({
+        num,
+        comentario: elemento.value,
+        imagenes: [] as any[],
+      })
+    } else {
+      this.comentariosImagenesMatriz[validator].comentario = elemento.value
+    }
   }
 
   loadTemplateImagenes(id: number) {
@@ -317,19 +377,68 @@ export class InformeA2mgComponent implements OnInit {
     this.numImagen++
   }
 
+
+  loadTemplateImagenesMatriz(id: number) {
+    let idImagen = this.numImagenMatriz
+    let template = `<div class="mt-4" id="imagen-matriz-${idImagen}">
+                    <div class="d-flex justify-content-between my-2">
+                      <div class="">
+                      </div>
+                      <button id="btn-${idImagen}" type="button" class="btn btn-danger ms-2"  mdbRipple>
+                        <i class="fas fa-trash" size="sm"></i>
+                      </button>
+                    </div>
+                    <input type="file" class="form-control" id="customFile" />
+                    <div class="border col-12" style="height: 400px;">
+                        <img src="#" height="400" class="col-12">
+                    </div>
+                    <div class="mt-2">
+                      <label mdbLabel class="form-label" for="figura-matriz-${idImagen}" >Nombre Figura</label>
+                      <input mdbInput type="text" id="figura-matriz-${idImagen}" class="form-control"/>
+                    </div>
+                </div>`
+
+    let newElement = document.createElement('div')
+    newElement.innerHTML = template
+    let serachId = "contenedorImg-matriz-" + id
+    let elemento: HTMLElement = document.getElementById(serachId)!
+    elemento.appendChild(newElement)
+
+
+    let img = newElement.querySelector('img')!
+    let idImg = this.numImagenMatriz
+    let nomFigura = newElement.querySelector('#figura-matriz-' + this.numImagenMatriz)!
+
+    nomFigura.addEventListener('change', (event) => { this.saveNomFigMatriz(event, id, idImg) })
+    newElement.querySelector('input')?.addEventListener('change', (event) => this.saveImagenesMatriz(event, id, img, idImg))
+    newElement.querySelector(`#btn-${idImagen}`)?.addEventListener('click', (event) => this.eliminarImagenMatriz(event, id, idImagen))
+
+    this.numImagenMatriz++
+  }
+
   eliminarImagen(event: Event, id: number, num: number) {
     let element = document.querySelector('#imagen' + num)!
     let index = this.comentariosImagenes.findIndex(data => data.num == id)
     if (index != -1) {
       let imagenes = this.comentariosImagenes[index].imagenes
-      let imgs = imagenes.filter((data: any) => data.id != num)
-      if (imgs.length > 0) {
-        this.comentariosImagenes[index].imagenes = []
-      } else[
-        this.comentariosImagenes[index].imagenes = imgs
-      ]
+      this.comentariosImagenes[index].imagenes = imagenes.filter((data: any) => data.id != num)
     }
     element?.remove()
+  }
+
+  eliminarImagenMatriz(event: Event, id: number, num: number) {
+
+
+    let element = document.querySelector('#imagen-matriz-' + num)!
+
+    let index = this.comentariosImagenesMatriz.findIndex(data => data.num == id)
+    if (index != -1) {
+      let imagenes = this.comentariosImagenesMatriz[index].imagenes
+      this.comentariosImagenesMatriz[index].imagenes = imagenes.filter((data: any) => data.id != num)
+      
+    }
+    element?.remove()
+
   }
 
 
@@ -362,7 +471,46 @@ export class InformeA2mgComponent implements OnInit {
           this.comentariosImagenes[validator].imagenes.push({ id: idImg, img: reader.result, nomFigura: '' })
         } else {
           let elm = this.comentariosImagenes[validator].imagenes[validador]
-          this.comentariosImagenes[validator].imagenes[validador].img = reader.result
+          elm.img = reader.result
+        }
+
+
+      }
+    }
+
+
+  }
+
+  saveImagenesMatriz(event: Event, index: number, imgElm: HTMLImageElement, idImg: number) {
+    let element = (event.target as HTMLInputElement)
+    imgElm.src = URL.createObjectURL(element.files![0]);
+    imgElm.onload = function () {
+      URL.revokeObjectURL(imgElm.src) // free memory
+    }
+
+    let file = element.files![0]
+    var reader = new FileReader();
+    reader.readAsDataURL(file);
+
+    reader.onload = (_event) => {
+
+      let validator = this.comentariosImagenesMatriz.findIndex(dato => dato.num == index)
+
+      if (validator == -1) {
+        this.comentariosImagenesMatriz.push({
+          num: index,
+          comentario: '',
+          imagenes: [{ id: idImg, img: reader.result, nomFigura: '' }] as any[],
+        })
+      } else {
+
+        let validador = this.comentariosImagenesMatriz[validator].imagenes.findIndex((dato: any) => dato.id == idImg)
+
+        if (validador == -1) {
+          this.comentariosImagenesMatriz[validator].imagenes.push({ id: idImg, img: reader.result, nomFigura: '' })
+        } else {
+          let elm = this.comentariosImagenesMatriz[validator].imagenes[validador]
+          elm.img = reader.result
         }
 
 
@@ -389,7 +537,26 @@ export class InformeA2mgComponent implements OnInit {
 
     }
 
+  }
 
+  saveNomFigMatriz(event: Event, index: number, idImg: number) {
+    let nomFig = (event.target as HTMLInputElement).value
+    let validator = this.comentariosImagenesMatriz.findIndex(dato => dato.num == index)
+    if (validator == -1) {
+      this.comentariosImagenesMatriz.push({
+        num: index,
+        comentario: '',
+        imagenes: [{ id: idImg, img: '', nomFigura: nomFig }] as any[],
+      })
+    } else {
+      let validador = this.comentariosImagenesMatriz[validator].imagenes.findIndex((dato: any) => dato.id == idImg)
+      if (validador == -1) {
+        this.comentariosImagenesMatriz[validator].imagenes.push({ id: idImg, img: '', nomFigura: nomFig })
+      } else {
+        this.comentariosImagenesMatriz[validator].imagenes[validador].nomFigura = nomFig
+      }
+
+    }
 
   }
 
@@ -412,23 +579,23 @@ export class InformeA2mgComponent implements OnInit {
     })
   }
 
-  limpiarVariables(){
+  limpiarVariables() {
     this.dataMatrix = []
-    
+
   }
 
   activarInforme() {
-    this.informeService.onPrevizualizar(this.dataCriticisadad, this.dataMatrix, this.tablaDispo, this.imgCriticidad, this.comentariosCriticidad, this.inputs, this.comentariosImagenes)
+    this.informeService.onPrevizualizar(this.dataCriticisadad, this.dataMatrix, this.tablaDispo, this.imgCriticidad, this.comentariosCriticidad, this.inputs, this.comentariosImagenes, this.comentariosImagenesMatriz)
     this.saveOnLocalStorage()
 
-  
-  
-   
-    
+
+
+
+
   }
 
   descargaCliente() {
-    this.informeService.descargaCliente(this.dataCriticisadad, this.dataMatrix, this.tablaDispo, this.imgCriticidad, this.comentariosCriticidad, this.inputs, this.comentariosImagenes)
+    this.informeService.descargaCliente(this.dataCriticisadad, this.dataMatrix, this.tablaDispo, this.imgCriticidad, this.comentariosCriticidad, this.inputs, this.comentariosImagenes, this.comentariosImagenesMatriz)
     this.saveOnLocalStorage()
   }
 
