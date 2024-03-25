@@ -1,5 +1,4 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { GeneradorService } from '../generador.service';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ApiService } from '../api/api.service';
 
@@ -327,17 +326,15 @@ export class ReporteTronaduraComponent {
 
     previsualizar() {
         this.inputs.get('graficosDVT')?.setValue(this.imagenesDVT)
-        let body = this.inputs.value
-        console.log(JSON.stringify(body));
+        // let body = this.inputs.value
+        let body = {...this.inputs.value}
 
-        // this.servicio.previsualizarPDF(this.inputs)
 
         this.api.getReporteTronadura(body).subscribe((res) => {
             let blob = new Blob([res as any]);
             const url = window.URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = url;
-            // window.open(url, '_blank'); // <- uncomment this line to open the PDF in a new tab 
             link.download = 'report.pdf';
             link.click();
             window.URL.revokeObjectURL(url);

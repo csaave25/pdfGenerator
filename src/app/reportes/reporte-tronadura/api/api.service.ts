@@ -11,7 +11,8 @@ export class ApiService {
 
 
   getReporteTronadura(body : any){
-    return this.http.post('http://localhost:3000/api/servicio/tronadura', {body});
+    let URL = 'http://localhost:3000/api/services/tronadura'
+    return this.http.post(URL, body,  { responseType: 'blob' });
   }
 
 }
