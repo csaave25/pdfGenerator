@@ -134,8 +134,6 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
 
 
   ngOnInit() {
-    this.loadGCC()
-    this.loadPrismas()
     this.reloadData()
   }
 
@@ -296,8 +294,11 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
 
   reloadData() {
     if (this.inputs.get('datos.fechaInicio')?.value && this.inputs.get('datos.fechaFinal')?.value) {
+      this.loadGCC()
+      this.loadPrismas()
       this.loadGCCDeformacion()
       this.LoadPiezometro()
+
     }
 
   }
@@ -785,7 +786,7 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
     let i = 0
     Chart.defaults.font.size = 8;
     this.chartsGeoDeformacion.forEach((elm: any) => { elm.destroy() })
-    
+
 
 
     this.geocentinelasDeformacion.reverse().forEach((element: any) => {
@@ -1095,7 +1096,7 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
       let arr: any[] = []
       data.forEach(dato => {
         let fecha = new Date(dato.fecha)
-        
+
 
         arr.push({
           x: fecha,
