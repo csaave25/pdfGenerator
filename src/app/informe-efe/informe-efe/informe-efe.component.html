@@ -272,7 +272,7 @@
                         <div>
                             <label class="form-label" for="customFile">Imágen agua acumulada</label>
                             <input accept="image/*" type="file" class="form-control" id="customFile"
-                                style="width: 400px;" (change)="LoadUploadImage(1,$event)" />
+                                style="width: 400px;" (change)="LoadUploadImage(this.inputs,1,$event)" />
                         </div>
                         <div class="border mt-2" style="width: 600px; height: 150px">
                             <img *ngIf="inputs.get('estaciones.estacion6.piezometro.imgAguaAcumulada')?.value "
@@ -395,7 +395,7 @@
                         <div>
                             <label class="form-label" for="customFile">Imágen agua acumulada</label>
                             <input accept="image/*" type="file" class="form-control" id="customFile"
-                                style="width: 400px;" (change)="LoadUploadImage(2,$event)" />
+                                style="width: 400px;" (change)="LoadUploadImage(this.inputs,2,$event)" />
                         </div>
                         <div class="border mt-2" style="width: 600px; height: 150px">
                             <img *ngIf="inputs.get('estaciones.estacion7.piezometro.imgAguaAcumulada')?.value" id="img1"
@@ -518,7 +518,7 @@
                         <div>
                             <label class="form-label" for="customFile">Imágen agua acumulada</label>
                             <input accept="image/*" type="file" class="form-control" id="customFile"
-                                style="width: 400px;" (change)="LoadUploadImage(3,$event)" />
+                                style="width: 400px;" (change)="LoadUploadImage(this.inputs,3,$event)" />
                         </div>
                         <div class="border mt-2" style="width: 600px; height: 150px">
                             <img *ngIf="inputs.get('estaciones.estacion8.piezometro.imgAguaAcumulada')?.value" id="img1"
@@ -556,7 +556,7 @@
                 <div>
                     <label class="form-label" for="customFile">Imágen Todos los Prismas</label>
                     <input accept="image/*" type="file" class="form-control" id="customFile" style="width: 400px;"
-                        (change)="LoadUploadImage(4,$event)" />
+                        (change)="LoadUploadImage(this.inputs,4,$event)" />
                 </div>
                 <div class="border mt-2" style="width: 500px; height: 300px">
                     <img *ngIf="inputs.get('prismas.imagenGeneral')?.value" id="img1"
@@ -583,7 +583,7 @@
                     <div>
                         <label class="form-label" for="customFile">Imágen Todos los Prismas</label>
                         <input accept="image/*" type="file" class="form-control" id="customFile" style="width: 400px;"
-                            (change)="LoadUploadImage(5,$event)" />
+                            (change)="LoadUploadImage(this.inputs,5,$event)" />
                     </div>
                     <div class="border mt-2" style="width: 500px; height: 300px">
                         <img *ngIf="inputs.get('prismas.prismas1.imagen')?.value" id="img1"
@@ -629,7 +629,7 @@
                     <div>
                         <label class="form-label" for="customFile">Imágen Todos los Prismas</label>
                         <input accept="image/*" type="file" class="form-control" id="customFile" style="width: 400px;"
-                            (change)="LoadUploadImage(6,$event)" />
+                            (change)="LoadUploadImage(this.inputs,6,$event)" />
                     </div>
                     <div class="border mt-2" style="width: 500px; height: 300px">
                         <img *ngIf="inputs.get('prismas.prismas2.imagen')?.value" id="img1"
