@@ -17,6 +17,7 @@ export class ApiService {
   private urlNombrePrismas = "https://consultasefe.emt.cl/api/prismas"
   private urlNombrePiezometro = "https://consultasefe.emt.cl/api/piezometros"
   private urlMilimetrosPiezometro = "https://consultasefe.emt.cl/api/piezometros/registros/semanas/5"
+  private URL_PDF = ""
 
   getGeocentinelas() {
     return this.http.get<any>(this.urlGeocentinelas);

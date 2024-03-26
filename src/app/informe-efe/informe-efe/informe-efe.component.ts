@@ -47,7 +47,10 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
   imagenAgua3: any
   chartsPiezometro: any[] = []
   chartsGeoDeformacion: any[] = []
-
+  loadingGCC = true
+  loadingPrismas = true
+  loaddingGCD = true
+  loadingPiezometro = true
 
 
 
@@ -342,9 +345,7 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
         let element = e.nativeElement
         html2canvas(element, { scale: 3 }).then((canvas) => {
           const base64image = canvas.toDataURL("image/png");
-          const img = new Image()
-          img.src = base64image
-          this.arrGCC.push(img)
+          this.arrGCC.push(base64image)
         });
       })
 
@@ -356,9 +357,7 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
       let element = e.nativeElement
       html2canvas(element, { scale: 2 }).then((canvas) => {
         const base64image = canvas.toDataURL("image/png");
-        const img = new Image()
-        img.src = base64image
-        this.arrGCD.push(img)
+        this.arrGCD.push(base64image)
       });
     })
 
@@ -370,9 +369,7 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
       let element = e.nativeElement
       html2canvas(element, { scale: 4 }).then((canvas) => {
         const base64image = canvas.toDataURL("image/png");
-        const img = new Image()
-        img.src = base64image
-        this.arrPiezometro.push(img)
+        this.arrPiezometro.push(base64image)
       });
     })
 
@@ -384,9 +381,7 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
         let element = e.nativeElement
         html2canvas(element, { scale: 3 }).then((canvas) => {
           const base64image = canvas.toDataURL("image/png");
-          const img = new Image()
-          img.src = base64image
-          this.arrPrismas.push(img)
+          this.arrPrismas.push(base64image)
         });
       })
     }
@@ -430,6 +425,8 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
           })
         })
       })
+    }).add(() => {
+      this.loadingGCC = false
     })
 
   }
@@ -571,6 +568,8 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
 
 
 
+    }).add(() => {
+      this.loaddingGCD = false
     })
   }
 
@@ -631,6 +630,8 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
         this.cargarDataTablaPrismas(dataPrismas)
         this.crearGraficosPrismas(dataGraph1, dataGraph2)
       })
+    }).add(() => {
+      this.loadingPrismas = false
     })
 
   }
@@ -750,6 +751,8 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
         this.crearGradicoPiezometro(dataPiezometros);
 
       })
+    }).add(() => {
+      this.loadingPiezometro = false
     })
   }
 
@@ -1185,7 +1188,12 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
     this.loadScreenshotPiezometro()
 
     setTimeout(() => {
-      this.service.generarInforme(this.inputs, this.arrGCC, this.arrGCD, this.gcdElements, this.arrPrismas, this.arrPiezometro)
+      // this.service.generarInforme(this.inputs, this.arrGCC, this.arrGCD, this.gcdElements, this.arrPrismas, this.arrPiezometro)
+
+      let body = { ...this.inputs.value, gcc: this.arrGCC, gcd: this.arrGCD, prismas: this.arrPrismas, piezometro: this.arrPiezometro }
+      console.log(body);
+      
+
       this.guardarEnLocalStorage()
 
     }, 2000);
@@ -1194,6 +1202,9 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
   subirInforme() {
     this.service.subirInforme(this.inputs, this.arrGCC, this.arrGCD, this.gcdElements, this.arrPrismas, this.arrPiezometro)
   }
+
+
+
 
 
 }
