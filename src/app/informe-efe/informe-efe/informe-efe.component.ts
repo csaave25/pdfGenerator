@@ -9,6 +9,7 @@ import moment from 'moment';
 import { prevenirSaltosDeLinea } from 'src/app/helpers';
 import { getFechasFormatos } from '../helpers/data';
 import { cargarLocalStorage, guardarEnLocalStorage } from '../helpers/localstorage';
+import { DataInformeService } from '../services/data-informe.service';
 
 // ng build --output-path docs --base-href /pdfGenerator/
 
@@ -19,7 +20,7 @@ import { cargarLocalStorage, guardarEnLocalStorage } from '../helpers/localstora
 })
 export class InformeEfeComponent implements OnInit, AfterContentInit {
 
-  constructor(private servicio: InformeService, private api: ApiService) { }
+  constructor(private servicio: InformeService, private api: ApiService, private dataService : DataInformeService) { }
 
   @ViewChildren("geocentinela") geoElements!: QueryList<ElementRef>;
   @ViewChildren("GCD") gcdElements!: QueryList<ElementRef>;
@@ -153,7 +154,7 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
 
   reloadData() {
     if (this.inputs.get('datos.fechaInicio')?.value && this.inputs.get('datos.fechaFinal')?.value) {
-      this.loadGCC()
+      this.dataService.loadGCC(this.geocentinelas)
       this.loadPrismas()
       this.loadGCCDeformacion()
       this.LoadPiezometro()
@@ -243,49 +244,7 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
     }
   }
 
-  loadGCC() {
-    this.api.getGeocentinelas().subscribe(data => {
-      this.api.getProfundidadGeocentinela().subscribe(res => {
-        this.api.getEstadoCentinela().subscribe(dta => {
-          data.objects.forEach((cen: any) => {
-            let geo: any = []
-            res.forEach((element: any) => {
-              if (cen.gid == element.geocentinela_id) {
-                dta.objects.forEach((elm: any) => {
-                  if (elm.gid == cen.gid && elm.canal == element.canal) {
-
-                    if (elm.nombre == "GCC08" || elm.nombre == "GCC10") {
-                      geo.push({
-                        profundidad: Math.abs(element.profundidad),
-                        canal: element.canal,
-                        estado: false
-                      })
-                    } else {
-                      geo.push({
-                        profundidad: Math.abs(element.profundidad),
-                        canal: element.canal,
-                        estado: elm.estado
-                      })
-                    }
-
-                  }
-                })
-              }
-            });
-
-            this.geocentinelas.push({
-              nombre: cen.nombre,
-              estacion: cen.estacion,
-              profundidades: geo
-            })
-          })
-        })
-      })
-    }).add(() => {
-      this.loadingGCC = false
-    })
-
-  }
+  
 
 
   loadGCCDeformacion() {
