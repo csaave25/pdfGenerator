@@ -2,9 +2,9 @@ import { ElementRef, Injectable, QueryList } from '@angular/core';
 import { jsPDF } from 'jspdf'
 import autoTable from 'jspdf-autotable'
 import { latoBold, latoRegular, montBold, montMedium, montSemi } from 'src/assets/fonts/fonts';
-import { colores, data, formateadoraDeTexto, justify, obtenerAncho } from './data';
+import { colores, data, formateadoraDeTexto, justify, obtenerAncho } from '../helpers/data';
 import { AbstractControl, FormGroup } from '@angular/forms';
-import { ApiService } from './api.service';
+import { ApiService } from '../api/api.service';
 import html2canvas from 'html2canvas';
 
 @Injectable({
