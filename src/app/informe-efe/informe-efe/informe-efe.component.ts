@@ -10,6 +10,7 @@ import { prevenirSaltosDeLinea } from 'src/app/helpers';
 import { getFechasFormatos } from '../helpers/data';
 import { cargarLocalStorage, guardarEnLocalStorage } from '../helpers/localstorage';
 import { DataInformeService } from '../services/data-informe.service';
+import { loadScreenshots } from '../helpers/screenshots';
 
 // ng build --output-path docs --base-href /pdfGenerator/
 
@@ -20,7 +21,7 @@ import { DataInformeService } from '../services/data-informe.service';
 })
 export class InformeEfeComponent implements OnInit, AfterContentInit {
 
-  constructor(private servicio: InformeService, private api: ApiService, private dataService : DataInformeService) { }
+  constructor(private servicio: InformeService, private api: ApiService, private dataService: DataInformeService) { }
 
   @ViewChildren("geocentinela") geoElements!: QueryList<ElementRef>;
   @ViewChildren("GCD") gcdElements!: QueryList<ElementRef>;
@@ -194,75 +195,26 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
     }
   }
 
-  loadScreenshotGCC() {
-    if (this.geoElements.length) {
-      this.geoElements.forEach(e => {
-        let element = e.nativeElement
-        html2canvas(element, { scale: 3 }).then((canvas) => {
-          const base64image = canvas.toDataURL("image/png");
-          this.arrGCC.push(base64image)
-        });
-      })
-
-    }
-  }
-
-  loadScreenshotGCD() {
-    this.gcdElements.forEach(e => {
-      let element = e.nativeElement
-      html2canvas(element, { scale: 2 }).then((canvas) => {
-        const base64image = canvas.toDataURL("image/png");
-        this.arrGCD.push(base64image)
-      });
-    })
-
+  async loadAllScreenshots() {
+    await loadScreenshots(this.geoElements, this.arrGCC)
+    await loadScreenshots(this.gcdElements, this.arrGCD)
+    await loadScreenshots(this.piezometroElement, this.arrPiezometro)
+    await loadScreenshots(this.prismasElements, this.arrPrismas)
 
   }
 
-  loadScreenshotPrismas() {
-    this.piezometroElement.forEach(e => {
-      let element = e.nativeElement
-      html2canvas(element, { scale: 4 }).then((canvas) => {
-        const base64image = canvas.toDataURL("image/png");
-        this.arrPiezometro.push(base64image)
-      });
-    })
+  async crearInforme() {
+    await this.loadAllScreenshots()
+    // this.service.generarInforme(this.inputs, this.arrGCC, this.arrGCD, this.gcdElements, this.arrPrismas, this.arrPiezometro)
+    let body = { ...this.inputs.value, gcc: this.arrGCC, gcd: this.arrGCD, prismas: this.arrPrismas, piezometro: this.arrPiezometro }
+    console.log(body);
+    guardarEnLocalStorage(this.inputs)
 
-  }
+}
 
-  loadScreenshotPiezometro() {
-    if (this.piezometroElement && this.dataTablaPrismas.length > 1) {
-      this.prismasElements.forEach(e => {
-        let element = e.nativeElement
-        html2canvas(element, { scale: 3 }).then((canvas) => {
-          const base64image = canvas.toDataURL("image/png");
-          this.arrPrismas.push(base64image)
-        });
-      })
-    }
-  }
-  
-  crearInforme() {
-    this.loadScreenshotGCC()
-    this.loadScreenshotGCD()
-    this.loadScreenshotPrismas()
-    this.loadScreenshotPiezometro()
-
-    setTimeout(() => {
-      // this.service.generarInforme(this.inputs, this.arrGCC, this.arrGCD, this.gcdElements, this.arrPrismas, this.arrPiezometro)
-
-      let body = { ...this.inputs.value, gcc: this.arrGCC, gcd: this.arrGCD, prismas: this.arrPrismas, piezometro: this.arrPiezometro }
-      console.log(body);
-      
-
-      guardarEnLocalStorage(this.inputs)
-
-    }, 2000);
-  }
-
-  subirInforme() {
-    this.service.subirInforme(this.inputs, this.arrGCC, this.arrGCD, this.gcdElements, this.arrPrismas, this.arrPiezometro)
-  }
+subirInforme() {
+  this.service.subirInforme(this.inputs, this.arrGCC, this.arrGCD, this.gcdElements, this.arrPrismas, this.arrPiezometro)
+}
 
 
 
