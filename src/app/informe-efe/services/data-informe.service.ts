@@ -394,4 +394,36 @@ export class DataInformeService {
       })
     })
   }
+
+  LoadUploadImage(inputs : FormGroup,id: number, event: any) {
+
+    let img1 = inputs.get('estaciones.estacion6.piezometro.imgAguaAcumulada')
+    let img2 = inputs.get('estaciones.estacion7.piezometro.imgAguaAcumulada')
+    let img3 = inputs.get('estaciones.estacion8.piezometro.imgAguaAcumulada')
+    let img4 = inputs.get('prismas.imagenGeneral')
+    let img5 = inputs.get('prismas.prismas1.imagen')
+    let img6 = inputs.get('prismas.prismas2.imagen')
+
+    if (event.target.files && event.target.files[0]) {
+      var reader = new FileReader();
+
+
+      reader.readAsDataURL(event.target.files[0]);
+
+      reader.onload = (event) => {
+        if (id == 1)
+          img1!.setValue(event.target!.result);
+        if (id == 2)
+          img2!.setValue(event.target!.result);
+        if (id == 3)
+          img3!.setValue(event.target!.result);
+        if (id == 4)
+          img4!.setValue(event.target!.result);
+        if (id == 5)
+          img5!.setValue(event.target!.result);
+        if (id == 6)
+          img6!.setValue(event.target!.result);
+      }
+    }
+  }
 }

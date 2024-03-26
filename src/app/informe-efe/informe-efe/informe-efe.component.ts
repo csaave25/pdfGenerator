@@ -162,38 +162,10 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
     }
   }
 
-
-  LoadUploadImage(id: number, event: any) {
-
-    let img1 = this.inputs.get('estaciones.estacion6.piezometro.imgAguaAcumulada')
-    let img2 = this.inputs.get('estaciones.estacion7.piezometro.imgAguaAcumulada')
-    let img3 = this.inputs.get('estaciones.estacion8.piezometro.imgAguaAcumulada')
-    let img4 = this.inputs.get('prismas.imagenGeneral')
-    let img5 = this.inputs.get('prismas.prismas1.imagen')
-    let img6 = this.inputs.get('prismas.prismas2.imagen')
-
-    if (event.target.files && event.target.files[0]) {
-      var reader = new FileReader();
-
-
-      reader.readAsDataURL(event.target.files[0]);
-
-      reader.onload = (event) => {
-        if (id == 1)
-          img1!.setValue(event.target!.result);
-        if (id == 2)
-          img2!.setValue(event.target!.result);
-        if (id == 3)
-          img3!.setValue(event.target!.result);
-        if (id == 4)
-          img4!.setValue(event.target!.result);
-        if (id == 5)
-          img5!.setValue(event.target!.result);
-        if (id == 6)
-          img6!.setValue(event.target!.result);
-      }
-    }
+  LoadUploadImage(inputs : FormGroup,id: number, event: any) {
+    this.dataService.LoadUploadImage(inputs, id, event)
   }
+
 
   async loadAllScreenshots() {
     await loadScreenshots(this.geoElements, this.arrGCC)
@@ -210,11 +182,11 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
     console.log(body);
     guardarEnLocalStorage(this.inputs)
 
-}
+  }
 
-subirInforme() {
-  this.service.subirInforme(this.inputs, this.arrGCC, this.arrGCD, this.gcdElements, this.arrPrismas, this.arrPiezometro)
-}
+  subirInforme() {
+    this.service.subirInforme(this.inputs, this.arrGCC, this.arrGCD, this.gcdElements, this.arrPrismas, this.arrPiezometro)
+  }
 
 
 
