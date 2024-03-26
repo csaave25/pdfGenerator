@@ -155,7 +155,7 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
   reloadData() {
     if (this.inputs.get('datos.fechaInicio')?.value && this.inputs.get('datos.fechaFinal')?.value) {
       this.dataService.loadGCC(this.geocentinelas)
-      this.loadPrismas()
+      this.dataService.loadPrismas(this.dataTablaPrismas, this.loadChartPrismas)
       this.loadGCCDeformacion()
       this.LoadPiezometro()
 
@@ -388,68 +388,7 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
     })
   }
 
-  loadPrismas() {
-
-    this.api.getNombrePrismas().subscribe(res => {
-
-      let dataPrismas: any[] = []
-      this.api.getDataPrismas().subscribe(data => {
-        res.objects.forEach((prisma: any) => {
-          if (prisma.gid != 27) {
-            data.objects.forEach((obj: any) => {
-              let date = new Date(obj.fecha)
-              if (obj.prisma_id == prisma.gid) {
-                let indexPrisma = dataPrismas.findIndex(data => data.gid == prisma.gid)
-                if (indexPrisma == -1) {
-                  let newData = {
-                    gid: prisma.gid,
-                    nombre: prisma.prisma_codigo,
-                    date: [date] as any[],
-                    desplazamiento: [obj.d_acumulado * 1000] as any
-                  }
-                  dataPrismas.push(newData)
-
-                } else {
-                  dataPrismas[indexPrisma].date.push(date)
-                  dataPrismas[indexPrisma].desplazamiento.push(obj.d_acumulado * 1000)
-
-                }
-              }
-
-            })
-          }
-        })
-
-        this.dataTablaPrismas.sort((data: any, data2: any) => (data.nombre > data2.nombre) ? 1 : (data2.nombre > data.nombre) ? -1 : 0)
-        dataPrismas.sort((data: any, data2: any) => (data.nombre > data2.nombre) ? 1 : (data2.nombre > data.nombre) ? -1 : 0)
-
-
-        let dataGraph1: any[] = []
-        let dataGraph2: any[] = []
-
-        dataPrismas.forEach((elm: any) => {
-          if (['P01', 'P02', 'P03', 'P04', 'P05', 'P06', 'P07', 'P08', 'P09', 'P10', 'P11', 'P12'].includes(elm.nombre)) {
-            dataGraph1.push(elm)
-
-          } else {
-            dataGraph2.push(elm)
-          }
-        })
-
-
-
-
-
-
-
-        this.cargarDataTablaPrismas(dataPrismas)
-        this.crearGraficosPrismas(dataGraph1, dataGraph2)
-      })
-    }).add(() => {
-      this.loadingPrismas = false
-    })
-
-  }
+  
 
   LoadPiezometro() {
     let { fechaInit, fechaFin } = getFechasFormatos(this.inputs.get('datos.fechaInicio')?.value, this.inputs.get('datos.fechaFinal')?.value)
@@ -571,34 +510,7 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
     })
   }
 
-  cargarDataTablaPrismas(datos: any[]) {
-    const data = datos.slice(0, datos.length)
-    data.forEach(elm => {
-      let primeraDate = elm.date[0]
-      let primerDesp = elm.desplazamiento[0]
-      let date = elm.date[0]
-      let desp = elm.desplazamiento[0]
-      for (let i = 1; i < elm.date.length; i++) {
-
-        if (date.getTime() < elm.date[i].getTime()) {
-          date = elm.date[i]
-          desp = elm.desplazamiento[i]
-        }
-        if (primeraDate.getTime() > elm.date[i].getTime()) {
-          primeraDate = elm.date[i]
-          primerDesp = elm.desplazamiento[i]
-        }
-      }
-      this.dataTablaPrismas.push({
-        gid: elm.gid,
-        nombre: elm.nombre,
-        fecha: date.toLocaleDateString('en-GB'),
-        desplazamiento: desp.toFixed(2),
-        acumulado: (desp - primerDesp).toFixed(2)
-      })
-    })
-
-  }
+  
 
   crearGraficosDeformacion() {
     let i = 0
@@ -755,155 +667,7 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
 
   }
 
-  crearGraficosPrismas(dataGraph1: any[], dataGraph2: any[]) {
-    let colores = ['#118DFF', '#12239E', '#E66C37', '#6B007B', '#E044A7', '#744EC2', '#D9B300', '#D64550', '#197278', '#1AAB40', '#15C6F4', '#4092FF', '#FFA25C', '#BF61CA', '#F475D1', '#B7A3FF', '#C5A406', '#FF8383']
-
-    function loadData(dataGraph: any[]) {
-      let dataset: any[] = []
-      dataGraph.forEach((elm, index) => {
-        let elemento: any[] = []
-        for (let i = 0; i < elm.date.length; i++) {
-
-          let arr = {
-            x: elm.date[i],
-            y: elm.desplazamiento[i]
-          }
-          elemento.push(arr)
-        }
-
-        dataset.push({
-          label: elm.nombre,
-          data: elemento,
-          backgroundColor: colores[index],
-          borderColor: colores[index],
-        })
-
-      })
-
-      return dataset
-
-    }
-
-    const data = loadData(dataGraph1)
-    const data2 = loadData(dataGraph2)
-
-    new Chart("prismas1", {
-      type: "line",
-      data: {
-        datasets: data
-      },
-      options: {
-        animation: false,
-        responsive: true,
-        elements: {
-          point: {
-            radius: 0
-          }
-        },
-        plugins: {
-          legend: {
-            title: {
-              font: {
-                weight: 'normal'
-              }
-            },
-            labels: {
-              font: {
-                size: 8
-              }
-            }
-          },
-        },
-        scales: {
-
-          x: {
-            type: 'time',
-            display: true,
-            ticks: {
-              autoSkip: true,
-              stepSize: 4
-
-            },
-          },
-          y: {
-            title: {
-              display: true,
-              text: 'Desplazamiento acumulado [mm]'
-            },
-            min: -30,
-            max: 100,
-            ticks: {
-
-              stepSize: 0,
-
-            }
-          }
-        }
-      }
-    });
-
-    new Chart("prismas2", {
-      type: "line",
-      plugins: [{
-        id: 'loadData', afterRender: (chart) => {
-          this.loadChartPrismas = true
-        }
-      }],
-      data: {
-        datasets: data2
-      },
-      options: {
-        animation: false,
-        responsive: true,
-        elements: {
-          point: {
-            radius: 0
-          }
-        },
-        plugins: {
-          legend: {
-            title: {
-              font: {
-                weight: 'normal'
-              }
-            },
-            labels: {
-              font: {
-                size: 8
-              }
-            }
-          },
-        },
-        scales: {
-
-          x: {
-            type: 'time',
-            display: true,
-            ticks: {
-              autoSkip: true,
-              stepSize: 4
-
-            },
-          },
-          y: {
-            title: {
-              display: true,
-              text: 'Desplazamiento acumulado [mm]'
-            },
-            min: -30,
-            max: 100,
-            ticks: {
-              // forces step size to be 50 units
-              stepSize: 0,
-
-            }
-          }
-        }
-      }
-    });
-
-
-  }
+  
 
   crearGradicoPiezometro(dataPiezometro: any[]) {
 
