@@ -1,16 +1,18 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from '../api/api.service';
 import { GraficosService } from './graficos.service';
+import { FormGroup } from '@angular/forms';
+import { getFechasFormatos } from '../helpers/data';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DataInformeService {
 
-  constructor(private api : ApiService, private graficos : GraficosService) { }
+  constructor(private api: ApiService, private graficos: GraficosService) { }
 
 
-  loadGCC(geocentinelas : any[]) {
+  loadGCC(geocentinelas: any[]) {
     this.api.getGeocentinelas().subscribe(data => {
       this.api.getProfundidadGeocentinela().subscribe(res => {
         this.api.getEstadoCentinela().subscribe(dta => {
@@ -52,7 +54,7 @@ export class DataInformeService {
   }
 
 
-  loadPrismas(dataTablaPrismas : any[], loadChartPrismas : boolean) {
+  loadPrismas(dataTablaPrismas: any[], loadChartPrismas: boolean) {
 
     this.api.getNombrePrismas().subscribe(res => {
       let dataPrismas: any[] = []
@@ -99,7 +101,7 @@ export class DataInformeService {
           }
         })
 
-        this.cargarDataTablaPrismas(dataPrismas,dataTablaPrismas)
+        this.cargarDataTablaPrismas(dataPrismas, dataTablaPrismas)
         loadChartPrismas = this.graficos.crearGraficosPrismas(dataGraph1, dataGraph2)
       })
     })
@@ -133,5 +135,145 @@ export class DataInformeService {
       })
     })
 
+  }
+
+
+  loadGCCDeformacion(inputs: FormGroup, geocentinelasDeformacion: any[], chartsGeoDeformacion: any[], loadchart : boolean) {
+
+    let { fechaInit, fechaFin } = getFechasFormatos(inputs.get('datos.fechaInicio')?.value, inputs.get('datos.fechaFinal')?.value)
+    let dateMin = new Date(fechaInit)
+    let dateMax = new Date(fechaFin)
+    dateMin.setHours(0, 0, 0, 0)
+    dateMax.setHours(23, 59, 59)
+
+    this.api.getGeocentinalasDeformacion().subscribe(data => {
+      let gcc10: any[] = [[], [], [], []]
+      let gcc8: any[] = [[], [], [], []]
+      let gcc7: any[] = [[], [], [], []]
+
+      data.objects.forEach((elemento: any) => {
+        let dateElemento = new Date(elemento.fecha).getTime()
+
+        if (dateElemento > dateMin.getTime() && dateElemento < dateMax.getTime()) {
+          if (elemento.nombre == "GCC10") {
+            if (elemento.canal == 1)
+              gcc10[0].push({
+                profundidad: elemento.profundidad,
+                canal: elemento.canal,
+                medicion: elemento.medicion,
+                fecha: elemento.fecha,
+                gid: elemento.gid
+              })
+            if (elemento.canal == 2)
+              gcc10[1].push({
+                profundidad: elemento.profundidad,
+                canal: elemento.canal,
+                medicion: elemento.medicion,
+                fecha: elemento.fecha,
+                gid: elemento.gid
+              })
+            if (elemento.canal == 3)
+              gcc10[2].push({
+                profundidad: elemento.profundidad,
+                canal: elemento.canal,
+                medicion: elemento.medicion,
+                fecha: elemento.fecha,
+                gid: elemento.gid
+              })
+            if (elemento.canal == 4)
+              gcc10[3].push({
+                profundidad: elemento.profundidad,
+                canal: elemento.canal,
+                medicion: elemento.medicion,
+                fecha: elemento.fecha,
+                gid: elemento.gid
+              })
+          }
+
+          if (elemento.nombre == "GCC08") {
+            if (elemento.canal == 1)
+              gcc8[0].push({
+                profundidad: elemento.profundidad,
+                canal: elemento.canal,
+                medicion: elemento.medicion,
+                fecha: elemento.fecha,
+                gid: elemento.gid
+              })
+            if (elemento.canal == 2)
+              gcc8[1].push({
+                profundidad: elemento.profundidad,
+                canal: elemento.canal,
+                medicion: elemento.medicion,
+                fecha: elemento.fecha,
+                gid: elemento.gid
+              })
+            if (elemento.canal == 3)
+              gcc8[2].push({
+                profundidad: elemento.profundidad,
+                canal: elemento.canal,
+                medicion: elemento.medicion,
+                fecha: elemento.fecha,
+                gid: elemento.gid
+              })
+            if (elemento.canal == 4)
+              gcc8[3].push({
+                profundidad: elemento.profundidad,
+                canal: elemento.canal,
+                medicion: elemento.medicion,
+                fecha: elemento.fecha,
+                gid: elemento.gid
+              })
+          }
+
+          if (elemento.nombre == "GCC07") {
+            if (elemento.canal == 1)
+              gcc7[0].push({
+                profundidad: elemento.profundidad,
+                canal: elemento.canal,
+                medicion: elemento.medicion,
+                fecha: elemento.fecha,
+                gid: elemento.gid
+              })
+            if (elemento.canal == 2)
+              gcc7[1].push({
+                profundidad: elemento.profundidad,
+                canal: elemento.canal,
+                medicion: elemento.medicion,
+                fecha: elemento.fecha,
+                gid: elemento.gid
+              })
+            if (elemento.canal == 3)
+              gcc7[2].push({
+                profundidad: elemento.profundidad,
+                canal: elemento.canal,
+                medicion: elemento.medicion,
+                fecha: elemento.fecha,
+                gid: elemento.gid
+              })
+            if (elemento.canal == 4)
+              gcc7[3].push({
+                profundidad: elemento.profundidad,
+                canal: elemento.canal,
+                medicion: elemento.medicion,
+                fecha: elemento.fecha,
+                gid: elemento.gid
+              })
+          }
+        }
+
+      });
+
+
+      geocentinelasDeformacion.push(gcc10)
+
+      geocentinelasDeformacion.push(gcc8)
+
+      geocentinelasDeformacion.push(gcc7)
+
+      loadchart =  this.graficos.crearGraficosDeformacion(geocentinelasDeformacion, chartsGeoDeformacion)
+
+
+
+    })
   }
 }

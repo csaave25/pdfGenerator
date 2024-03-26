@@ -161,4 +161,158 @@ export class GraficosService {
 
     return loadChartPrismas
   }
+
+
+  crearGraficosDeformacion(geocentinelasDeformacion: any[], chartsGeoDeformacion: any[]) {
+    let i = 0
+    Chart.defaults.font.size = 8;
+  chartsGeoDeformacion.forEach((elm: any) => { elm.destroy() })
+
+
+
+    geocentinelasDeformacion.reverse().forEach((element: any) => {
+      let data: any[] = []
+      element.forEach((elm: any) => {
+        let dataGCD = {
+          numbers: [] as any,
+          dates: [] as any,
+          canal: '',
+          profundidad: 0,
+          gid: 0
+        }
+
+        elm.reverse().forEach((el: any) => {
+
+          dataGCD.dates.push(el.fecha.slice(0, 10))
+          dataGCD.numbers.push(el.medicion)
+          dataGCD.profundidad = el.profundidad
+          dataGCD.canal = el.canal
+          dataGCD.gid = el.gid
+        })
+
+        data.push(dataGCD)
+
+
+      })
+
+
+
+      if (i < 3) {
+
+
+        chartsGeoDeformacion.push(
+          new Chart("chart" + i, {
+            type: "line",
+
+            plugins: [{
+              id: 'loadData', afterRender: (chart) => {
+                if (chart.id == "2") {
+
+                }
+              }
+            }],
+            data: {
+              labels: data[0].dates,
+              datasets: [
+                {
+                  label: data[0].canal + '/ ' + Math.abs(data[0].profundidad) + ' [m]',
+                  data: data[0].numbers,
+                  borderWidth: 1,
+                  backgroundColor: '#118DFF',
+                  borderColor: '#118DFF',
+                },
+                {
+                  label: data[1].canal + '/ ' + Math.abs(data[1].profundidad) + ' [m]',
+                  data: data[1].numbers,
+                  borderWidth: 1,
+                  backgroundColor: '#12239E',
+                  borderColor: '#12239E',
+                },
+                {
+                  label: data[2].canal + '/ ' + Math.abs(data[2].profundidad) + ' [m]',
+                  data: data[2].numbers,
+                  borderWidth: 1,
+                  backgroundColor: '#E66C37',
+                  borderColor: '#E66C37',
+                },
+                {
+                  label: data[3].canal + '/ ' + Math.abs(data[3].profundidad) + ' [m]',
+                  data: data[3].numbers,
+                  borderWidth: 1,
+                  backgroundColor: '#6B007B',
+                  borderColor: '#6B007B',
+                },
+                // {
+                //   data: [15,15,30,31] 
+                // }
+              ]
+            },
+
+            options: {
+              // maintainAspectRatio: false,
+              responsive: true,
+              elements: {
+                point: {
+                  radius: 0
+                }
+              },
+              plugins: {
+                legend: {
+                  title: {
+                    font: {
+                      weight: 'normal'
+                    }
+                  },
+                  labels: {
+                    font: {
+                      size: 8
+                    }
+                  }
+                },
+                title: {
+                  display: true,
+                  text: 'Canal / Prof.'
+                },
+
+              },
+              scales: {
+
+                x: {
+                  // title: {
+                  //   display: true,
+                  //   text: 'Fecha',
+
+                  // },
+                  ticks: {
+
+                    // For a category axis, the val is the index so the lookup via getLabelForValue is needed
+                    maxTicksLimit: 7,
+                    autoSkip: true,
+                    includeBounds: true
+                  }
+                },
+                y: {
+                  title: {
+                    display: true,
+                    text: 'Deformación [%]'
+                  },
+                  min: 0,
+                  max: 100,
+                  ticks: {
+                    // forces step size to be 50 units
+                    stepSize: 20,
+
+                  }
+                }
+              }
+            }
+          }));
+
+        i++
+      }
+      
+    });
+
+    return true
+  }
 }
