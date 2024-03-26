@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Chart } from 'chart.js/auto';
+import moment from 'moment';
 
 @Injectable({
   providedIn: 'root'
@@ -166,7 +167,7 @@ export class GraficosService {
   crearGraficosDeformacion(geocentinelasDeformacion: any[], chartsGeoDeformacion: any[]) {
     let i = 0
     Chart.defaults.font.size = 8;
-  chartsGeoDeformacion.forEach((elm: any) => { elm.destroy() })
+    chartsGeoDeformacion.forEach((elm: any) => { elm.destroy() })
 
 
 
@@ -310,9 +311,99 @@ export class GraficosService {
 
         i++
       }
-      
+
     });
 
     return true
+  }
+
+
+
+  crearGradicoPiezometro(dataPiezometro: any[],chartsPiezometro: any[], ) {
+
+    moment.locale('es')
+
+    function loadData(data: any[], nombre: string) {
+      let datas: any[] = []
+      let arr: any[] = []
+      data.forEach(dato => {
+        let fecha = new Date(dato.fecha)
+
+
+        arr.push({
+          x: fecha,
+          y: dato.milimetros
+        })
+      })
+      datas.push({
+        label: nombre,
+        data: arr,
+        backgroundColor: '#12239E',
+        borderColor: '#12239E',
+      })
+
+      return datas
+    }
+    chartsPiezometro.forEach((elm: any) => { elm.destroy() })
+    dataPiezometro.forEach(piezometro => {
+
+      let datos = loadData(piezometro.data, piezometro.nombre)
+
+      chartsPiezometro.push(
+        new Chart("piezometro" + piezometro.gid, {
+          type: "line",
+          data: {
+            datasets: datos,
+          },
+          options: {
+            animation: false,
+            responsive: true,
+            elements: {
+              point: {
+                radius: 0
+              }
+            },
+            plugins: {
+              legend: {
+                title: {
+                  font: {
+                    weight: 'normal'
+                  }
+                },
+                labels: {
+                  font: {
+                    size: 8
+                  }
+                }
+              },
+            },
+            scales: {
+
+              x: {
+                type: 'time',
+                display: true,
+                ticks: {
+                  autoSkip: true,
+                  stepSize: 6
+
+                },
+              },
+              y: {
+                title: {
+                  display: true,
+                  text: 'Columna de agua [cm]'
+                },
+                min: -25,
+                max: 75,
+                ticks: {
+
+                  stepSize: 25,
+
+                }
+              }
+            }
+          }
+        }));
+    })
   }
 }

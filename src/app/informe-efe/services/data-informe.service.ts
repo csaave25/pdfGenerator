@@ -272,8 +272,126 @@ export class DataInformeService {
 
       loadchart =  this.graficos.crearGraficosDeformacion(geocentinelasDeformacion, chartsGeoDeformacion)
 
+    })
+  }
 
 
+
+  LoadPiezometro(inputs : FormGroup, chartsPiezometro: any[]) {
+    let { fechaInit, fechaFin } = getFechasFormatos(inputs.get('datos.fechaInicio')?.value, inputs.get('datos.fechaFinal')?.value)
+    let dateMin = new Date(fechaInit)
+    let dateMax = new Date(fechaFin)
+    dateMin.setHours(0, 0, 0, 0)
+    dateMax.setHours(23, 59, 59)
+
+    let dataPiezometros: any[] = []
+    this.api.getNombrePiezometros().subscribe(data => {
+      let piezometros: any[] = []
+      data.objects.forEach((piez: any) => {
+        if (piez.gid == 3 || piez.gid == 4 || piez.gid == 6) {
+          piezometros.push(piez)
+        }
+      })
+
+
+      this.api.getMilimetrosPiezometros().subscribe(data => {
+
+        piezometros.forEach(piezometro => {
+          data.objects.forEach((elm: any) => {
+            let fechaElm = new Date(elm.fecha).getTime()
+            if (fechaElm > dateMin.getTime() && fechaElm < dateMax.getTime()) {
+              if (piezometro.gid == elm.piezometro_id) {
+                let index = dataPiezometros.findIndex(data => data.gid == elm.piezometro_id)
+
+                if (index == -1) {
+                  dataPiezometros.push({
+                    gid: elm.piezometro_id,
+                    nombre: piezometro.nombre,
+                    data: [elm] as any
+                  })
+                } else {
+                  dataPiezometros[index].data.push(elm)
+                }
+              }
+            }
+
+          })
+        })
+
+
+        //algoritomo para agregar un piezometro en caso de que no le llegue info.
+        if (dataPiezometros.length < 3) {
+          let data: any[] = []
+          for (let i = 0; i < 3; i++) {
+
+            if (dataPiezometros[i]) {
+              if (dataPiezometros[i].gid == 4) {
+                data[0] = dataPiezometros[i]
+              }
+
+              if (dataPiezometros[i].gid == 3) {
+                data[1] = dataPiezometros[i]
+              }
+
+              if (dataPiezometros[i].gid == 6) {
+                data[2] = dataPiezometros[i]
+              }
+
+            }
+
+          }
+
+          let gid = 0
+          let nombre = 'null'
+          let datos: any[] = []
+          for (let i = 0; i < 3; i++) {
+
+            if (!data[i]) {
+
+              if (i == 0) {
+                gid = 4
+                nombre = 'PZ02'
+              } else if (i == 1) {
+                gid = 3
+                nombre = 'PZ03'
+              } else if (i == 2) {
+                gid = 6
+                nombre = 'PZ04'
+              }
+
+              data[i] = {
+                gid,
+                nombre,
+                data: []
+              }
+            }
+          }
+
+
+          for (let i = 0; i < 3; i++) {
+            if (data[i].data.length > 0) {
+              datos = [...data[i].data]
+              break
+            }
+          }
+
+          datos = datos.map((elm: any) => {
+            return { ...elm, milimetros: null }
+          })
+
+          data.forEach((elm: any) => {
+            if (elm.data.length == 0) {
+              elm.data = datos
+
+            }
+          })
+
+          dataPiezometros = data
+        }
+
+        this.graficos.crearGradicoPiezometro(dataPiezometros,chartsPiezometro);
+
+      })
     })
   }
 }
