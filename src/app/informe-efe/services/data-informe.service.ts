@@ -22,20 +22,25 @@ export class DataInformeService {
               if (cen.gid == element.geocentinela_id) {
                 dta.objects.forEach((elm: any) => {
                   if (elm.gid == cen.gid && elm.canal == element.canal) {
+                    // if()
 
-                    if (elm.nombre == "GCC08" || elm.nombre == "GCC10") {
+                    if (elm.canal_id === 108 || elm.canal_id === 119) {
+                      // console.log(elm.canal_id);
                       geo.push({
                         profundidad: Math.abs(element.profundidad),
-                        canal: element.canal,
+                        canal: elm.canal,
                         estado: false
                       })
                     } else {
+
                       geo.push({
                         profundidad: Math.abs(element.profundidad),
-                        canal: element.canal,
+                        canal: elm.canal,
                         estado: elm.estado
                       })
                     }
+
+
 
                   }
                 })
@@ -138,7 +143,7 @@ export class DataInformeService {
   }
 
 
-  loadGCCDeformacion(inputs: FormGroup, geocentinelasDeformacion: any[], chartsGeoDeformacion: any[], loadchart : boolean) {
+  loadGCCDeformacion(inputs: FormGroup, geocentinelasDeformacion: any[], chartsGeoDeformacion: any[], loadchart: boolean) {
 
     let { fechaInit, fechaFin } = getFechasFormatos(inputs.get('datos.fechaInicio')?.value, inputs.get('datos.fechaFinal')?.value)
     let dateMin = new Date(fechaInit)
@@ -270,14 +275,14 @@ export class DataInformeService {
 
       geocentinelasDeformacion.push(gcc7)
 
-      loadchart =  this.graficos.crearGraficosDeformacion(geocentinelasDeformacion, chartsGeoDeformacion)
+      loadchart = this.graficos.crearGraficosDeformacion(geocentinelasDeformacion, chartsGeoDeformacion)
 
     })
   }
 
 
 
-  LoadPiezometro(inputs : FormGroup, chartsPiezometro: any[]) {
+  LoadPiezometro(inputs: FormGroup, chartsPiezometro: any[]) {
     let { fechaInit, fechaFin } = getFechasFormatos(inputs.get('datos.fechaInicio')?.value, inputs.get('datos.fechaFinal')?.value)
     let dateMin = new Date(fechaInit)
     let dateMax = new Date(fechaFin)
@@ -389,13 +394,13 @@ export class DataInformeService {
           dataPiezometros = data
         }
 
-        this.graficos.crearGradicoPiezometro(dataPiezometros,chartsPiezometro);
+        this.graficos.crearGradicoPiezometro(dataPiezometros, chartsPiezometro);
 
       })
     })
   }
 
-  LoadUploadImage(inputs : FormGroup,id: number, event: any) {
+  LoadUploadImage(inputs: FormGroup, id: number, event: any) {
 
     let img1 = inputs.get('estaciones.estacion6.piezometro.imgAguaAcumulada')
     let img2 = inputs.get('estaciones.estacion7.piezometro.imgAguaAcumulada')
