@@ -177,7 +177,7 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
 
   async crearInforme() {
     await this.loadAllScreenshots()
-    // this.service.generarInforme(this.inputs, this.arrGCC, this.arrGCD, this.gcdElements, this.arrPrismas, this.arrPiezometro)
+    this.service.generarInforme(this.inputs, this.arrGCC, this.arrGCD, this.gcdElements, this.arrPrismas, this.arrPiezometro)
     let body = { ...this.inputs.value, gcc: this.arrGCC, gcd: this.arrGCD, prismas: this.arrPrismas, piezometro: this.arrPiezometro }
     console.log(body);
     guardarEnLocalStorage(this.inputs)
