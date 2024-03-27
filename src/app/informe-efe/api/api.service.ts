@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +17,16 @@ export class ApiService {
   private urlNombrePrismas = "https://consultasefe.emt.cl/api/prismas"
   private urlNombrePiezometro = "https://consultasefe.emt.cl/api/piezometros"
   private urlMilimetrosPiezometro = "https://consultasefe.emt.cl/api/piezometros/registros/semanas/5"
-  private URL_PDF = ""
+  private URL_PRECIPITACIONES = "https://climatologia.meteochile.gob.cl/application/servicios/getDatosRecientesEma/330007/"
+
+  getPrecipitaciones(fecha : string) {
+    // let params = new HttpParams()
+    // .set('usuario', 'csaavedra@emt.cl')
+    // .set('token', 'TcxMTU3MjIzMTM0Mw==IXmvxB');
+    // return this.http.get<any>(this.URL_PRECIPITACIONES + fecha, {params});
+
+    return this.http.get<any>('https://climatologia.meteochile.gob.cl/application/servicios/getDatosRecientesEma/330007/2024/02?usuario=csaavedra@emt.cl&token=TcxMTU3MjIzMTM0Mw==IXmvxB');
+  }
 
   getGeocentinelas() {
     return this.http.get<any>(this.urlGeocentinelas);
@@ -35,17 +44,17 @@ export class ApiService {
     return this.http.get<any>(this.urlGeocenDeformacion);
   }
 
-  getNombrePrismas(){
+  getNombrePrismas() {
     return this.http.get<any>(this.urlNombrePrismas);
   }
-  getDataPrismas(){
+  getDataPrismas() {
     return this.http.get<any>(this.urlDataPrismas);
   }
-  getNombrePiezometros(){
+  getNombrePiezometros() {
     return this.http.get<any>(this.urlNombrePiezometro);
   }
 
-  getMilimetrosPiezometros(){
+  getMilimetrosPiezometros() {
     return this.http.get<any>(this.urlMilimetrosPiezometro);
   }
 

@@ -141,6 +141,9 @@ export class InformeEfeComponent implements OnInit, AfterContentInit {
 
   ngOnInit() {
     this.reloadData()
+    // this.api.getPrecipitaciones('2024/02').subscribe((res) => {
+    //   console.log(res);
+    // })
   }
 
   ngAfterContentInit(): void {
