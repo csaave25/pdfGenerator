@@ -26,10 +26,10 @@ export class InformeA2mgComponent implements OnInit {
     usrs: new FormGroup({
       elaborado: new FormControl('CONSTANZA SARRÍA'),
       cargo1: new FormControl('INGENIERO GEOTÉCNICO MCM'),
-      revisado: new FormControl('VALERIA MIRANDA'),
+      revisado: new FormControl('LEONARDO ZAHR'),
       cargo2: new FormControl('LÍDER MCM-AMSA'),
       aprobado: new FormControl('LEONARDO ZAHR'),
-      cargo3: new FormControl('JEFE MCM'),
+      cargo3: new FormControl('LÍDER MCM'),
     }),
     disponibilidadComentario: new FormGroup({
       infraEMT: new FormControl(''),
@@ -184,12 +184,15 @@ export class InformeA2mgComponent implements OnInit {
     let fecha = this.inputs.get('fecha')?.value.replace("-", "/")
     let mes = new Date(fecha).toLocaleString('default', { month: 'long' })
     let ano = new Date(fecha).getFullYear()
-    this.rq.getConfiabilidad(mes, ano).subscribe(data => {
-      this.inputs.get('confiabilidad.identificacion')?.setValue(data.objects[0].identification)
-      this.inputs.get('confiabilidad.clasificacion')?.setValue(data.objects[0].classification)
-      this.inputs.get('confiabilidad.comunicacion')?.setValue(data.objects[0].communication)
-      this.calcularPromedioConfiabilidad()
+    this.rq.getToken().subscribe(data => {
+      let token = data.token
+      this.rq.getConfiabilidad(mes, ano, token).subscribe(data => {
+        this.inputs.get('confiabilidad.identificacion')?.setValue(data.objects[0].identification)
+        this.inputs.get('confiabilidad.clasificacion')?.setValue(data.objects[0].classification)
+        this.inputs.get('confiabilidad.comunicacion')?.setValue(data.objects[0].communication)
+        this.calcularPromedioConfiabilidad()
 
+      })
     })
   }
 
@@ -435,7 +438,7 @@ export class InformeA2mgComponent implements OnInit {
     if (index != -1) {
       let imagenes = this.comentariosImagenesMatriz[index].imagenes
       this.comentariosImagenesMatriz[index].imagenes = imagenes.filter((data: any) => data.id != num)
-      
+
     }
     element?.remove()
 

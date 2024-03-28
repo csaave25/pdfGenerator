@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs'
+import { environments } from 'src/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -11,10 +12,20 @@ export class ApiService {
   urlMatrix = 'https://a2mggestion.emt.cl/api/matrix'
   urlMatrixUltimosCambios = 'https://a2mggestion.emt.cl/api/matrixLogs/logs/resumeAll'
   urlDisponibilidad = 'http://10.10.10.238:8766/reportabilidad/metricas/'
+  utlAuth = 'https://m2d.emt.cl/api3/auth/login'
 
-  token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI2M2FjM2FiYjA0MDc4YjI5NWRmMzU1NDMiLCJpYXQiOjE3MTEzNzUwODUsImV4cCI6MTcxMTQzNTA4NX0.JybRrtwITBpnnLqfv684dbdocZCMWAHitryYp6loN3E'
+  token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI2M2FjM2FiYjA0MDc4YjI5NWRmMzU1NDMiLCJpYXQiOjE3MTE2MzI1NDUsImV4cCI6MTcxMTY5MjU0NX0.kuodezB5lRgFhznjY0TowKgH0ObjzrUXRyEOSc7UI'
 
   constructor(private http: HttpClient) { }
+
+  getToken(){
+    
+    let body = {
+      email : environments.AUTH_USER_A2MG,
+      password : environments.AUTH_PASS_A2MG
+    }
+    return this.http.post<any>(this.utlAuth,body)
+  }
 
   getAlerta(): Observable<any> {
     return this.http.get<any>(this.urlAlertas);
@@ -88,10 +99,10 @@ export class ApiService {
 
   }
 
-  getConfiabilidad(mes: string, ano: number) {
+  getConfiabilidad(mes: string, ano: number, token: string) {
 
     const headerDict = {
-      'x-token': this.token,
+      'x-token': token,
     }
 
     const requestOptions = {
