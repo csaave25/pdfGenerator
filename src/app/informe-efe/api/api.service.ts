@@ -20,12 +20,11 @@ export class ApiService {
   private URL_PRECIPITACIONES = "https://climatologia.meteochile.gob.cl/application/servicios/getDatosRecientesEma/330007/"
 
   getPrecipitaciones(fecha : string) {
-    // let params = new HttpParams()
-    // .set('usuario', 'csaavedra@emt.cl')
-    // .set('token', 'TcxMTU3MjIzMTM0Mw==IXmvxB');
-    // return this.http.get<any>(this.URL_PRECIPITACIONES + fecha, {params});
-
-    return this.http.get<any>('https://climatologia.meteochile.gob.cl/application/servicios/getDatosRecientesEma/330007/2024/02?usuario=csaavedra@emt.cl&token=TcxMTU3MjIzMTM0Mw==IXmvxB');
+    let params = new HttpParams()
+    .set('usuario', 'csaavedra@emt.cl')
+    .set('token', 'TcxMTU3MjIzMTM0Mw==IXmvxB');
+    return this.http.get<any>(this.URL_PRECIPITACIONES + fecha, {params , withCredentials: true});
+    // return this.http.get<any>('https://climatologia.meteochile.gob.cl/application/servicios/getDatosRecientesEma/330007/2024/02?usuario=csaavedra@emt.cl&token=TcxMTU3MjIzMTM0Mw==IXmvxB');
   }
 
   getGeocentinelas() {

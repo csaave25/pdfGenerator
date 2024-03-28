@@ -1,7 +1,7 @@
 import { Component, ViewChild, ElementRef, Renderer2, OnInit, ViewChildren } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { InformeService } from '../informe.service';
-import { ApiService } from '../api.service';
+import { InformeService } from '../generator/informe.service';
+import { ApiService } from '../api/api.service';
 
 @Component({
   selector: 'app-informe-a2mg',

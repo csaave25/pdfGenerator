@@ -3,7 +3,7 @@ import { jsPDF } from 'jspdf'
 import autoTable from 'jspdf-autotable'
 import { latoBold, latoRegular, montBold, montMedium, montSemi } from 'src/assets/fonts/fonts';
 import { FormGroup } from '@angular/forms';
-import { dataInforme, formateadoraDeTexto } from './data';
+import { dataInforme, formateadoraDeTexto } from '../helpers/data';
 
 
 interface Data {
