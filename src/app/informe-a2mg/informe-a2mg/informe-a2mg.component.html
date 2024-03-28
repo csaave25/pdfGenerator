@@ -42,8 +42,8 @@
             <input mdbInput type="text" id="cargos" class="form-control" formControlName="cargo3" />
         </div>
     </div>
-    <!-- <div class="col-8 mt-4" *ngIf="dataCriticisadad && tablaDispo"> -->
-    <div class="col-8 mt-4" *ngIf="tablaDispo">
+    <!-- <div class="col-8 mt-4" *ngIf="dataCriticisadad && tablaDispo.value"> -->
+    <div class="col-8 mt-4" *ngIf="tablaDispo.value">
         <div [formGroup]="inputs.controls.disponibilidadComentario">
             <h4>Disponibilidad del Sistema</h4>
             <table class="table">
@@ -57,7 +57,7 @@
                 <tbody>
                     <tr style="background-color: #f2f3f3;">
                         <th scope="row">Infraestructura EMT</th>
-                        <td>{{tablaDispo.infraestructura}}</td>
+                        <td>{{tablaDispo.value.infraestructura}}</td>
                         <td>
                             <mdb-form-control class="">
                                 <textarea mdbInput class="form-control" id="infraEMT" rows="1"
@@ -68,7 +68,7 @@
                     </tr>
                     <tr>
                         <th scope="row" class="ps-5">Servicio web</th>
-                        <td>{{tablaDispo.servicio_web}}</td>
+                        <td>{{tablaDispo.value.servicio_web}}</td>
                         <td>
                             <mdb-form-control class="">
                                 <textarea mdbInput class="form-control" id="servicioWeb" rows="1"
@@ -79,7 +79,7 @@
                     </tr>
                     <tr>
                         <th scope="row" class="ps-5">Servicio imágenes</th>
-                        <td>{{tablaDispo.servicio_imagenes}}</td>
+                        <td>{{tablaDispo.value.servicio_imagenes}}</td>
                         <td>
                             <mdb-form-control class="">
                                 <textarea mdbInput class="form-control" id="imagenes" rows="1"
@@ -90,7 +90,7 @@
                     </tr>
                     <tr>
                         <th scope="row" class="ps-5">Servicio base de datos</th>
-                        <td>{{tablaDispo.servicio_db}}</td>
+                        <td>{{tablaDispo.value.servicio_db}}</td>
                         <td>
                             <mdb-form-control class="">
                                 <textarea mdbInput class="form-control" id="bd" rows="1"
@@ -101,7 +101,7 @@
                     </tr>
                     <tr>
                         <th scope="row" class="ps-5">Servicio API</th>
-                        <td>{{tablaDispo.servicio_api}}</td>
+                        <td>{{tablaDispo.value.servicio_api}}</td>
                         <td>
                             <mdb-form-control class="">
                                 <textarea mdbInput class="form-control" id="api" rows="1"
@@ -112,7 +112,7 @@
                     </tr>
                     <tr>
                         <th scope="row" class="ps-5">Servicio de computo</th>
-                        <td>{{tablaDispo.servicio_computo}}</td>
+                        <td>{{tablaDispo.value.servicio_computo}}</td>
                         <td>
                             <mdb-form-control class="">
                                 <textarea mdbInput class="form-control" id="computo" rows="1"
@@ -123,7 +123,7 @@
                     </tr>
                     <tr style="background-color: #f2f3f3;">
                         <th scope="row">Infraestructura ANT</th>
-                        <td>{{tablaDispo.sistema_adquisicion_imagenes}}</td>
+                        <td>{{tablaDispo.value.sistema_adquisicion_imagenes}}</td>
                         <td>
                             <mdb-form-control class="">
                                 <textarea mdbInput class="form-control" id="ant" rows="1" formControlName="infraANT"
@@ -134,7 +134,7 @@
                     </tr>
                     <tr>
                         <th scope="row" class="ps-5">Sistema de adquisición de imágenes</th>
-                        <td>{{tablaDispo.sistema_adquisicion_imagenes}}</td>
+                        <td>{{tablaDispo.value.sistema_adquisicion_imagenes}}</td>
                         <td>
                             <mdb-form-control class="">
                                 <textarea mdbInput class="form-control" id="adquisicion" rows="1"
@@ -145,7 +145,7 @@
                     </tr>
                     <tr style="background-color: #f2f3f3;">
                         <th scope="row">Enlaces</th>
-                        <td>{{tablaDispo.enlace_dedicado}}</td>
+                        <td>{{tablaDispo.value.enlace_dedicado}}</td>
                         <td>
                             <mdb-form-control class="">
                                 <textarea mdbInput class="form-control" id="enlaces" rows="1"
@@ -156,7 +156,7 @@
                     </tr>
                     <tr>
                         <th scope="row" class="ps-5">Enlace dedicado AMSA</th>
-                        <td>{{tablaDispo.enlace_dedicado}}</td>
+                        <td>{{tablaDispo.value.enlace_dedicado}}</td>
                         <td>
                             <mdb-form-control class="">
                                 <textarea mdbInput class="form-control" id="enlace" rows="1"
@@ -177,21 +177,21 @@
                     <p class="col-2">Identificación:</p>
                     <div class="col-2">
                         <input type="number" id="Identificación" class="form-control" formControlName="identificacion"
-                            (change)="calcularPromedioConfiabilidad()" />
+                            (change)="calcularPromedio()" />
                     </div>
                 </li>
                 <li class="d-flex  ">
                     <p class="col-2">Clasificación:</p>
                     <div class="col-2">
                         <input type="number" id="Clasificacion" class="form-control" formControlName="clasificacion"
-                            (change)="calcularPromedioConfiabilidad()" />
+                            (change)="calcularPromedio()" />
                     </div>
                 </li>
                 <li class="d-flex  ">
                     <p class="col-2">Comunicación:</p>
                     <div class="col-2">
                         <input type="number" id="Porcentaje" class="form-control" formControlName="comunicacion"
-                            (change)="calcularPromedioConfiabilidad()" />
+                            (change)="calcularPromedio()" />
                     </div>
                 </li>
                 <li class="d-flex  ">

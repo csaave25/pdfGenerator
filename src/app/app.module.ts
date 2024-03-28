@@ -66,7 +66,7 @@ export const appConfig: ApplicationConfig = {
     EventoComponent,
     TurnosDiariosComponent,
     ChecklistComponent,
-    EstadosDelServicioComponent
+    EstadosDelServicioComponent,
   ],
   imports: [
     FormsModule,
