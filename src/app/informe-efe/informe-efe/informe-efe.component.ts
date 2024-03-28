@@ -1,16 +1,12 @@
 import { Component, ElementRef, OnInit, QueryList, ViewChildren, AfterContentInit } from '@angular/core';
 import { InformeService } from '../genInforme/informe.service';
 import { FormControl, FormGroup } from '@angular/forms';
-import Chart from 'chart.js/auto';
 import { ApiService } from '../api/api.service';
-import html2canvas from 'html2canvas';
 import 'chartjs-adapter-moment';
-import moment from 'moment';
+import { loadScreenshots } from '../helpers/screenshots';
 import { prevenirSaltosDeLinea } from 'src/app/helpers';
-import { getFechasFormatos } from '../helpers/data';
 import { cargarLocalStorage, guardarEnLocalStorage } from '../helpers/localstorage';
 import { DataInformeService } from '../services/data-informe.service';
-import { loadScreenshots } from '../helpers/screenshots';
 
 // ng build --output-path docs --base-href /pdfGenerator/
 
